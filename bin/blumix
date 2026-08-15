@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -o pipefail
+BLUMIX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$BLUMIX_ROOT/lib/core.sh"
+source "$BLUMIX_ROOT/lib/ui.sh"
+source "$BLUMIX_ROOT/lib/system.sh"
+source "$BLUMIX_ROOT/lib/network.sh"
+source "$BLUMIX_ROOT/lib/security.sh"
+source "$BLUMIX_ROOT/lib/development.sh"
+source "$BLUMIX_ROOT/lib/integrations.sh"
+
+case "${1:-}" in
+    version) echo "Blumix $BLUMIX_VERSION" ;;
+    system) blumix_system ;;
+    network) blumix_network ;;
+    security) blumix_security ;;
+    integrations) blumix_integrations ;;
+    development) blumix_development ;;
+    help|"") 
+        printf '%b🚀 BLUMIX%b v%s - Centro de Mando\n\n' "$BLX_BOLD" "$BLX_RESET" "$BLUMIX_VERSION"
+        printf '%bComandos:%b\n' "$BLX_BOLD" "$BLX_RESET"
+        printf '  blumix system        Diagnóstico del sistema\n'
+        printf '  blumix network       Estado de red\n'
+        printf '  blumix security      Auditoría de seguridad\n'
+        printf '  blumix integrations  Blumcl/Blumsec\n'
+        printf '  blumix development   Herramientas\n'
+        printf '  blumix version       Versión\n'
+        ;;
+    *) echo "Comando desconocido: $1. Usa 'blumix help'" ;;
+esac

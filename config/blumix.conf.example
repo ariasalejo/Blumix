@@ -1,0 +1,7 @@
+# cp config/blumix.conf.example config/blumix.conf
+BLUMCL_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumcl"
+BLUMSEC_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumsec"
+BLUMELIX_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumelix"
+BLUMIX_THEME="dark"
+BLUMIX_LANG="es"
+BLUMIX_AI_ENABLED=0
