@@ -19,7 +19,7 @@ Android      bóveda        web app
 | `blumix version` | Mostrar versión instalada |
 | `blumix help` | Ayuda completa |
 
-**Alias rápido:** `blx` (ej: `blx system`, `blx net`)
+**Alias rápido:** `blx` (ej: `bm system`, `blx net`)
 
 ## 📦 Instalación
 
