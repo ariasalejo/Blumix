@@ -138,3 +138,39 @@ blx_warn(){ printf '  %b%s%b\n' "$BLX_YELLOW" "$1" "$BLX_RESET"; }
 blx_err(){ printf '  %b%s%b\n' "$BLX_RED" "$1" "$BLX_RESET"; }
 blx_bottom(){ printf '\n'; }
 blx_menu(){ printf '%bComandos:%b\n' "$BLX_BOLD" "$BLX_RESET"; }
+
+# ── Estrellas parpadeantes ──
+blx_stars() {
+    [[ "${BLUMIX_ANIM:-1}" == "0" ]] && { blx_center "${BLX_DIM}·  ✦  ·  *  ·  ✦  ·${BLX_RESET}"; return; }
+    local cols=$(blx_cols) i j line chars='·✦*·+·'
+    for ((j=0;j<3;j++)); do
+        line=""
+        for ((i=0;i<cols;i++)); do
+            if (( RANDOM % 6 == 0 )); then line+="${chars:RANDOM%${#chars}:1}"; else line+=" "; fi
+        done
+        printf '\r%b%s%b' "$BLX_DIM" "$line" "$BLX_RESET"
+        sleep 0.15
+    done
+    printf '\n'
+}
+
+# ── Estaciones orbitales con estado en vivo ──
+blx_stations() {
+    local s_cl="🔴" s_sec="🔴" s_elx="🔴"
+    blumix_dir_exists "$BLUMCL_HOME"   && s_cl="🟢"
+    blumix_dir_exists "$BLUMSEC_HOME"  && s_sec="🟢"
+    blumix_dir_exists "$BLUMELIX_HOME" && s_elx="🟢"
+
+    printf '\n'
+    blx_center "${BLX_CYAN}   ┌─────────┐   ┌─────────┐   ┌──────────┐${BLX_RESET}"
+    blx_center "${BLX_CYAN}   │ BLUMCL  │   │ BLUMSEC │   │ BLUMELIX │${BLX_RESET}"
+    blx_center "${BLX_CYAN}   └────┬────┘   └────┬────┘   └────┬─────┘${BLX_RESET}"
+    blx_center "${BLX_CYAN}        └────────────┼─────────────┘${BLX_RESET}"
+    blx_center "${BLX_CYAN}                     │${BLX_RESET}"
+    blx_center "${BLX_CYAN}                ┌────────┐${BLX_RESET}"
+    blx_center "${BLX_CYAN}                │  N A V E │${BLX_RESET}"
+    blx_center "${BLX_CYAN}                └─────────┘${BLX_RESET}"
+    printf '\n'
+    blx_center "ESTACIONES:  BLUMCL ${s_cl}   BLUMSEC ${s_sec}   BLUMELIX ${s_elx}"
+    printf '\n'
+}
