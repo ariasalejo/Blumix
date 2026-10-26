@@ -26,19 +26,93 @@ HTML = r"""<!doctype html>
 @media(max-width:850px){.shell{grid-template-columns:1fr}.rail{position:static;padding:14px 18px;border-right:0;border-bottom:1px solid var(--line)}.sub{margin:2px 0 12px}.nav{display:flex;flex-wrap:wrap}.nav a{padding:7px 9px}.rail-note{margin-top:12px}.main{padding:0 16px 28px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}.top{height:auto;padding:14px 0;flex-wrap:wrap}}
 @media(max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:8px}.card{padding:11px}.value{font-size:22px}.chip{max-width:100%;overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* BLUMIX COMMAND DECK — refinamiento visual ligero, sin dependencias externas */
+:root{--bg:#070b12;--panel:#0e1622;--line:#26394b;--text:#f2f7ff;--muted:#8fa2b8;--cyan:#6af5e2;--lime:#c8ff7b;--amber:#ffd080;--red:#ff8198;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;--sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{background:radial-gradient(ellipse at 74% 0%,rgba(19,91,105,.18),transparent 38%),radial-gradient(ellipse at 8% 75%,rgba(33,58,103,.13),transparent 34%),#070b12;letter-spacing:.005em}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.14;background-image:linear-gradient(rgba(110,154,180,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(110,154,180,.11) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+.shell{position:relative;z-index:1;grid-template-columns:244px minmax(0,1fr);max-width:1800px;margin:0 auto}
+.rail{position:sticky;top:0;height:100vh;padding:28px 17px;background:linear-gradient(180deg,rgba(9,17,27,.97),rgba(7,12,20,.94));border-right:1px solid #223345;box-shadow:12px 0 45px rgba(0,0,0,.12)}
+.brand{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:.14em;color:#f4fbff}
+.brand:before{content:"";display:inline-block;width:23px;height:23px;border:1.5px solid var(--cyan);transform:rotate(30deg);border-radius:6px;box-shadow:0 0 17px rgba(106,245,226,.16),inset 0 0 10px rgba(106,245,226,.09)}
+.sub{font:9px var(--mono);letter-spacing:.12em;color:#72889f;margin:8px 0 35px}
+.nav{gap:6px}.nav a{position:relative;display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid transparent;border-radius:9px;color:#a5b6c9;font-size:12px;transition:background .18s,border-color .18s,color .18s}
+.nav a:before{content:"";width:5px;height:5px;border:1px solid #668093;border-radius:2px;transform:rotate(45deg)}
+.nav a:hover,.nav a:focus-visible{border-color:#28525a;background:linear-gradient(90deg,rgba(25,78,82,.36),rgba(17,37,43,.34));color:var(--cyan)}
+.rail-note{position:relative;margin-top:42px;border:1px solid #29434b;background:linear-gradient(145deg,rgba(16,43,48,.72),rgba(11,23,32,.72));padding:14px;border-radius:11px;color:#b8d7d9;font-size:10px;line-height:1.65}
+.rail-note:before{content:"POLÍTICA OPERATIVA";display:block;font:9px var(--mono);letter-spacing:.12em;color:var(--cyan);margin-bottom:9px}
+.main{padding:0 clamp(18px,3vw,46px) 42px}
+.top{height:70px;border-bottom:1px solid rgba(44,65,83,.72)}
+.top .mono{font-size:10px;letter-spacing:.09em}
+.chip{border-color:#2b4051;background:rgba(12,23,34,.78);letter-spacing:.04em}
+.btn{font-size:11px;font-weight:650;letter-spacing:.02em;border-color:#32646a;background:linear-gradient(135deg,#12343a,#0e242d);box-shadow:0 4px 18px rgba(0,0,0,.16);transition:transform .18s,border-color .18s,background .18s}
+.btn:hover{background:linear-gradient(135deg,#19464a,#12303a);border-color:#59cfc2;transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:wait;transform:none}
+.hero{position:relative;overflow:hidden;padding:38px 0 27px;align-items:center;min-height:215px}
+.hero:after{content:"";position:absolute;right:17%;top:5px;width:270px;height:190px;pointer-events:none;background:radial-gradient(ellipse,rgba(41,178,177,.10),transparent 68%);filter:blur(5px)}
+.eyebrow{font-size:9px;letter-spacing:.2em;color:#7af7e5}
+.hero h1{font-size:clamp(30px,4vw,49px);letter-spacing:-.055em;margin:12px 0 12px;font-weight:690}
+.hero p{font-size:12px;line-height:1.8;max-width:580px;color:#9aacc0}
+.hero-side{position:relative;z-index:1;display:flex;align-items:center;gap:14px;min-width:190px;padding:12px 14px;border:1px solid #263e4c;border-radius:12px;background:linear-gradient(145deg,rgba(16,31,44,.86),rgba(9,17,27,.9));box-shadow:0 12px 35px rgba(0,0,0,.17)}
+.hero-orbit{width:58px;height:58px;flex:0 0 58px;filter:drop-shadow(0 0 12px rgba(106,245,226,.12))}
+.hero-side .label{font-size:9px;letter-spacing:.1em}.hero-side #updated{font-size:11px;margin-top:5px;color:#d9e7f3}
+.grid{gap:13px}
+.card{position:relative;overflow:hidden;padding:17px 17px 16px;border-color:#263748;background:linear-gradient(145deg,rgba(18,30,44,.97),rgba(10,17,27,.98));box-shadow:0 10px 30px rgba(0,0,0,.11);transition:transform .18s,border-color .18s,box-shadow .18s}
+.card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,rgba(106,245,226,.75),rgba(106,245,226,0))}
+.card:hover{transform:translateY(-2px);border-color:#3d6871;box-shadow:0 15px 34px rgba(0,0,0,.19)}
+.label{font-size:9px;letter-spacing:.13em}
+.value{font-size:30px;letter-spacing:-.055em;font-weight:600;margin:12px 0 6px}
+.detail{font-size:10px;line-height:1.6}
+.section{margin:31px 0 13px}
+.section h2{font-size:13px;font-weight:650;letter-spacing:.015em}
+.status{font-size:10px}
+select{color:var(--text);background:#0b1420;border:1px solid #2b4052;border-radius:7px;padding:6px 8px}
+.panel{border-color:#27394b;background:linear-gradient(145deg,rgba(14,23,35,.97),rgba(9,15,24,.98));box-shadow:0 12px 32px rgba(0,0,0,.1)}
+.panel-head{padding:15px 17px;background:rgba(18,31,45,.5);border-bottom-color:#253748}
+.panel-head h3{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+th{font-size:9px;letter-spacing:.12em}
+th,td{padding:14px 16px;border-bottom-color:#1e2c3b}
+tbody tr:hover{background:rgba(34,70,79,.12)}
+td strong{font-size:12px;letter-spacing:.025em}
+.tag{font-size:9px;letter-spacing:.025em;background:rgba(8,14,22,.45)}
+.tag.good{color:#c8ff9c;border-color:#365c46;background:rgba(36,75,48,.15)}
+.tag.warn{color:#ffd18a;border-color:#5c4a32;background:rgba(83,58,25,.15)}
+.tag.unknown{color:#bdc9d7;border-color:#3a4b5c;background:rgba(47,63,79,.14)}
+.cols{gap:13px}
+.list{padding:13px;gap:8px}
+.item{padding:13px 14px;border-color:#29394a;background:linear-gradient(135deg,rgba(15,27,40,.88),rgba(10,17,27,.9));border-radius:10px}
+.item strong{font-size:11px;letter-spacing:.015em}
+.item p{font-size:10px;line-height:1.7;color:#95a9bd}
+.notice{border-color:#5c4a31;background:linear-gradient(100deg,rgba(53,39,22,.75),rgba(27,24,21,.8));color:#e8cc9c;border-radius:10px;line-height:1.7}
+.footer{font-size:9px;letter-spacing:.025em;border-top-color:#263748}
+.empty{font-size:11px;line-height:1.7}
+#connection{display:inline-flex;align-items:center;gap:6px}
+#connection:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+#connection.lime{color:var(--lime)}
+#connection.error{color:var(--red)}
+#stale{scroll-margin-top:20px}
+@media(max-width:850px){.shell{grid-template-columns:1fr}.rail{position:relative;height:auto;padding:18px 18px 14px}.sub{margin:7px 0 16px}.rail-note{margin-top:15px}.main{padding:0 18px 30px}.hero{min-height:0;padding:29px 0 22px}.hero:after{right:0}.hero-side{align-self:stretch;max-width:300px}.section{margin-top:25px}}
+@media(max-width:520px){.main{padding:0 13px 25px}.top{align-items:flex-start;padding:12px 0}.top>div{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.grid{gap:8px}.card{padding:13px 12px}.value{font-size:25px}.hero h1{font-size:31px}.hero p{font-size:11px}.hero-side{padding:10px 12px}.panel-head{padding:12px}.nav a{font-size:11px}.rail-note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+.command-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.command-strip span{display:inline-flex;align-items:center;gap:8px;border:1px solid #223646;background:rgba(10,18,28,.66);padding:8px 10px;border-radius:7px;color:#8198ad;font:9px var(--mono);letter-spacing:.06em}
+.command-strip b{font-weight:500;color:var(--cyan)}
+
 </style></head>
 <body><div class="shell">
 <aside class="rail"><div class="brand">⬡ BLUMIX</div><div class="sub">INTELLIGENCE CENTER · LOCAL</div>
 <nav class="nav" aria-label="Navegación principal"><a href="#overview">Resumen ejecutivo</a><a href="#projects">Proyectos</a><a href="#services">Procesos y servicios</a><a href="#incidents">Hallazgos</a></nav>
 <div class="rail-note">MODO SOLO LECTURA<br><br>El panel no instala, detiene, borra ni modifica servicios. La salud funcional solo se declara cuando existe una prueba específica.</div></aside>
 <main class="main"><header class="top"><span class="mono muted">BLUMIX / LOCAL DIAGNOSTICS</span><div><span id="connection" class="chip">Conectando…</span> <button id="refresh" class="btn" type="button">Actualizar</button></div></header>
-<section id="overview"><div class="hero"><div><div class="eyebrow">Control plane · evidencia, no suposiciones</div><h1>Centro de <span class="cyan">inteligencia</span></h1><p>Métricas locales y estados verificables del ecosistema. Los datos se consultan al equipo en el momento de la actualización; no se envían a servicios externos.</p></div><div><div class="label">Última consulta</div><div id="updated" class="mono muted">Sin datos todavía</div></div></div>
+<section id="overview"><div class="hero"><div><div class="eyebrow">Control plane · evidencia, no suposiciones</div><h1>Centro de <span class="cyan">inteligencia</span></h1><p>Métricas locales y estados verificables del ecosistema. Los datos se consultan al equipo en el momento de la actualización; no se envían a servicios externos.</p></div><div class="hero-side"><svg class="hero-orbit" viewBox="0 0 64 64" role="img" aria-label="Emblema visual BLUMIX"><circle cx="32" cy="32" r="25" fill="none" stroke="#294a57" stroke-width="1"/><circle cx="32" cy="32" r="17" fill="none" stroke="#356b72" stroke-width="1" stroke-dasharray="3 4"/><ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="#6af5e2" stroke-width="1" opacity=".75" transform="rotate(-42 32 32)"/><path d="M32 20 42 26 42 38 32 44 22 38 22 26Z" fill="#102b34" stroke="#6af5e2" stroke-width="1.4"/><circle cx="32" cy="32" r="3" fill="#c8ff7b"/><circle cx="52" cy="15" r="2.5" fill="#c8ff7b"/></svg><div><div class="label">Última consulta local</div><div id="updated" class="mono muted">Sin datos todavía</div><div class="detail" style="margin-top:5px;color:#6af5e2">● SOLO LECTURA</div></div></div></div>
 <div class="grid">
 <div class="card"><div class="label">CPU</div><div id="cpu" class="value cyan">—</div><div class="detail">Muestra breve · no es tendencia</div></div>
 <div class="card"><div class="label">Memoria usada</div><div id="memory" class="value">—</div><div class="detail">Calculada desde MemAvailable</div></div>
 <div class="card"><div class="label">Disco raíz</div><div id="disk" class="value">—</div><div class="detail">Uso de la partición raíz</div></div>
 <div class="card"><div class="label">Carga / núcleos</div><div id="load" class="value">—</div><div class="detail">Carga media a 1 minuto</div></div>
-</div></section>
+</div><div class="command-strip" aria-label="Política del centro de mando"><span><b>01</b> DIAGNÓSTICO LOCAL</span><span><b>02</b> SIN TELEMETRÍA EXTERNA</span><span><b>03</b> ACCIONES MANUALES</span></div></section>
 <section id="projects"><div class="section"><h2>Inventario del ecosistema</h2><label class="status">Filtrar <select id="project-filter" aria-label="Filtrar proyectos"><option value="all">Todos los estados</option><option value="GIT_DETECTED">Git detectado</option><option value="DISCOVERED">Solo carpeta</option><option value="NOT_FOUND">No encontrado</option></select></label></div>
 <div class="panel"><div class="panel-head"><h3>BLUMCL · BLUMSEC · BLUMELIX</h3><span id="project-count" class="status">Pendiente</span></div><div class="table-wrap"><table><thead><tr><th>Proyecto</th><th>Evidencia</th><th>Salud funcional</th></tr></thead><tbody id="projects-body"><tr><td colspan="3" class="empty">Esperando datos locales…</td></tr></tbody></table></div></div></section>
 <section id="services"><div class="section"><h2>Procesos y unidades observables</h2><span class="status">Sin argumentos de procesos</span></div><div class="cols"><div class="panel"><div class="panel-head"><h3>Procesos relacionados por nombre</h3><span class="status">ps</span></div><div id="process-list" class="list"><div class="empty">Pendiente</div></div></div><div class="panel"><div class="panel-head"><h3>Unidades systemd relacionadas</h3><span class="status">systemctl</span></div><div id="service-list" class="list"><div class="empty">Pendiente</div></div></div></div></section>
