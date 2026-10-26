@@ -25,7 +25,7 @@ Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
 | `blumix doctor` | Comprobaciones básicas de instalación |
-| `blumix intelligence` / `blumix intel` | Diagnóstico determinista de CPU, memoria disponible, disco, integraciones y herramientas; recomienda siguientes pasos sin ejecutarlos |
+| `blumix intelligence` / `blumix intel` | Diagnóstico determinista; admite `--json` con esquema `blumix.intelligence.v1` |\n| `blumix projects [--json]` | Inventario con estados `NOT_FOUND`, `DISCOVERED` y `GIT_DETECTED` |\n| `blumix services [--json]` | Procesos y unidades systemd relacionados observables, sin ejecutar acciones |
 | `blumix report --json` | Crear una instantánea JSON sin rutas absolutas ni secretos para importar en el Atlas |
 | `blumix blumcl` | Abrir el directorio de BLUMCL si existe |
 | `blumix blumsec` | Abrir el directorio de BLUMSEC si existe |
@@ -46,7 +46,7 @@ bash tests/test_blumix.sh
 ./bin/blumix audit
 ./bin/blumix audit --json
 ./bin/blumix system
-./bin/blumix report --json > "$HOME/blumix-report.json"
+./bin/blumix intelligence --json\n./bin/blumix projects --json\n./bin/blumix services --json\n./bin/blumix report --json > "$HOME/blumix-report.json"
 ~~~
 
 Para ejecutar sin instalar nada en el sistema, utiliza `./bin/blumix` desde el repositorio. Si deseas el comando global, añade el directorio `bin` de tu copia local al PATH; no pegues una ruta de otra máquina sin revisarla.
@@ -102,3 +102,11 @@ Consulta [la arquitectura](docs/architecture/overview.md), [la instalación](doc
 ## Licencia
 
 MIT, según el archivo LICENSE del repositorio.
+
+
+## Estados de evidencia
+
+- `blumix projects` distingue recurso ausente (`NOT_FOUND`), carpeta encontrada (`DISCOVERED`) y metadatos Git detectados (`GIT_DETECTED`). No ejecuta pruebas funcionales ni declara una aplicación saludable.
+- `blumix services` observa nombres de procesos y unidades systemd que identifiquen explícitamente BLUMIX, BLUMCL, BLUMSEC o BLUMELIX. La ausencia de coincidencias queda como desconocida; no demuestra que un servicio esté detenido.
+- `blumix intelligence --json`, `blumix projects --json` y `blumix services --json` emiten JSON estructurado en stdout; los argumentos inválidos devuelven código 2.
+- El Atlas/PWA existente es una interfaz estática offline-first que importa informes elegidos por el usuario. No es un servidor de diagnóstico en vivo ni presenta informes antiguos como telemetría actual. El service worker solo cachea la interfaz estática.
