@@ -26,6 +26,11 @@ Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas
 | `blumix status` | Resumen breve del equipo y las rutas |
 | `blumix doctor` | Comprobaciones básicas de instalación |
 | `blumix intelligence` / `blumix intel` | Diagnóstico determinista; admite `--json` con esquema `blumix.intelligence.v1` |\n| `blumix projects [--json]` | Inventario con estados `NOT_FOUND`, `DISCOVERED` y `GIT_DETECTED` |\n| `blumix services [--json]` | Procesos y unidades systemd relacionados observables, sin ejecutar acciones |
+| `blumix menu` | Menú interactivo con selección cerrada de operaciones |
+| `blumix watch [2-60]` | Refresco del centro de mando en terminal; Ctrl+C para salir |
+| `blumix completion bash` | Generar autocompletado Bash para comandos y opciones |
+| `blumix paths` | Mostrar rutas locales configuradas explícitamente |
+| `blumix install-user` | Crear enlace en `~/.local/bin` sin sobrescribir destinos ni editar perfiles |
 | `blumix report --json` | Crear una instantánea JSON sin rutas absolutas ni secretos para importar en el Atlas |
 | `blumix blumcl` | Abrir el directorio de BLUMCL si existe |
 | `blumix blumsec` | Abrir el directorio de BLUMSEC si existe |
