@@ -1,104 +1,69 @@
-cat > docs/architecture/overview.md <<'EOF'
-🏗️ Arquitectura de Blumix
-Ecosistema BLUM
-Blumix es el orquestador del ecosistema BLUM. No reemplaza ni fusiona los proyectos, los conecta mediante variables de entorno y rutas.
+# Arquitectura de BLUMIX
 
-          🌌 BLUM ECOSYSTEM
-                 │
-            ┌────▼────┐
-            │ BLUMIX  │
-            │ORQUESTADOR│
-            └────┬────┘
-                 │
-    ┌────────────┼────────────┐
-    ▼            ▼            ▼
- BLUMCL       BLUMSEC     BLUMELIX
-análisis     seguridad     servicios
-Android      bóveda        web app
-Termux       cifrado       Flask
+## Propósito
 
+BLUMIX es un dispatcher de terminal con módulos Bash. Presenta diagnósticos locales y descubre directorios configurados para herramientas relacionadas. No fusiona los repositorios ni debe ejecutar acciones modificadoras sin una confirmación explícita futura.
 
+## Flujo
+
+~~~text
+Usuario
+  |
+  v
+bin/blumix  -> valida comando / muestra ayuda
+  |
+  +--> lib/core.sh          rutas, utilidades, configuración local
+  +--> lib/ui.sh            presentación y métricas de terminal
+  +--> lib/system.sh        información del sistema
+  +--> lib/network.sh       interfaces y DNS local
+  +--> lib/security.sh      observaciones de firewall y SSH
+  +--> lib/integrations.sh  descubrimiento de directorios
+  +--> lib/development.sh   herramientas disponibles
+~~~
+
+## Estructura
+
+~~~text
 Blumix/
-├── bin/
-│   └── blumix              # Ejecutable principal (dispatcher)
-├── lib/                    # Módulos del sistema
-│   ├── core.sh             # Constantes, utilidades, carga de config
-│   ├── ui.sh               # UI responsiva con cajas ANSI
-│   ├── system.sh           # Diagnóstico: OS, CPU, RAM, disco
-│   ├── network.sh          # Red: interfaces, DNS, IP externa
-│   ├── security.sh         # Firewall, SSH, SELinux
-│   ├── development.sh      # Herramientas: Git, Python, Bash
-│   └── integrations.sh     # Conexión con Blumcl/Blumsec/Blumelix
-├── config/
-│   └── blumix.conf.example # Plantilla de configuración
-├── docs/                   # Documentación completa
-├── tests/
-│   └── test_blumix.sh      # Tests automatizados
-└── tools/
-    └── update_readme.py    # Sincroniza ROADMAP → README
+├── bin/blumix
+├── lib/
+│   ├── core.sh
+│   ├── ui.sh
+│   ├── system.sh
+│   ├── network.sh
+│   ├── security.sh
+│   ├── integrations.sh
+│   └── development.sh
+├── config/blumix.conf.example
+├── docs/
+│   └── visual-atlas/
+├── tests/test_blumix.sh
+├── README.md
+├── SECURITY.md
+├── CONTRIBUTING.md
+├── ROADMAP.md
+└── CHANGELOG.md
+~~~
 
-blumix <comando>
-    ↓
-bin/blumix (dispatcher)
-    ↓
-lib/core.sh (carga constantes)
-    ↓
-lib/ui.sh (inicializa colores)
-    ↓
-lib/<modulo>.sh (ejecuta función específica)
-    ↓
-Salida en terminal con UI responsiva
+## Integraciones
 
-Filosofía de diseño
+Las variables de entorno `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` apuntan a directorios independientes. BLUMIX intenta respetar las variables explícitas; si no existen, busca algunas rutas locales conocidas y conserva la ruta histórica como último recurso.
 
-    Unificado, no fusionado — cada proyecto conserva su identidad, repo y versiones
-    Sin IA por defecto — protege máquinas con pocos recursos (AMD A9, 4GB RAM)
-    Zero-trust — nunca confíes, siempre verifica
-    Responsive — la UI se adapta al ancho real de la terminal (40-76 columnas)
-    Offline-first — todo funciona sin internet
-    Sin secretos en git — .gitignore robusto protege archivos sensibles
+Una ruta encontrada solo demuestra que el directorio existe. No confirma que el proyecto esté instalado correctamente, que sus pruebas pasen, que su servicio esté activo o que exista una API conectada. Las integraciones profundas requieren adaptadores y contratos verificados por separado.
 
-Variables de entorno
-Variable
-	
-Descripción
-	
-Por defecto
-BLUMIX_HOME
-	
-Ruta de Blumix
-	
-$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix
-BLUMCL_HOME
-	
-Ruta de Blumcl
-	
-$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumcl
-BLUMSEC_HOME
-	
-Ruta de Blumsec
-	
-$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumsec
-BLUMELIX_HOME
-	
-Ruta de Blumelix
-	
-$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumelix
-BLUMIX_THEME
-	
-Tema (dark/light)
-	
-dark
-BLUMIX_LANG
-	
-Idioma (es/en)
-	
-es
-BLUMIX_AI_ENABLED
-	
-Activar IA (0/1)
-	
-0
-EOF
-	
-	
+## Configuración
+
+La configuración local opcional está en `config/blumix.conf` o en la ruta indicada por `BLUMIX_CONFIG`. Se carga como Bash y por ello solo deben usarse archivos locales confiables. No se guardan secretos ni tokens en el repositorio.
+
+## Seguridad por diseño
+
+- Diagnósticos en modo lectura.
+- Sin elevación automática a root.
+- Sin llamadas a servicios externos para las métricas locales.
+- IA desactivada por defecto.
+- Las comprobaciones informativas no sustituyen una auditoría completa.
+- Los errores y los comandos desconocidos deben devolver estados de salida útiles.
+
+## Límites actuales
+
+La CLI no es todavía un gestor de servicios, un sistema de plugins, un escáner de puertos ni un panel de salud distribuido. Esos objetivos requieren diseño, pruebas y controles propios antes de anunciarlos como capacidades implementadas.
