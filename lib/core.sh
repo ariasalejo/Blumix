@@ -1,33 +1,46 @@
 #!/usr/bin/env bash
 # BLUMIX core: rutas y utilidades compartidas.
-BLUMIX_VERSION="0.4.0"
+BLUMIX_VERSION="0.4.1"
 export BLUMIX_ROOT="${BLUMIX_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 blumix_command_exists() { command -v "$1" >/dev/null 2>&1; }
 blumix_dir_exists()    { [[ -d "$1" ]]; }
 blumix_file_exists()   { [[ -f "$1" ]]; }
 
-# Respeta primero la variable explícita; luego una ruta existente conocida;
-# por último conserva el destino legado como fallback no destructivo.
+# Resolución segura y portable:
+# 1) Una variable explícita del usuario siempre prevalece.
+# 2) Buscar coincidencia exacta y luego sin distinguir mayúsculas/minúsculas
+#    en el directorio actual de proyectos.
+# 3) Usar la ruta heredada solo si existe; si no, devolverla como pista.
+# No crea, mueve, renombra ni modifica directorios.
 blumix_resolve_home() {
-    local variable="$1" legacy="$2" project="$3" value candidate
+    local variable="$1" legacy="$2" project="$3" value candidate base
     value="${!variable:-}"
     if [[ -n "$value" ]]; then
         printf '%s\n' "$value"
-        return
+        return 0
     fi
-    if [[ -d "$legacy" ]]; then
-        printf '%s\n' "$legacy"
-        return
-    fi
-    for candidate in \
-        "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/$project" \
-        "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/${project,,}"; do
+
+    base="$HOME/04_DEVELOPMENT/08_Proyectos/Blum"
+    if [[ -d "$base" ]]; then
+        candidate="$base/$project"
         if [[ -d "$candidate" ]]; then
             printf '%s\n' "$candidate"
-            return
+            return 0
         fi
-    done
+        # Linux distingue mayúsculas/minúsculas: Blumcl, BlumCL y BLUMCL
+        # pueden ser nombres distintos. Buscamos solo en el primer nivel.
+        candidate="$(find "$base" -mindepth 1 -maxdepth 1 -type d -iname "$project" -print -quit 2>/dev/null)"
+        if [[ -n "$candidate" && -d "$candidate" ]]; then
+            printf '%s\n' "$candidate"
+            return 0
+        fi
+    fi
+
+    if [[ -d "$legacy" ]]; then
+        printf '%s\n' "$legacy"
+        return 0
+    fi
     printf '%s\n' "$legacy"
 }
 
