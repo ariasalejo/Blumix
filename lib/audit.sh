@@ -44,11 +44,12 @@ blumix_audit() {
         config_detail="No existe configuración local; se usan valores predeterminados o variables de entorno."
     fi
 
-    if find "$BLUMIX_ROOT" -path "$BLUMIX_ROOT/.git" -prune -o -type f \\( \
-        -name '.env' -o -name 'id_rsa' -o -name 'id_ed25519' -o \
-        -name '*.pem' -o -name '*.key' -o -name '*.p12' -o \
-        -name '*.pfx' -o -name 'vault.blx' \\) -print -quit 2>/dev/null | grep -q .; then
-        secret_found=1
+    secret_match=""
+    for pattern in '.env' 'id_rsa' 'id_ed25519' '*.pem' '*.key' '*.p12' '*.pfx' 'vault.blx'; do
+        secret_match="$(find "$BLUMIX_ROOT" -path "$BLUMIX_ROOT/.git" -prune -o -type f -name "$pattern" -print -quit 2>/dev/null)"
+        [[ -n "$secret_match" ]] && break
+    done
+    if [[ -n "$secret_match" ]]; then
         secret_status="warn"
         secret_detail="Se encontró un nombre de archivo que suele contener secretos; revisa manualmente sin imprimir su contenido."
     else
