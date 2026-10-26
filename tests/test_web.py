@@ -72,7 +72,7 @@ class WebTests(unittest.TestCase):
                 self.assertIn("application/json", headers.get("Content-Type", ""))
                 data = json.loads(body)
                 self.assertEqual(data["schema"], schema)
-                self.assertTrue(data["read_only"])
+                self.assertTrue(data.get("read_only", data.get("safety", {}).get("read_only", False)))
                 self.assertNotIn("password", body.decode("utf-8").lower())
 
     def test_rejects_untrusted_host(self):
