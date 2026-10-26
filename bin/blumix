@@ -121,6 +121,7 @@ Comandos:
   watch [2-60]           Actualizar el centro de mando cada N segundos (Ctrl+C)
   completion bash        Generar autocompletado para Bash
   paths                  Mostrar rutas configuradas del ecosistema
+  install-user           Instalar enlace en ~/.local/bin (no toca perfiles)
   version, --version     Mostrar versión
   system                 Información básica del sistema
   network, net           Interfaces de red y DNS local
@@ -223,6 +224,27 @@ blumix_paths() {
     printf '\nLas rutas se muestran localmente porque solicitaste este comando; no se exportan por defecto.\n'
 }
 
+blumix_install_user() {
+    local target="$HOME/.local/bin/blumix"
+    mkdir -p "$HOME/.local/bin" || { printf 'No se pudo crear ~/.local/bin.\\n' >&2; return 1; }
+    if [[ -e "$target" || -L "$target" ]]; then
+        if [[ -L "$target" && "$(readlink "$target" 2>/dev/null)" == "$BLUMIX_ROOT/bin/blumix" ]]; then
+            printf 'BLUMIX ya está enlazado: %s\\n' "$target"
+        else
+            printf 'No se modifica nada: ya existe %s y no apunta a esta copia.\\n' "$target" >&2
+            return 1
+        fi
+    else
+        ln -s "$BLUMIX_ROOT/bin/blumix" "$target" || return 1
+        printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
+    fi
+    case ":$PATH:" in
+        *":$HOME/.local/bin:"*) printf 'PATH ya incluye ~/.local/bin; abre una terminal nueva si hace falta.\\n' ;;
+        *) printf 'Para esta sesión ejecuta: export PATH="$HOME/.local/bin:$PATH"\\n'
+           printf 'Para hacerlo permanente, añade esa línea a ~/.bashrc manualmente. No se ha editado ningún perfil.\\n' ;;
+    esac
+}
+
 blumix_completion() {
     [[ "${1:-}" == "bash" && -z "${2:-}" ]] || {
         printf 'Uso: blumix completion bash\n' >&2
@@ -321,6 +343,7 @@ case "${1:-}" in
         blumix_paths
         ;;
     completion) blumix_completion "${2:-}" "${3:-}" ;;
+    install-user) [[ -z "${2:-}" ]] || { printf 'Uso: blumix install-user\\n' >&2; exit 2; }; blumix_install_user ;;
     watch) blumix_watch "$@" ;;
     menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\\n' >&2; exit 2; }; blumix_menu ;;
     intelligence|intel|center)
