@@ -235,36 +235,36 @@ blumix_paths() {
 blumix_install_user() {
     local mode="${1:-}" extra="${2:-}" target="$HOME/.local/bin/blumix" backup
     if [[ -n "$extra" || ( -n "$mode" && "$mode" != "--replace" ) ]]; then
-        printf 'Uso: blumix install-user [--replace]\\n' >&2
+        printf 'Uso: blumix install-user [--replace]\n' >&2
         return 2
     fi
     mkdir -p "$HOME/.local/bin" || return 1
     if [[ -e "$target" || -L "$target" ]]; then
         if [[ -L "$target" && "$(readlink "$target" 2>/dev/null)" == "$BLUMIX_ROOT/bin/blumix" ]]; then
-            printf 'BLUMIX ya está enlazado a esta copia: %s\\n' "$target"
+            printf 'BLUMIX ya está enlazado a esta copia: %s\n' "$target"
         elif [[ "$mode" == "--replace" ]]; then
             backup="${target}.respaldo-$(date +%Y%m%d-%H%M%S)"
-            mv -- "$target" "$backup" || { printf 'No se pudo respaldar el lanzador anterior.\\n' >&2; return 1; }
+            mv -- "$target" "$backup" || { printf 'No se pudo respaldar el lanzador anterior.\n' >&2; return 1; }
             if ! ln -s "$BLUMIX_ROOT/bin/blumix" "$target"; then
                 mv -- "$backup" "$target"
-                printf 'No se pudo crear el enlace; se restauró el lanzador anterior.\\n' >&2
+                printf 'No se pudo crear el enlace; se restauró el lanzador anterior.\n' >&2
                 return 1
             fi
-            printf 'Lanzador anterior respaldado en: %s\\n' "$backup"
-            printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
+            printf 'Lanzador anterior respaldado en: %s\n' "$backup"
+            printf 'Enlace creado: %s -> %s\n' "$target" "$BLUMIX_ROOT/bin/blumix"
         else
-            printf 'Ya existe %s y no apunta a esta copia. No se modificó.\\n' "$target" >&2
-            printf 'Para conservarlo como respaldo y enlazar esta versión, usa: blumix install-user --replace\\n' >&2
+            printf 'Ya existe %s y no apunta a esta copia. No se modificó.\n' "$target" >&2
+            printf 'Para conservarlo como respaldo y enlazar esta versión, usa: blumix install-user --replace\n' >&2
             return 1
         fi
     else
         ln -s "$BLUMIX_ROOT/bin/blumix" "$target" || return 1
-        printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
+        printf 'Enlace creado: %s -> %s\n' "$target" "$BLUMIX_ROOT/bin/blumix"
     fi
     case ":$PATH:" in
-        *":$HOME/.local/bin:"*) printf 'PATH incluye ~/.local/bin.\\n' ;;
-        *) printf 'Para esta sesión: export PATH="$HOME/.local/bin:$PATH"\\n'
-           printf 'No se ha modificado ningún perfil de shell.\\n' ;;
+        *":$HOME/.local/bin:"*) printf 'PATH incluye ~/.local/bin.\n' ;;
+        *) printf 'Para esta sesión: export PATH="$HOME/.local/bin:$PATH"\n'
+           printf 'No se ha modificado ningún perfil de shell.\n' ;;
     esac
 }
 
@@ -362,17 +362,17 @@ case "${1:-}" in
         ;;
     integrations|int) blumix_integrations ;;
     paths)
-        [[ -z "${2:-}" ]] || { printf 'Uso: blumix paths\\n' >&2; exit 2; }
+        [[ -z "${2:-}" ]] || { printf 'Uso: blumix paths\n' >&2; exit 2; }
         blumix_paths
         ;;
     completion) blumix_completion "${2:-}" "${3:-}" ;;
     install-user) blumix_install_user "${2:-}" "${3:-}" ;;
     watch) blumix_watch "$@" ;;
-    menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\\n' >&2; exit 2; }; blumix_tui_menu ;;
+    menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\n' >&2; exit 2; }; blumix_tui_menu ;;
     intelligence|intel|center)
         if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_intelligence_json
         elif [[ -z "${2:-}" ]]; then blumix_intelligence
-        else printf "Uso: blumix intelligence [--json]\\n" >&2; exit 2; fi
+        else printf "Uso: blumix intelligence [--json]\n" >&2; exit 2; fi
         ;;
     projects)
         if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_projects json
