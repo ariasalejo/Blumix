@@ -108,3 +108,51 @@ blumix_services() {
         printf '\n[UNKNOWN] La ausencia de coincidencias no prueba que un servicio esté detenido; no se han supuesto puertos ni endpoints.\n'
     fi
 }
+
+
+blumix_intelligence_json() {
+    local generated cpu mem_total mem_available mem_pct disk_pct load1 cores
+    local cpu_json mem_json disk_json load_json state="OBSERVED"
+    generated="$(date -Is 2>/dev/null || date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    cpu="$(blx_cpu_pct 2>/dev/null || true)"
+    [[ "$cpu" =~ ^[0-9]+$ ]] || cpu=""
+    mem_total="$(awk '/^MemTotal:/ {print $2; exit}' /proc/meminfo 2>/dev/null)"
+    mem_available="$(awk '/^MemAvailable:/ {print $2; exit}' /proc/meminfo 2>/dev/null)"
+    mem_pct=""
+    if [[ "$mem_total" =~ ^[0-9]+$ && "$mem_available" =~ ^[0-9]+$ ]] && (( mem_total > 0 )); then
+        (( mem_available > mem_total )) && mem_available=$mem_total
+        mem_pct=$(((mem_total - mem_available) * 100 / mem_total))
+    fi
+    disk_pct="$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $5}')"
+    [[ "$disk_pct" =~ ^[0-9]+$ ]] || disk_pct=""
+    load1="$(awk '{print $1}' /proc/loadavg 2>/dev/null)"
+    [[ "$load1" =~ ^[0-9]+([.][0-9]+)?$ ]] || load1=""
+    cores="$(getconf _NPROCESSORS_ONLN 2>/dev/null)"
+    [[ "$cores" =~ ^[0-9]+$ && "$cores" -gt 0 ]] || cores=""
+    if { [[ "$cpu" =~ ^[0-9]+$ ]] && (( cpu >= 90 )); } ||
+       { [[ "$mem_pct" =~ ^[0-9]+$ ]] && (( mem_pct >= 92 )); } ||
+       { [[ "$disk_pct" =~ ^[0-9]+$ ]] && (( disk_pct >= 95 )); }; then
+        state="DEGRADED"
+    elif { [[ "$cpu" =~ ^[0-9]+$ ]] && (( cpu >= 75 )); } ||
+         { [[ "$mem_pct" =~ ^[0-9]+$ ]] && (( mem_pct >= 85 )); } ||
+         { [[ "$disk_pct" =~ ^[0-9]+$ ]] && (( disk_pct >= 85 )); }; then
+        state="REVIEW"
+    fi
+    [[ "$cpu" =~ ^[0-9]+$ ]] && cpu_json="$cpu" || cpu_json=null
+    [[ "$mem_pct" =~ ^[0-9]+$ ]] && mem_json="$mem_pct" || mem_json=null
+    [[ "$disk_pct" =~ ^[0-9]+$ ]] && disk_json="$disk_pct" || disk_json=null
+    [[ -n "$load1" ]] && load_json="$(blumix_json_quote "$load1")" || load_json=null
+    printf '{\n  "schema": "blumix.intelligence.v1",\n  "generated_at": '
+    blumix_json_quote "$generated"
+    printf ',\n  "state": '; blumix_json_quote "$state"
+    printf ',\n  "metrics": {"cpu_percent": %s, "memory_used_percent": %s, "root_disk_used_percent": %s, "load_1m": %s, "logical_cores": ' "$cpu_json" "$mem_json" "$disk_json" "$load_json"
+    [[ -n "$cores" ]] && printf '%s' "$cores" || printf 'null'
+    printf '},\n  "checks": ['
+    printf '\n    {"id": "cpu", "status": '; if [[ "$cpu" =~ ^[0-9]+$ ]]; then if (( cpu >= 90 )); then printf '"DEGRADED"'; elif (( cpu >= 75 )); then printf '"REVIEW"'; else printf '"OBSERVED"'; fi; else printf '"UNKNOWN"'; fi
+    printf ', "source": "CPU sample", "checked_at": '; blumix_json_quote "$generated"; printf ', "limitations": "Muestra breve; no identifica causa raíz."},'
+    printf '\n    {"id": "memory", "status": '; if [[ "$mem_pct" =~ ^[0-9]+$ ]]; then if (( mem_pct >= 92 )); then printf '"DEGRADED"'; elif (( mem_pct >= 85 )); then printf '"REVIEW"'; else printf '"OBSERVED"'; fi; else printf '"UNKNOWN"'; fi
+    printf ', "source": "/proc/meminfo MemAvailable", "checked_at": '; blumix_json_quote "$generated"; printf '},'
+    printf '\n    {"id": "root_disk", "status": '; if [[ "$disk_pct" =~ ^[0-9]+$ ]]; then if (( disk_pct >= 95 )); then printf '"DEGRADED"'; elif (( disk_pct >= 85 )); then printf '"REVIEW"'; else printf '"OBSERVED"'; fi; else printf '"UNKNOWN"'; fi
+    printf ', "source": "df -P /", "checked_at": '; blumix_json_quote "$generated"; printf '}'
+    printf '\n  ],\n  "safety": {"read_only": true, "network_access": false, "secrets_included": false, "service_health_checked": false}\n}\n'
+}
