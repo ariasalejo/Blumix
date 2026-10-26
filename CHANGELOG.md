@@ -6,6 +6,17 @@ Cambios notables por versión.
 
 - Próximas mejoras sujetas a implementación y pruebas.
 
+## [0.5.0] - En desarrollo
+
+### Añadido
+- Dashboard de terminal con identidad visual, mapa de estaciones, HUD de recursos, información del sistema e integraciones en una sola vista.
+- Acceso rápido a comandos de diagnóstico desde el centro de mando.
+- Modo sin animaciones cuando la salida no es una terminal interactiva, para facilitar logs, pruebas y automatización.
+
+### Seguridad
+- El panel reitera que detectar una carpeta no demuestra que un servicio esté saludable.
+- No se ejecutan cambios de configuración ni acciones privilegiadas desde el dashboard.
+
 ## [0.4.1] - En desarrollo
 
 ### Corregido
