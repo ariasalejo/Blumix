@@ -34,6 +34,32 @@ assert all(x["status"] in {"pass", "warn", "info"} for x in d["checks"])
 fi
 pass "auditoría local JSON: esquema, alcance y controles presentes"
 
+# La configuración se interpreta como datos: nunca se ejecuta como Bash.
+config_tmp="$(mktemp -d)"
+trap 'rm -rf "$config_tmp"' EXIT
+mkdir -p "$config_tmp/home"
+marker="$config_tmp/SHOULD_NOT_EXIST"
+printf 'BLUMCL_HOME="%s/from-config"\nBLUMIX_THEME="$(touch %s)"\n' "$config_tmp" "$marker" > "$config_tmp/config"
+if env -u BLUMCL_HOME BLUMIX_CONFIG="$config_tmp/config" HOME="$config_tmp/home" bash -c '
+    source "$1/lib/core.sh"
+    blumix_load_config
+    [[ "$BLUMCL_HOME" == "$2/from-config" ]]
+' _ "$R" "$config_tmp"; then
+    [[ ! -e "$marker" ]] || fail "la configuración ejecutó una sustitución de comandos"
+    pass "configuración restringida: sin ejecución de código"
+else
+    fail "no se pudo leer configuración segura"
+fi
+if BLUMCL_HOME="$config_tmp/from-env" BLUMIX_CONFIG="$config_tmp/config" HOME="$config_tmp/home" bash -c '
+    source "$1/lib/core.sh"
+    blumix_load_config
+    [[ "$BLUMCL_HOME" == "$2/from-env" ]]
+' _ "$R" "$config_tmp"; then
+    pass "variable de entorno explícita prevalece sobre configuración"
+else
+    fail "la configuración sobrescribió una ruta explícita del entorno"
+fi
+
 report="$(bash "$R/bin/blumix" report --json)" || fail "report --json devolvió error"
 grep -q '"schema": "blumix.snapshot.v1"' <<<"$report" || fail "report no incluye el esquema esperado"
 grep -q '"absolute_paths_included": false' <<<"$report" || fail "report no declara el control de privacidad"
@@ -57,10 +83,16 @@ atlas="$R/docs/visual-atlas/index.html"
 [[ -s "$atlas" ]] || fail "falta el Atlas HTML"
 grep -q 'id="snapshot-file"' "$atlas" || fail "Atlas no permite importar instantáneas"
 grep -q 'blumix.snapshot.v1' "$atlas" || fail "Atlas no valida el esquema de informe"
+grep -q 'function validateSnapshot' "$atlas" || fail "Atlas no valida tipos y rangos del informe"
+grep -q 'NO FIRMADO' "$atlas" || fail "Atlas no advierte que el informe no está firmado"
+[[ -s "$R/docs/visual-atlas/manifest.webmanifest" ]] || fail "falta manifiesto PWA"
+[[ -s "$R/docs/visual-atlas/sw.js" ]] || fail "falta service worker PWA"
 grep -q 'No se envía' "$atlas" || grep -q 'no se envía' "$atlas" || fail "Atlas no explica el procesamiento local"
 if command -v node >/dev/null 2>&1; then
     node -e 'const fs=require("fs");const html=fs.readFileSync(process.argv[1],"utf8");const match=html.match(/<script>([\s\S]*?)<\/script>/);if(!match)process.exit(2);new Function(match[1]);' "$atlas" || fail "sintaxis JavaScript del Atlas"
     pass "sintaxis JavaScript del Atlas"
+    node --check "$R/docs/visual-atlas/sw.js" || fail "sintaxis del service worker"
+    pass "sintaxis del service worker PWA"
 fi
 if command -v python3 >/dev/null 2>&1; then
     python3 - "$atlas" <<'PY'
@@ -87,7 +119,15 @@ if parser.duplicates:
 if missing:
     raise SystemExit("Faltan IDs del Atlas: " + ", ".join(sorted(missing)))
 PY
-    pass "estructura HTML e identificadores únicos del Atlas"
+    python3 - "$R/docs/visual-atlas/manifest.webmanifest" <<'PYMANIFEST'
+import json, sys
+with open(sys.argv[1], encoding="utf-8") as source:
+    manifest = json.load(source)
+assert manifest["name"].startswith("BLUMIX")
+assert manifest["display"] == "standalone"
+assert manifest["start_url"] == "./index.html"
+PYMANIFEST
+    pass "estructura HTML, manifiesto PWA e identificadores únicos del Atlas"
 fi
 
 
