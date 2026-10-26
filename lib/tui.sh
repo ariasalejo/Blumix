@@ -51,13 +51,14 @@ blumix_tui_children_count() {
 
 blumix_tui_render_node() {
     local node="$1" prefix="$2" last="$3" selected="$4"
-    local marker="├──" branch="·" color="$BLX_CYAN" i child_prefix="$prefix"
+    local marker="├──" branch="·" color="$BLX_CYAN" i child_prefix="$prefix" glyph
     [[ "$last" == 1 ]] && marker="└──"
     if [[ "$(blumix_tui_children_count "$node")" -gt 0 ]]; then
         if [[ "${BLX_NODE_EXPANDED[$node]:-0}" == 1 ]]; then branch="▼"; else branch="▶"; fi
     fi
     [[ "$node" == "$selected" ]] && color="$BLX_GREEN"
-    printf '%b%s%b %b%s%b %b%-25s%b' "$BLX_DIM" "$prefix$marker" "$BLX_RESET" "$color" "$branch" "$BLX_RESET" "$([[ "$node" == "$selected" ]] && printf '%s' "$BLX_BOLD")" "${BLX_NODE_LABELS[$node]}" "$BLX_RESET"
+    glyph="${BLX_NODE_ICONS[$node]:-·}"
+    printf '%b%s%b %b%s%b %b%s %-32s%b' "$BLX_DIM" "$prefix$marker" "$BLX_RESET" "$color" "$branch" "$BLX_RESET" "$glyph" "$([[ "$node" == "$selected" ]] && printf '%s' "$BLX_BOLD")" "${BLX_NODE_LABELS[$node]}" "$BLX_RESET"
     if [[ "$node" == "$selected" ]]; then printf '%b  ◀ ACTIVE%b' "$BLX_GREEN" "$BLX_RESET"; fi
     printf '\n'
     if [[ "${BLX_NODE_EXPANDED[$node]:-0}" != 1 ]]; then return; fi
