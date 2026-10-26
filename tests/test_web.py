@@ -47,7 +47,7 @@ class WebTests(unittest.TestCase):
         self.assertIn(b"Centro de", body)
         self.assertEqual(headers.get("X-Content-Type-Options"), "nosniff")
         self.assertEqual(headers.get("X-Frame-Options"), "DENY")
-        self.assertIn("127.0.0.1", str(WEB.ROOT))
+        self.assertEqual(self.server.server_address[0], "127.0.0.1")
 
     def test_manifest_and_service_worker(self):
         status, _, body = self.request("/manifest.webmanifest")
