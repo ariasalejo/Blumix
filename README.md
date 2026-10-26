@@ -4,7 +4,7 @@
 
 BLUMIX es una herramienta modular de terminal para consultar el estado de un equipo Linux y localizar herramientas del ecosistema BLUM sin fusionar sus repositorios. Su interfaz visual es una capa de operación; los proyectos integrados conservan sus propios ciclos de vida, permisos, datos y versiones.
 
-> Estado del proyecto: versión de desarrollo 0.6.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
+> Estado del proyecto: versión de desarrollo 0.7.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
 
 ## Atlas visual
 
@@ -19,6 +19,7 @@ Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas
 | `blumix system` | SO, kernel, tiempo activo, RAM y CPU |
 | `blumix network` | Interfaces y DNS local |
 | `blumix security` | Estado detectable de firewall y SSH |
+| `blumix audit` / `blumix audit --json` | Revisiones locales de permisos, nombres de archivos de riesgo y estado Git; solo lectura |
 | `blumix integrations` | Descubrimiento de rutas configuradas y tolerante a mayúsculas/minúsculas para BLUMCL, BLUMSEC y BLUMELIX |
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
@@ -40,6 +41,8 @@ git clone https://github.com/ariasalejo/Blumix.git
 cd Blumix
 bash tests/test_blumix.sh
 ./bin/blumix help
+./bin/blumix audit
+./bin/blumix audit --json
 ./bin/blumix system
 ./bin/blumix report --json > "$HOME/blumix-report.json"
 ~~~
@@ -69,6 +72,10 @@ Puedes definir `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` como rutas absolu
 - **Offline-first:** las funciones de diagnóstico local no necesitan IA ni servicios externos.
 - **IA opcional:** no es requisito de instalación ni se activa por defecto.
 - **Honestidad de estado:** “directorio encontrado” no significa que una integración esté conectada ni que el servicio esté saludable.
+
+## Auditoría local
+
+`blumix audit` revisa señales limitadas: permisos del archivo de configuración, nombres de archivos que suelen contener secretos y si existe metadato Git local. `blumix audit --json` genera el esquema `blumix.audit.v1` sin imprimir rutas ni contenidos de archivos. No usa red, no eleva privilegios y no cambia el sistema. Es una heurística: no sustituye un escáner de secretos, una revisión de dependencias ni una auditoría profesional.
 
 ## Calidad y seguridad
 
