@@ -4,7 +4,16 @@ Cambios notables por versión.
 
 ## [Unreleased]
 
-- Próximas mejoras sujetas a implementación y pruebas.
+- Agente local autenticado, comprobaciones reales de salud por integración y aplicación Android nativa; aún no implementados.
+
+## [0.7.0-atlas-redesign] - En desarrollo
+
+### Atlas / control del ecosistema
+- Rediseño completo del Atlas: topología SVG interactiva, navegación por vistas, registro de eventos, integraciones, métricas importadas y consola de comandos manuales.
+- Nuevo `blumix policy` / `blumix policy --json` con catálogo de capacidades y política de denegación por defecto.
+- Operaciones privilegiadas explícitamente bloqueadas; `run_shell` denegada. Ninguna operación se ejecuta desde la web.
+- Documento de arquitectura para agente local, autorización por capacidad, aprobación por operación, privilegio mínimo y auditoría.
+- Pruebas para el esquema de política, capacidades bloqueadas y nuevo diseño del Atlas.
 
 ## [0.7.0] - En desarrollo
 
