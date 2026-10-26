@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 🌌 BLUMIX ULTRA · Nave + Estaciones
+# BLUMIX · Centro de Mando modular.
 set -o pipefail
 BLUMIX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$BLUMIX_ROOT/lib/core.sh"
@@ -7,56 +7,237 @@ source "$BLUMIX_ROOT/lib/ui.sh"
 source "$BLUMIX_ROOT/lib/system.sh"
 source "$BLUMIX_ROOT/lib/network.sh"
 source "$BLUMIX_ROOT/lib/security.sh"
+source "$BLUMIX_ROOT/lib/audit.sh"
 source "$BLUMIX_ROOT/lib/development.sh"
 source "$BLUMIX_ROOT/lib/integrations.sh"
 blumix_load_config
 
 blumix_status() {
-    local cpu=$(blx_cpu_pct)
-    local ram=$(free 2>/dev/null | awk '/^Mem:/ {printf "%.0f", ($3/$2)*100}')
-    local disk=$(df -h / 2>/dev/null | awk 'NR==2 {gsub("%","",$5); print $5}')
-    local cl="🔴" sec="🔴" elx="🔴"
-    blumix_dir_exists "$BLUMCL_HOME" && cl="🟢"
-    blumix_dir_exists "$BLUMSEC_HOME" && sec="🟢"
-    blumix_dir_exists "$BLUMELIX_HOME" && elx="🟢"
-    printf 'BLUMIX v%s | CPU %s%% | RAM %s%% | DISK %s%% | CL %s SEC %s ELX %s\n' \
-        "$BLUMIX_VERSION" "$cpu" "${ram:-?}" "${disk:-?}" "$cl" "$sec" "$elx"
+    local cpu ram disk cl="NO" sec="NO" elx="NO"
+    cpu="$(blx_cpu_pct)"
+    ram="$(free 2>/dev/null | awk '/^Mem:/ {if ($2>0) printf "%.0f", ($3/$2)*100}')"
+    disk="$(df -P / 2>/dev/null | awk 'NR==2 {gsub("%","",$5); print $5}')"
+    blumix_dir_exists "$BLUMCL_HOME" && cl="SÍ"
+    blumix_dir_exists "$BLUMSEC_HOME" && sec="SÍ"
+    blumix_dir_exists "$BLUMELIX_HOME" && elx="SÍ"
+    printf 'BLUMIX %s | CPU %s%% | RAM %s%% | DISCO %s%% | BLUMCL %s | BLUMSEC %s | BLUMELIX %s\n' \
+        "$BLUMIX_VERSION" "${cpu:-?}" "${ram:-?}" "${disk:-?}" "$cl" "$sec" "$elx"
+}
+
+blumix_report_json() {
+    # Snapshot reducido: sin usuario, hostname, rutas absolutas, variables
+    # de entorno, secretos ni contenido de archivos.
+    local os kernel cpu_model generated uptime_seconds cpu_pct
+    local mem_total_kb mem_available_kb mem_used_kb mem_total_bytes mem_used_bytes mem_pct
+    local disk_pct cl=false sec=false elx=false
+    local os_json kernel_json cpu_model_json generated_json
+
+    os="$(. /etc/os-release 2>/dev/null; printf '%s' "${PRETTY_NAME:-Linux no identificado}")"
+    kernel="$(uname -r 2>/dev/null || printf 'no-disponible')"
+    generated="$(date -Is 2>/dev/null || date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    uptime_seconds="$(awk '{printf "%.0f", $1}' /proc/uptime 2>/dev/null)"
+    cpu_pct="$(blx_cpu_pct 2>/dev/null || true)"
+    cpu_model="$(lscpu 2>/dev/null | awk -F: '/Model name|Nombre del modelo/ {gsub(/^[[:space:]]+/, "", $2); if ($2 != "") {print $2; exit}}')"
+    if [[ -z "$cpu_model" ]]; then
+        cpu_model="$(awk -F: '/model name/ {gsub(/^[[:space:]]+/, "", $2); if ($2 != "") {print $2; exit}}' /proc/cpuinfo 2>/dev/null)"
+    fi
+    [[ -n "$cpu_model" ]] || cpu_model="no-disponible"
+
+    mem_total_kb="$(awk '/^MemTotal:/ {print $2; exit}' /proc/meminfo 2>/dev/null)"
+    mem_available_kb="$(awk '/^MemAvailable:/ {print $2; exit}' /proc/meminfo 2>/dev/null)"
+    mem_total_bytes=null
+    mem_used_bytes=null
+    mem_pct=null
+    if [[ "$mem_total_kb" =~ ^[0-9]+$ && "$mem_available_kb" =~ ^[0-9]+$ ]] && (( mem_total_kb > 0 )); then
+        (( mem_available_kb > mem_total_kb )) && mem_available_kb=$mem_total_kb
+        mem_used_kb=$((mem_total_kb - mem_available_kb))
+        mem_total_bytes=$((mem_total_kb * 1024))
+        mem_used_bytes=$((mem_used_kb * 1024))
+        mem_pct=$((mem_used_kb * 100 / mem_total_kb))
+    fi
+
+    disk_pct="$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $5}')"
+    [[ "$cpu_pct" =~ ^[0-9]+$ ]] || cpu_pct=null
+    [[ "$uptime_seconds" =~ ^[0-9]+$ ]] || uptime_seconds=null
+    [[ "$disk_pct" =~ ^[0-9]+$ ]] || disk_pct=null
+    [[ -d "$BLUMCL_HOME" ]] && cl=true
+    [[ -d "$BLUMSEC_HOME" ]] && sec=true
+    [[ -d "$BLUMELIX_HOME" ]] && elx=true
+
+    os_json="$(blumix_json_quote "$os")"
+    kernel_json="$(blumix_json_quote "$kernel")"
+    cpu_model_json="$(blumix_json_quote "$cpu_model")"
+    generated_json="$(blumix_json_quote "$generated")"
+
+    cat <<JSON
+{
+  "schema": "blumix.snapshot.v1",
+  "generated_at": $generated_json,
+  "blumix_version": "$(printf '%s' "$BLUMIX_VERSION")",
+  "system": {
+    "os": $os_json,
+    "kernel": $kernel_json,
+    "cpu_model": $cpu_model_json,
+    "cpu_percent": $cpu_pct,
+    "uptime_seconds": $uptime_seconds,
+    "memory_total_bytes": $mem_total_bytes,
+    "memory_used_bytes": $mem_used_bytes,
+    "memory_percent": $mem_pct,
+    "root_disk_percent": $disk_pct
+  },
+  "integrations": {
+    "BLUMCL": {"directory_found": $cl},
+    "BLUMSEC": {"directory_found": $sec},
+    "BLUMELIX": {"directory_found": $elx}
+  },
+  "safety": {
+    "absolute_paths_included": false,
+    "secrets_included": false,
+    "live_service_health_checked": false
+  }
+}
+JSON
 }
 
 blumix_about() {
-    printf '\n%b💎 BLUMIX%b — Centro de Mando\n\n' "$BLX_BOLD" "$BLX_RESET"
-    cat <<'TXT'
-Este proyecto es para mí, Eduar.
-Para recordarme cada día que todo es posible si no me rindo.
-Porque cada línea de código es una prueba de que puedo.
+    printf '\n%bBLUMIX — Centro de Mando%b\n' "$BLX_BOLD" "$BLX_RESET"
+    printf '%s\n\n' 'Entender → detectar → verificar → decidir.'
+    printf '%s\n' 'Unificar el acceso sin fusionar los proyectos.'
+    printf '%s\n\n' 'Diagnósticos locales de solo lectura; IA opcional.'
+}
 
-— Eduar Arias · 14 de agosto de 2026
-TXT
-    printf '\n'
+blumix_help() {
+    cat <<'HELP'
+BLUMIX — Centro de Mando
+
+Uso: blumix <comando>
+
+Comandos:
+  help, --help, -h       Mostrar esta ayuda
+  version, --version     Mostrar versión
+  system                 Información básica del sistema
+  network, net           Interfaces de red y DNS local
+  security, sec           Estado detectable de firewall y SSH
+  audit [--json]          Revisiones locales de permisos y archivos de riesgo
+  integrations, int      Rutas de proyectos conectados
+  development, dev        Herramientas de desarrollo
+  status                 Resumen breve del equipo e integraciones
+  doctor                 Comprobaciones básicas de instalación
+  report --json          Exportar instantánea local sin rutas ni secretos
+  blumcl, cl              Abrir directorio BLUMCL
+  blumsec                 Abrir directorio BLUMSEC
+  blumelix, elx            Abrir directorio BLUMELIX
+  about                  Filosofía del proyecto
+
+Variables:
+  BLUMCL_HOME, BLUMSEC_HOME, BLUMELIX_HOME
+  BLUMIX_CONFIG          Ruta alternativa a la configuración local
+
+Seguridad: los comandos de diagnóstico no modifican la configuración del sistema.
+HELP
 }
 
 blumix_dashboard() {
-    clear 2>/dev/null
-    blx_matrix
-    blx_stars
+    # Mantener la salida rápida y legible en pipes, logs y terminales pequeñas.
+    if [[ ! -t 1 || "${BLUMIX_ANIM:-auto}" == "0" ]]; then
+        export BLUMIX_ANIM=0
+    fi
+    if [[ -t 1 && "${BLUMIX_ANIM:-auto}" != "0" ]]; then
+        blx_stars
+        blx_matrix
+    fi
     blx_ascii_art
-    blx_glitch "  >> NAVE ESPACIAL EN LÍNEA <<"
+    blx_title "BLUMIX // CENTRO DE MANDO"
+    printf '  %bENTENDER%b → %bDETECTAR%b → %bVERIFICAR%b → %bDECIDIR%b\n' "$BLX_CYAN" "$BLX_RESET" "$BLX_BLUE" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_MAGENTA" "$BLX_RESET"
+    printf '  Modo: diagnóstico local · sin cambios automáticos\n\n'
     blx_stations
     blx_hud
-    blx_spin "Escaneando integraciones BLUM..."
-    local user="${USER:-$(whoami)}"
-    local st="🔴 offline"
-    curl -s -m 1 http://127.0.0.1:5000 2>/dev/null | grep -q "BLUMELIX" && st="🟢 en línea"
+    blumix_system
+    blumix_integrations
     printf '\n'
-    blx_typing "  👤 ${user} · 💎 Blumelix ${st} · $(date +%d/%m/%Y' '%H:%M)"
-    printf '\n  %bsystem%b·%bnetwork%b·%bsecurity%b·%bintegrations%b·%bdevelopment%b·%bstatus%b·%babout%b\n\n' \
-      "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET"
+    printf '  %bACCESO RÁPIDO%b\n' "$BLX_BOLD"
+    printf '  blumix doctor        Verificar instalación y rutas\n'
+    printf '  blumix integrations  Inspeccionar proyectos\n'
+    printf '  blumix security      Revisar señales de seguridad\n'
+    printf '  blumix network       Consultar red y DNS\n'
+    printf '  blumix report --json Exportar instantánea para el Atlas\n'
+    printf '  blumix nave          Volver a mostrar este centro de mando\n'
+    printf '\n  Atlas visual: docs/visual-atlas/index.html\n'
+    printf '  La presencia de un directorio no confirma que un servicio esté activo.\n'
+}
+
+blumix_doctor() {
+    local failures=0
+    printf 'BLUMIX doctor — comprobaciones locales\n\n'
+    for cmd in bash git awk sed; do
+        if blumix_command_exists "$cmd"; then
+            printf '[OK]      %s disponible\n' "$cmd"
+        else
+            printf '[FALTA]   %s no encontrado\n' "$cmd"
+            failures=$((failures + 1))
+        fi
+    done
+    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh"; do
+        if [[ -r "$file" ]]; then
+            printf '[OK]      %s\n' "${file#"$BLUMIX_ROOT/"}"
+        else
+            printf '[FALTA]   %s\n' "${file#"$BLUMIX_ROOT/"}"
+            failures=$((failures + 1))
+        fi
+    done
+    printf '\nRutas detectadas:\n'
+    for pair in "BLUMCL:$BLUMCL_HOME" "BLUMSEC:$BLUMSEC_HOME" "BLUMELIX:$BLUMELIX_HOME"; do
+        if [[ -d "${pair#*:}" ]]; then
+            printf '[ENCONTRADO] %s\n' "$pair"
+        else
+            printf '[NO ENCONTRADO] %s (opcional; configura su ruta si corresponde)\n' "$pair"
+        fi
+    done
+    if (( failures > 0 )); then
+        printf '\nDoctor: %s comprobación(es) obligatoria(s) fallaron.\n' "$failures"
+        return 1
+    fi
+    printf '\nDoctor: comprobaciones básicas superadas. No es una auditoría de seguridad completa.\n'
 }
 
 case "${1:-}" in
-    system) blumix_system ;; network) blumix_network ;; security) blumix_security ;;
-    integrations) blumix_integrations ;; development) blumix_development ;;
-    blumcl) blumix_go_blumcl ;; blumsec) blumix_go_blumsec ;; blumelix) blumix_go_blumelix ;;
-    status) blumix_status ;; about) blumix_about ;; nave|"") blumix_dashboard ;;
-    version) echo "Blumix $BLUMIX_VERSION" ;; help) blumix_dashboard ;;
+    system) blumix_system ;;
+    network|net) blumix_network ;;
+    security|sec) blumix_security ;;
+    audit)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then
+            blumix_audit json
+        elif [[ -z "${2:-}" ]]; then
+            blumix_audit text
+        else
+            printf 'Uso: blumix audit [--json]\n' >&2
+            exit 2
+        fi
+        ;;
+    integrations|int) blumix_integrations ;;
+    development|dev) blumix_development ;;
+    blumcl|cl) blumix_go_blumcl ;;
+    blumsec) blumix_go_blumsec ;;
+    blumelix|elx) blumix_go_blumelix ;;
+    status) blumix_status ;;
+    doctor) blumix_doctor ;;
+    report|snapshot)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then
+            blumix_report_json
+        else
+            printf 'Uso: blumix report --json\n' >&2
+            printf 'El informe no incluye rutas absolutas ni secretos.\n' >&2
+            exit 2
+        fi
+        ;;
+    about) blumix_about ;;
+    nave) blumix_dashboard ;;
+    version|--version|-V) printf 'BLUMIX %s\n' "$BLUMIX_VERSION" ;;
+    help|--help|-h) blumix_help ;;
+    "") blumix_dashboard ;;
+    *)
+        printf 'BLUMIX: comando desconocido: %s\n' "$1" >&2
+        printf 'Ejecuta «blumix help» para ver los comandos.\n' >&2
+        exit 2
+        ;;
 esac

@@ -1,96 +1,92 @@
-cd ~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix # ═══════════════════════════════════════════════════════════ # README.md PROFESIONAL + DEDICATORIA # ═══════════════════════════════════════════════════════════ cat > README.md <<'EOF' # 🚀 BLUMIX · Centro de Mando > Tu hub unificado para Blumcl, Blumsec y Blumelix > **Filosofía:** *entender → diseñar → verificar → decidir* --- ## 💝 Dedicatoria > Este proyecto es para mí, Eduar. > Para recordarme cada día que **todo es posible** si no me rindo. > Porque cada línea de código es una prueba de que puedo. > Porque aprender ciberseguridad no es un sueño, es un camino. > > — *Eduar Arias, 14 de agosto de 2026* --- ## 🎯 ¿Qué es Blumix? Blumix es un **Centro de Mando en terminal** que unifica el acceso a tus proyectos de ciberseguridad **sin fusionarlos**. Cada herramienta conserva su identidad, su repo y su independencia. 
- 🌌 BLUM ECOSYSTEM │ ┌────▼────┐ │ BLUMIX │ │ORQUESTADOR│ └────┬────┘ │ ┌────────────┼────────────┐ ▼ ▼ ▼
-BLUMCL       BLUMSEC     BLUMELIX
-análisis     seguridad     servicios
-Android      bóveda        web app
+# BLUMIX · Centro de Mando
 
-## ✨ Comandos disponibles
+**Entender → detectar → verificar → decidir.**
 
-| Comando | Descripción |
-|---------|-------------|
-| `blumix system` | Diagnóstico del sistema (OS, CPU, RAM, disco) |
-| `blumix network` | Estado de red, interfaces, DNS, IP externa |
-| `blumix security` | Firewall, SSH, SELinux, auditoría |
-| `blumix integrations` | Estado de Blumcl, Blumsec, Blumelix |
-| `blumix development` | Herramientas de desarrollo disponibles |
-| `blumix blumcl` | Ir al proyecto Blumcl |
-| `blumix blumsec` | Ir al proyecto Blumsec |
-| `blumix blumelix` | Ir al proyecto Blumelix |
-| `blumix version` | Mostrar versión instalada |
-| `blumix help` | Ayuda completa |
+BLUMIX es una herramienta modular de terminal para consultar el estado de un equipo Linux y localizar herramientas del ecosistema BLUM sin fusionar sus repositorios. Su interfaz visual es una capa de operación; los proyectos integrados conservan sus propios ciclos de vida, permisos, datos y versiones.
 
-**Alias rápido:** `blx` (ej: `bm system`, `blx net`)
+> Estado del proyecto: versión de desarrollo 0.7.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
 
-## 📦 Instalación
+## Atlas visual
 
-### Requisitos
-- Bash 4+
-- Fedora/Debian/Ubuntu/Termux
-- Git
+Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas/index.html). El Atlas puede importar una instantánea JSON creada por la CLI: no necesita servidor, API ni conexión continua, y nunca se presenta como telemetría en vivo.
 
-### Pasos
+## Capacidades de la CLI
 
-```bash
-# Clonar
+| Comando | Función |
+|---|---|
+| `blumix help` | Ayuda y comandos disponibles |
+| `blumix version` | Versión |
+| `blumix system` | SO, kernel, tiempo activo, RAM y CPU |
+| `blumix network` | Interfaces y DNS local |
+| `blumix security` | Estado detectable de firewall y SSH |
+| `blumix audit` / `blumix audit --json` | Revisiones locales de permisos, nombres de archivos de riesgo y estado Git; solo lectura |
+| `blumix integrations` | Descubrimiento de rutas configuradas y tolerante a mayúsculas/minúsculas para BLUMCL, BLUMSEC y BLUMELIX |
+| `blumix development` | Disponibilidad de herramientas de desarrollo |
+| `blumix status` | Resumen breve del equipo y las rutas |
+| `blumix doctor` | Comprobaciones básicas de instalación |
+| `blumix report --json` | Crear una instantánea JSON sin rutas absolutas ni secretos para importar en el Atlas |
+| `blumix blumcl` | Abrir el directorio de BLUMCL si existe |
+| `blumix blumsec` | Abrir el directorio de BLUMSEC si existe |
+| `blumix blumelix` | Abrir el directorio de BLUMELIX si existe |
+| `blumix about` | Filosofía del proyecto |
+
+Alias breves: `net`, `sec`, `int`, `dev`, `cl`, `elx`. Usa `blumix --help` para consultar la ayuda.
+
+## Instalación en Ubuntu / Lubuntu / Debian
+
+Requisitos básicos: Bash 4+, Git y utilidades estándar de Linux. Algunas métricas opcionales dependen de herramientas instaladas en el sistema.
+
+~~~bash
 git clone https://github.com/ariasalejo/Blumix.git
 cd Blumix
+bash tests/test_blumix.sh
+./bin/blumix help
+./bin/blumix audit
+./bin/blumix audit --json
+./bin/blumix system
+./bin/blumix report --json > "$HOME/blumix-report.json"
+~~~
 
-# Permisos
-chmod +x bin/blumix lib/*.sh
+Para ejecutar sin instalar nada en el sistema, utiliza `./bin/blumix` desde el repositorio. Si deseas el comando global, añade el directorio `bin` de tu copia local al PATH; no pegues una ruta de otra máquina sin revisarla.
 
-# Añadir al PATH
-echo 'export PATH="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin:$PATH"' >> ~/.bashrc
-echo 'alias blx="blumix"' >> ~/.bashrc
-source ~/.bashrc
+Para llevar el diagnóstico a la vista visual, abre `docs/visual-atlas/index.html`, pulsa **Seleccionar informe JSON** e importa `~/blumix-report.json`. La página valida tipos y rangos antes de mostrarlo y avisa que el JSON no está firmado. El Atlas también puede instalarse como PWA desde un origen HTTPS; abrirlo como archivo local permite previsualizarlo, pero no registra el service worker. El informe incluye sistema operativo, kernel, métricas básicas y existencia de carpetas; no contiene rutas absolutas, nombre de usuario ni secretos. Revísalo antes de compartirlo: incluso la información técnica general puede revelar características de tu equipo.
 
-# Verificar
-blumix version
+## Configuración
 
-🧩 Integraciones
-Blumix no fusiona proyectos, los conecta:
+Copia la plantilla y edita las rutas de acuerdo con tu equipo:
 
-    Blumcl
-     → Auditoría de almacenamiento Termux/Android
-    Blumsec
-     → Notario digital personal (bóveda cifrada, sellado, evidencias)
-    Blumelix
-     → App web Flask con 44 funciones premium
+~~~bash
+cp config/blumix.conf.example config/blumix.conf
+nano config/blumix.conf
+~~~
 
-Cada uno conserva su propio git, tests, roadmap y versiones independientes.
-🛡️ Principios de diseño
+Puedes definir `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` como rutas absolutas. También se pueden pasar como variables de entorno para una ejecución. El archivo local `config/blumix.conf` está excluido de Git.
 
-    Unificado, no fusionado — cada proyecto conserva su identidad
-    Responsive — la UI se adapta al ancho real de la terminal
-    Offline-first — todo funciona sin internet
-    Zero-trust — nunca confíes, siempre verifica
-    Sin secretos en git — archivos sensibles fuera del repo (.gitignore robusto)
-    Sin IA por defecto — protege máquinas con pocos recursos (tu AMD A9 con 4GB RAM)
+**Seguridad de configuración:** BLUMIX lee el archivo como datos mediante una lista cerrada de claves; no lo ejecuta como Bash. Solo expande el prefijo literal `$HOME` al inicio de rutas. Las variables de entorno explícitas prevalecen sobre las rutas configuradas.
 
-📚 Documentación
+## Principios de diseño
 
-    Arquitectura
-    Guía de instalación
-    Configuración SSH
-    Módulos
-    Roadmap
-    Changelog
+- **Unificado, no fusionado:** cada herramienta conserva su repositorio e identidad.
+- **Lectura primero:** las comprobaciones no cambian firewall, servicios ni archivos.
+- **Sin secretos en Git:** credenciales, claves y configuración local no deben versionarse.
+- **Offline-first:** las funciones de diagnóstico local no necesitan IA ni servicios externos.
+- **IA opcional:** no es requisito de instalación ni se activa por defecto.
+- **Honestidad de estado:** “directorio encontrado” no significa que una integración esté conectada ni que el servicio esté saludable.
 
-🧪 Tests
-     ./tests/test_blumix.sh
+## Auditoría local
 
+`blumix audit` revisa señales limitadas: permisos del archivo de configuración, nombres de archivos que suelen contener secretos y si existe metadato Git local. `blumix audit --json` genera el esquema `blumix.audit.v1` sin imprimir rutas ni contenidos de archivos. No usa red, no eleva privilegios y no cambia el sistema. Es una heurística: no sustituye un escáner de secretos, una revisión de dependencias ni una auditoría profesional.
 
-Verifica:
+## Calidad y seguridad
 
-    ✅ bin/blumix es ejecutable
-    ✅ Todos los módulos existen
-    ✅ Sintaxis bash correcta
-    ✅ Comandos responden
+~~~bash
+bash tests/test_blumix.sh
+bash -n bin/blumix
+for file in lib/*.sh; do bash -n "$file" || exit 1; done
+~~~
 
-📜 Licencia
-MIT — Úsalo, modifícalo y compártelo libremente. Ver LICENSE
-.
-Hecho con 💎 en Fedora · Android · Termux
-Para mí, Eduar. Porque todo es posible.
-EOF
+Consulta [la arquitectura](docs/architecture/overview.md), [la instalación](docs/guides/installation.md), [la política de seguridad](SECURITY.md), [las contribuciones](CONTRIBUTING.md), el [changelog](CHANGELOG.md) y el [roadmap](ROADMAP.md).
 
+## Licencia
 
+MIT, según el archivo LICENSE del repositorio.

@@ -1,83 +1,73 @@
-cat > docs/guides/installation.md <<'EOF'
-📦 Instalación
-Requisitos
+# Instalación y uso
 
-    Sistema: Fedora/Debian/Ubuntu/Termux
-    Shell: Bash 4+
-    Herramientas: Git, curl, ip, free, df
+## Requisitos
 
-Instalación rápida
+- Bash 4 o posterior.
+- Git para clonar el repositorio.
+- Utilidades habituales de Linux: awk, sed, free, df, ip y systemctl (algunas son opcionales según el módulo).
 
-# 1. Clonar repositorio
+## Obtener y probar
+
+~~~bash
 git clone https://github.com/ariasalejo/Blumix.git
 cd Blumix
+bash tests/test_blumix.sh
+./bin/blumix help
+./bin/blumix system
+./bin/blumix integrations
+~~~
 
-# 2. Dar permisos de ejecución
-chmod +x bin/blumix lib/*.sh
+No es obligatorio instalar paquetes adicionales ni usar `sudo` para ejecutar los diagnósticos básicos.
 
-# 3. Añadir al PATH
-echo 'export PATH="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin:$PATH"' >> ~/.bashrc
-echo 'alias blx="blumix"' >> ~/.bashrc
+## Ejecutar desde cualquier ubicación
 
-# 4. Recargar configuración
-source ~/.bashrc
+La opción más simple es usar la ruta al script:
 
-# 5. Verificar instalación
-blumix version
+~~~bash
+/path/a/Blumix/bin/blumix help
+~~~
 
-Instalación manual (sin PATH)
-Si no quieres modificar ~/.bashrc:
+Para añadir la copia local al PATH, sustituye la ruta del ejemplo por la ubicación real:
 
-# Usar ruta completa
-~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin/blumix system
+~~~bash
+printf '\nexport PATH="%s/bin:$PATH"\n' "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumix" >> "$HOME/.bashrc"
+~~~
 
-# O crear symlink
-sudo ln -s ~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin/blumix /usr/local/bin/blumix
+Después abre una nueva terminal o ejecuta `source ~/.bashrc`. Evita añadir repetidamente la misma línea. No copies rutas históricas sin verificar que existan en tu equipo.
 
-Variables disponibles:
+## Configurar rutas de proyectos
 
-    BLUMCL_HOME — ruta de Blumcl
-    BLUMSEC_HOME — ruta de Blumsec
-    BLUMIX_THEME — tema (dark/light)
-    BLUMIX_AI_ENABLED — activar IA (0/1)
+~~~bash
+cp config/blumix.conf.example config/blumix.conf
+nano config/blumix.conf
+~~~
 
-Verificación
+Descomenta y ajusta las rutas que realmente existen. También puedes sobrescribir una ruta para una sola ejecución:
 
-# Ver versión
-blumix version
+~~~bash
+BLUMSEC_HOME="$HOME/ruta/real/Blumsec" ./bin/blumix integrations
+~~~
 
-# Ver diagnóstico del sistema
-blumix system
+El archivo de configuración se interpreta como código Bash: solo carga una configuración que tú hayas revisado. El archivo local está excluido de Git.
 
-# Ver estado de integraciones
-blumix integrations
+## Comandos útiles
 
-# Ejecutar tests
-./tests/test_blumix.sh
-
-Desinstalación
-
-# Eliminar del PATH nano ~/.bashrc # Borrar líneas de Blumix # Eliminar archivos rm -rf ~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix # Recargar source ~/.bashrc
-
-Solución de problemas
-"blumix: command not found"
-
-# Verificar PATH echo $PATH | grep Blumix # Si no aparece, añadir manualmente export PATH="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin:$PATH"
-
-"Permission denied"
-
-# Dar permisos
-chmod +x ~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/bin/blumix
-chmod +x ~/Ciberseguridad/03_Proyectos_y_Trabajos/Blumix/lib/*.sh
-
-Tests fallan
-
-# Verificar sintaxis
-bash -n bin/blumix
-bash -n lib/core.sh
-
-# Verificar ejecución
+~~~bash
+./bin/blumix help
 ./bin/blumix version
+./bin/blumix doctor
+./bin/blumix status
+./bin/blumix network
+./bin/blumix security
+~~~
 
-EOF
+## Solución de problemas
 
+- **Permission denied:** ejecuta `bash bin/blumix help` para comprobar el archivo sin depender del bit ejecutable; revisa permisos antes de cambiarlos.
+- **Directorio no encontrado:** ajusta la variable correspondiente en la configuración local o en el entorno.
+- **Firewall desconocido:** que UFW o firewalld no aparezcan no demuestra que el sistema carezca de reglas de firewall.
+- **Pruebas:** ejecuta `bash tests/test_blumix.sh` y revisa el primer error informado.
+
+## Desinstalación
+
+Si solo clonaste el repositorio, la desinstalación consiste en retirar la carpeta clonada y quitar manualmente del PATH cualquier línea que añadiste. Comprueba la ruta antes de borrar nada; BLUMIX no proporciona un desinstalador automático.

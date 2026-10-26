@@ -1,0 +1,19 @@
+{
+  "name": "BLUMIX — Centro de Mando",
+  "short_name": "BLUMIX",
+  "description": "Atlas local-first de BLUMIX. Diagnósticos desde CLI e informes locales no autenticados.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07111e",
+  "theme_color": "#07111e",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

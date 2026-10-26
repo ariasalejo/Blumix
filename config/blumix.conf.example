@@ -1,7 +1,11 @@
-# cp config/blumix.conf.example config/blumix.conf
-BLUMCL_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumcl"
-BLUMSEC_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumsec"
-BLUMELIX_HOME="$HOME/Ciberseguridad/03_Proyectos_y_Trabajos/Blumelix"
+# Plantilla local de configuración BLUMIX.
+# Copia a config/blumix.conf y edita solo las rutas reales de tu equipo.
+# Solo se aceptan asignaciones simples de una lista cerrada; nunca se ejecuta como Bash.
+# $HOME se expande solo al inicio de una ruta. No se admiten sustituciones de comandos.
+#
+# BLUMCL_HOME="$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumcl"
+# BLUMSEC_HOME="$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumsec"
+# BLUMELIX_HOME="$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumelix"
 BLUMIX_THEME="dark"
 BLUMIX_LANG="es"
 BLUMIX_AI_ENABLED=0
