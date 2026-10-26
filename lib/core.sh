@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # BLUMIX core: rutas y utilidades compartidas.
-BLUMIX_VERSION="0.4.1"
+BLUMIX_VERSION="0.5.0"
 export BLUMIX_ROOT="${BLUMIX_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 blumix_command_exists() { command -v "$1" >/dev/null 2>&1; }
