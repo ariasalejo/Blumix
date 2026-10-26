@@ -117,6 +117,10 @@ Uso: blumix <comando>
 
 Comandos:
   help, --help, -h       Mostrar esta ayuda
+  menu                   Menú interactivo con selección segura
+  watch [2-60]           Actualizar el centro de mando cada N segundos (Ctrl+C)
+  completion bash        Generar autocompletado para Bash
+  paths                  Mostrar rutas configuradas del ecosistema
   version, --version     Mostrar versión
   system                 Información básica del sistema
   network, net           Interfaces de red y DNS local
@@ -209,6 +213,84 @@ blumix_doctor() {
     printf '\nDoctor: comprobaciones básicas superadas. No es una auditoría de seguridad completa.\n'
 }
 
+
+blumix_paths() {
+    printf 'BLUMIX — RUTAS CONFIGURADAS (solo lectura)\\n\\n'
+    printf 'Repositorio BLUMIX: %s\\n' "$BLUMIX_ROOT"
+    printf 'BLUMCL:   %s %s\\n' "$([[ -d "$BLUMCL_HOME" ]] && printf '[OK]' || printf '[FALTA]')" "$BLUMCL_HOME"
+    printf 'BLUMSEC:  %s %s\\n' "$([[ -d "$BLUMSEC_HOME" ]] && printf '[OK]' || printf '[FALTA]')" "$BLUMSEC_HOME"
+    printf 'BLUMELIX: %s %s\\n' "$([[ -d "$BLUMELIX_HOME" ]] && printf '[OK]' || printf '[FALTA]')" "$BLUMELIX_HOME"
+    printf '\\nLas rutas se muestran localmente porque solicitaste este comando; no se exportan por defecto.\\n'
+}
+
+blumix_completion() {
+    [[ "${1:-}" == "bash" && -z "${2:-}" ]] || {
+        printf 'Uso: blumix completion bash\\n' >&2
+        return 2
+    }
+    cat <<'COMPLETION'
+_blumix_complete() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local commands="help version system network net security sec audit policy intelligence intel center projects services integrations int development dev status doctor report snapshot blumcl cl blumsec blumelix elx about nave menu watch completion paths"
+    if (( COMP_CWORD == 1 )); then
+        COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+    elif (( COMP_CWORD == 2 )); then
+        case "${COMP_WORDS[1]}" in
+            audit|policy|intelligence|intel|center|projects|services|report|snapshot)
+                COMPREPLY=( $(compgen -W "--json" -- "$cur") ) ;;
+            completion) COMPREPLY=( $(compgen -W "bash" -- "$cur") ) ;;
+            watch) COMPREPLY=( $(compgen -W "2 5 10 15 30 60" -- "$cur") ) ;;
+        esac
+    fi
+}
+complete -F _blumix_complete blumix
+COMPLETION
+}
+
+blumix_watch() {
+    local interval="${2:-5}"
+    if [[ ${1:-} != "watch" || ${3:-} != "" || ! "$interval" =~ ^[0-9]+$ ]] || (( interval < 2 || interval > 60 )); then
+        printf 'Uso: blumix watch [intervalo-segundos: 2-60]\\n' >&2
+        return 2
+    fi
+    if [[ ! -t 1 ]]; then
+        printf 'watch necesita una terminal interactiva; usa intelligence --json para salida automatizada.\\n' >&2
+        return 2
+    fi
+    trap 'printf "\\033[0m\\nBLUMIX watch detenido.\\n"; return 0' INT
+    while :; do
+        printf '\\033[H\\033[2J'
+        printf 'BLUMIX // CENTRO DE MANDO EN VIVO · refresco %ss · Ctrl+C para salir\\n\\n' "$interval"
+        BLUMIX_ANIM=0 blumix_dashboard
+        sleep "$interval"
+    done
+}
+
+blumix_menu() {
+    local choice
+    [[ -t 0 && -t 1 ]] || { printf 'menu requiere una terminal interactiva.\\n' >&2; return 2; }
+    while :; do
+        printf '\\n%bBLUMIX // MENÚ DE OPERACIONES%b\\n' "$BLX_CYAN" "$BLX_RESET"
+        printf '  1) Centro de mando\\n  2) Diagnóstico inteligente\\n  3) Inventario de proyectos\\n  4) Observación de servicios\\n  5) Auditoría local\\n  6) Seguridad\\n  7) Red y DNS\\n  8) Herramientas de desarrollo\\n  9) Rutas configuradas\\n  0) Salir\\n'
+        read -r -p 'Selecciona una opción: ' choice || return 0
+        case "$choice" in
+            1) blumix_dashboard ;;
+            2) blumix_intelligence ;;
+            3) blumix_projects text ;;
+            4) blumix_services text ;;
+            5) blumix_audit text ;;
+            6) blumix_security ;;
+            7) blumix_network ;;
+            8) blumix_development ;;
+            9) blumix_paths ;;
+            0|q|Q) return 0 ;;
+            *) printf 'Opción no válida; no se ejecutó ninguna acción.\\n' ;;
+        esac
+        printf '\\nPulsa Intro para volver al menú...'
+        read -r _ || return 0
+    done
+}
+
 case "${1:-}" in
     system) blumix_system ;;
     network|net) blumix_network ;;
@@ -234,6 +316,13 @@ case "${1:-}" in
         fi
         ;;
     integrations|int) blumix_integrations ;;
+    paths)
+        [[ -z "${2:-}" ]] || { printf 'Uso: blumix paths\\n' >&2; exit 2; }
+        blumix_paths
+        ;;
+    completion) blumix_completion "${2:-}" "${3:-}" ;;
+    watch) blumix_watch "$@" ;;
+    menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\\n' >&2; exit 2; }; blumix_menu ;;
     intelligence|intel|center)
         if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_intelligence_json
         elif [[ -z "${2:-}" ]]; then blumix_intelligence
