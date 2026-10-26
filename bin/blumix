@@ -226,22 +226,22 @@ blumix_paths() {
 
 blumix_install_user() {
     local target="$HOME/.local/bin/blumix"
-    mkdir -p "$HOME/.local/bin" || { printf 'No se pudo crear ~/.local/bin.\\n' >&2; return 1; }
+    mkdir -p "$HOME/.local/bin" || { printf 'No se pudo crear ~/.local/bin.\n' >&2; return 1; }
     if [[ -e "$target" || -L "$target" ]]; then
         if [[ -L "$target" && "$(readlink "$target" 2>/dev/null)" == "$BLUMIX_ROOT/bin/blumix" ]]; then
-            printf 'BLUMIX ya está enlazado: %s\\n' "$target"
+            printf 'BLUMIX ya está enlazado: %s\n' "$target"
         else
-            printf 'No se modifica nada: ya existe %s y no apunta a esta copia.\\n' "$target" >&2
+            printf 'No se modifica nada: ya existe %s y no apunta a esta copia.\n' "$target" >&2
             return 1
         fi
     else
         ln -s "$BLUMIX_ROOT/bin/blumix" "$target" || return 1
-        printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
+        printf 'Enlace creado: %s -> %s\n' "$target" "$BLUMIX_ROOT/bin/blumix"
     fi
     case ":$PATH:" in
-        *":$HOME/.local/bin:"*) printf 'PATH ya incluye ~/.local/bin; abre una terminal nueva si hace falta.\\n' ;;
-        *) printf 'Para esta sesión ejecuta: export PATH="$HOME/.local/bin:$PATH"\\n'
-           printf 'Para hacerlo permanente, añade esa línea a ~/.bashrc manualmente. No se ha editado ningún perfil.\\n' ;;
+        *":$HOME/.local/bin:"*) printf 'PATH ya incluye ~/.local/bin; abre una terminal nueva si hace falta.\n' ;;
+        *) printf 'Para esta sesión ejecuta: export PATH="$HOME/.local/bin:$PATH"\n'
+           printf 'Para hacerlo permanente, añade esa línea a ~/.bashrc manualmente. No se ha editado ningún perfil.\n' ;;
     esac
 }
 
@@ -253,7 +253,7 @@ blumix_completion() {
     cat <<'COMPLETION'
 _blumix_complete() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local commands="help version system network net security sec audit policy intelligence intel center projects services integrations int development dev status doctor report snapshot blumcl cl blumsec blumelix elx about nave menu watch completion paths"
+    local commands="help version system network net security sec audit policy intelligence intel center projects services integrations int development dev status doctor report snapshot blumcl cl blumsec blumelix elx about nave menu watch completion paths install-user"
     if (( COMP_CWORD == 1 )); then
         COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
     elif (( COMP_CWORD == 2 )); then
