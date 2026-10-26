@@ -234,7 +234,11 @@ case "${1:-}" in
         fi
         ;;
     integrations|int) blumix_integrations ;;
-    intelligence|intel|center) blumix_intelligence ;;
+    intelligence|intel|center)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_intelligence_json
+        elif [[ -z "${2:-}" ]]; then blumix_intelligence
+        else printf "Uso: blumix intelligence [--json]\\n" >&2; exit 2; fi
+        ;;
     projects)
         if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_projects json
         elif [[ -z "${2:-}" ]]; then blumix_projects text
