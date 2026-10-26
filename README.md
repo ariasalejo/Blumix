@@ -4,7 +4,7 @@
 
 BLUMIX es una herramienta modular de terminal para consultar el estado de un equipo Linux y localizar herramientas del ecosistema BLUM sin fusionar sus repositorios. Su interfaz visual es una capa de operación; los proyectos integrados conservan sus propios ciclos de vida, permisos, datos y versiones.
 
-> Estado del proyecto: versión de desarrollo 0.4.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
+> Estado del proyecto: versión de desarrollo 0.4.1. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
 
 ## Atlas visual
 
@@ -19,7 +19,7 @@ Explora la arquitectura, los componentes y la hoja de ruta en el [Atlas Visual I
 | `blumix system` | SO, kernel, tiempo activo, RAM y CPU |
 | `blumix network` | Interfaces y DNS local |
 | `blumix security` | Estado detectable de firewall y SSH |
-| `blumix integrations` | Existencia de las rutas configuradas de BLUMCL, BLUMSEC y BLUMELIX |
+| `blumix integrations` | Descubrimiento de rutas configuradas y tolerante a mayúsculas/minúsculas para BLUMCL, BLUMSEC y BLUMELIX |
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
 | `blumix doctor` | Comprobaciones básicas de instalación |
