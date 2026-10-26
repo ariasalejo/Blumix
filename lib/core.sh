@@ -67,8 +67,7 @@ blumix_load_config() {
     [[ -f "$cfg" && -r "$cfg" ]] || return 0
 
     while IFS= read -r line || [[ -n "$line" ]]; do
-        line="${line%
-\r'}"
+        line="${line%$'\r'}"
         [[ "$line" =~ ^[[:space:]]*(#.*)?$ ]] && continue
         if [[ ! "$line" =~ ^[[:space:]]*([A-Z_][A-Z0-9_]*)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
             printf '[BLUMIX] Configuración: línea inválida ignorada.\n' >&2
