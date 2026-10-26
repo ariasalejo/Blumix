@@ -17,7 +17,7 @@ for file in "$R"/lib/*.sh; do
 done
 
 version="$(bash "$R/bin/blumix" version)"
-[[ "$version" == "BLUMIX 0.4.1" ]] || fail "versión inesperada: $version"
+[[ "$version" == "BLUMIX 0.5.0" ]] || fail "versión inesperada: $version"
 pass "comando version"
 
 help="$(bash "$R/bin/blumix" --help)"
