@@ -17,7 +17,7 @@ for file in "$R"/lib/*.sh; do
 done
 
 version="$(bash "$R/bin/blumix" version)"
-[[ "$version" == "BLUMIX 0.4.0" ]] || fail "versión inesperada: $version"
+[[ "$version" == "BLUMIX 0.4.1" ]] || fail "versión inesperada: $version"
 pass "comando version"
 
 help="$(bash "$R/bin/blumix" --help)"
@@ -42,5 +42,25 @@ grep -q 'BLUMCL' <<<"$integration_output" || fail "integrations omite BLUMCL"
 grep -q 'BLUMSEC' <<<"$integration_output" || fail "integrations omite BLUMSEC"
 grep -q 'BLUMELIX' <<<"$integration_output" || fail "integrations omite BLUMELIX"
 pass "las tres integraciones se reportan explícitamente"
+
+# Comprueba descubrimiento local con diferencias de mayúsculas/minúsculas
+# sin tocar los repositorios reales del usuario.
+tmp_home="$(mktemp -d)"
+trap 'rm -rf "$tmp_home"' EXIT
+mkdir -p "$tmp_home/04_DEVELOPMENT/08_Proyectos/Blum/Blumcl" \
+         "$tmp_home/04_DEVELOPMENT/08_Proyectos/Blum/BLUMSEC" \
+         "$tmp_home/04_DEVELOPMENT/08_Proyectos/Blum/BlumELIX"
+if env -u BLUMCL_HOME -u BLUMSEC_HOME -u BLUMELIX_HOME HOME="$tmp_home" bash -c '
+    source "$1/lib/core.sh"
+    [[ "$BLUMCL_HOME" == "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumcl" ]] &&
+    [[ "$BLUMSEC_HOME" == "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/BLUMSEC" ]] &&
+    [[ "$BLUMELIX_HOME" == "$HOME/04_DEVELOPMENT/08_Proyectos/Blum/BlumELIX" ]]
+' _ "$R"; then
+    pass "descubrimiento de rutas tolera mayúsculas/minúsculas"
+else
+    fail "no se resolvieron correctamente las rutas con capitalización mixta"
+fi
+rm -rf "$tmp_home"
+trap - EXIT
 
 printf '\nTodas las pruebas automatizadas pasaron.\n'
