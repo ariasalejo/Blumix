@@ -17,8 +17,22 @@ for file in "$R"/lib/*.sh; do
 done
 
 version="$(bash "$R/bin/blumix" version)"
-[[ "$version" == "BLUMIX 0.6.0" ]] || fail "versión inesperada: $version"
+[[ "$version" == "BLUMIX 0.7.0" ]] || fail "versión inesperada: $version"
 pass "comando version"
+
+audit="$(bash "$R/bin/blumix" audit --json)" || fail "audit --json devolvió error"
+if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' "$audit" | python3 -c '
+import json, sys
+d = json.load(sys.stdin)
+assert d["schema"] == "blumix.audit.v1"
+assert d["read_only"] is True
+assert d["network_access"] is False
+assert {x["id"] for x in d["checks"]} == {"config_permissions", "secret_like_files", "repository_state"}
+assert all(x["status"] in {"pass", "warn", "info"} for x in d["checks"])
+'
+fi
+pass "auditoría local JSON: esquema, alcance y controles presentes"
 
 report="$(bash "$R/bin/blumix" report --json)" || fail "report --json devolvió error"
 grep -q '"schema": "blumix.snapshot.v1"' <<<"$report" || fail "report no incluye el esquema esperado"
@@ -81,6 +95,7 @@ help="$(bash "$R/bin/blumix" --help)"
 grep -q 'doctor' <<<"$help" || fail "help no anuncia doctor"
 grep -q 'integrations' <<<"$help" || fail "help no anuncia integrations"
 grep -q 'report --json' <<<"$help" || fail "help no anuncia report --json"
+grep -q 'audit' <<<"$help" || fail "help no anuncia audit"
 pass "ayuda contiene comandos clave"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
