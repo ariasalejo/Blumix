@@ -28,7 +28,11 @@ jobs:
           for file in lib/*.sh tests/*.sh; do
             bash -n "$file"
           done
+          python3 -m py_compile bin/blumix-web.py tests/test_web.py
 
       - name: Run test suite
         shell: bash
         run: bash tests/test_blumix.sh
+
+      - name: Test local web panel and API security
+        run: python3 tests/test_web.py
