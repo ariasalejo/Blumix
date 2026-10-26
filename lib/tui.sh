@@ -32,7 +32,7 @@ BLX_NODE_ICONS=(
   "◈" "⇄" "✓" "◈" "⛨" "⚖" "◈" "⌁" "◈" "⌘"
   "◈" "▤" "?"
 )
-for blx_node_id in 0 1 4 7 10 13 16 18 20; do BLX_NODE_EXPANDED[$blx_node_id]=1; done
+BLX_NODE_EXPANDED[0]=1
 
 blumix_tui_project_state() {
     local path="$1"
@@ -111,7 +111,7 @@ blumix_tui_render() {
     blumix_tui_render_node 0 "" 1 "$selected"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
     printf '%b│%b  ↑↓ select  → expand  ← collapse/parent  Enter route  Space toggle%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-69))" "" "$BLX_RESET"
-    printf '%b│%b  1–7 jump to domain  r refresh  ? help  q exit%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-51))" "" "$BLX_RESET"
+    printf '%b│%b  1–8 jump to domain  r refresh  ? help  q exit%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-51))" "" "$BLX_RESET"
     printf '%b╰' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '╯%b\\n' "$BLX_RESET"
 }
 
