@@ -12,6 +12,7 @@ source "$BLUMIX_ROOT/lib/policy.sh"
 source "$BLUMIX_ROOT/lib/development.sh"
 source "$BLUMIX_ROOT/lib/integrations.sh"
 source "$BLUMIX_ROOT/lib/intelligence.sh"
+source "$BLUMIX_ROOT/lib/evidence.sh"
 blumix_load_config
 
 blumix_status() {
@@ -123,6 +124,8 @@ Comandos:
   audit [--json]          Revisiones locales de permisos y archivos de riesgo
   policy [--json]         Catálogo de capacidades y límites de privilegio
   intelligence, intel     Diagnóstico accionable por reglas locales (solo lectura)
+  projects [--json]       Inventario con estados de evidencia
+  services [--json]       Procesos y unidades relacionados observables
   integrations, int      Rutas de proyectos conectados
   development, dev        Herramientas de desarrollo
   status                 Resumen breve del equipo e integraciones
@@ -183,7 +186,7 @@ blumix_doctor() {
             failures=$((failures + 1))
         fi
     done
-    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh" "$BLUMIX_ROOT/lib/intelligence.sh"; do
+    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh" "$BLUMIX_ROOT/lib/intelligence.sh" "$BLUMIX_ROOT/lib/evidence.sh"; do
         if [[ -r "$file" ]]; then
             printf '[OK]      %s\n' "${file#"$BLUMIX_ROOT/"}"
         else
@@ -232,6 +235,16 @@ case "${1:-}" in
         ;;
     integrations|int) blumix_integrations ;;
     intelligence|intel|center) blumix_intelligence ;;
+    projects)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_projects json
+        elif [[ -z "${2:-}" ]]; then blumix_projects text
+        else printf "Uso: blumix projects [--json]\n" >&2; exit 2; fi
+        ;;
+    services)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_services json
+        elif [[ -z "${2:-}" ]]; then blumix_services text
+        else printf "Uso: blumix services [--json]\n" >&2; exit 2; fi
+        ;;
     development|dev) blumix_development ;;
     blumcl|cl) blumix_go_blumcl ;;
     blumsec) blumix_go_blumsec ;;
