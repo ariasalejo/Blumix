@@ -125,7 +125,7 @@ Uso: blumix <comando>
 
 Comandos:
   help, --help, -h       Mostrar esta ayuda
-  menu                   Centro visual interactivo con navegación por teclado
+  menu                   Árbol interactivo del orquestador: flechas, ramas y módulos
   watch [2-60]           Actualizar el centro de mando cada N segundos (Ctrl+C)
   completion bash        Generar autocompletado para Bash
   paths                  Mostrar rutas configuradas del ecosistema
@@ -199,7 +199,7 @@ blumix_doctor() {
             failures=$((failures + 1))
         fi
     done
-    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh" "$BLUMIX_ROOT/lib/intelligence.sh" "$BLUMIX_ROOT/lib/evidence.sh"; do
+    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/tui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh" "$BLUMIX_ROOT/lib/intelligence.sh" "$BLUMIX_ROOT/lib/evidence.sh"; do
         if [[ -r "$file" ]]; then
             printf '[OK]      %s\n' "${file#"$BLUMIX_ROOT/"}"
         else
