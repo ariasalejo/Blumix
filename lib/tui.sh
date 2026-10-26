@@ -43,3 +43,65 @@ blumix_tui_render() {
     printf '%b│%b  r refresh · ? help · q exit · directory presence is not service health%*s│%b\n' "$BLX_CYAN" "$BLX_RESET" "$((width-76))" "" "$BLX_RESET"
     printf '%b╰' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '╯%b\n' "$BLX_RESET"
 }
+
+blumix_tui_open() {
+    case "$1" in
+        0) blumix_system ;;
+        1) blumix_intelligence ;;
+        2) blumix_projects text ;;
+        3) blumix_services text ;;
+        4) blumix_audit text ;;
+        5) blumix_security ;;
+        6) blumix_network ;;
+        7) blumix_development ;;
+        8) blumix_paths ;;
+        9) blumix_help ;;
+    esac
+}
+blumix_tui_menu() {
+    local selected=0 key rest action
+    [[ -t 0 && -t 1 ]] || { printf 'El centro interactivo requiere una terminal; usa blumix intelligence fuera de ella.\n' >&2; return 2; }
+    command -v ps >/dev/null 2>&1 || { printf 'Falta ps; instala procps para usar el centro visual.\n' >&2; return 2; }
+    trap 'printf "\033[0m\033[?25h\n"' EXIT
+    while :; do
+        blumix_tui_render "$selected"
+        key=""
+        IFS= read -rsn1 key || break
+        if [[ "$key" == $'\033' ]]; then
+            rest=""
+            IFS= read -rsn1 -t 0.15 rest || true
+            if [[ "$rest" == "[" ]]; then
+                IFS= read -rsn1 -t 0.15 rest || true
+                case "$rest" in
+                    A|D) (( selected > 0 )) && selected=$((selected-1)) ;;
+                    B|C) (( selected < 9 )) && selected=$((selected+1)) ;;
+                    H) selected=0 ;;
+                    F) selected=9 ;;
+                esac
+            fi
+            continue
+        fi
+        action=""
+        case "$key" in
+            q|Q) break ;;
+            r|R) continue ;;
+            j|J) (( selected < 9 )) && selected=$((selected+1)); continue ;;
+            k|K) (( selected > 0 )) && selected=$((selected-1)); continue ;;
+            \?) action="help" ;;
+            [1-9]) selected=$((10#$key-1)); action="open" ;;
+            0) break ;;
+            ""|$'\n'|$'\r') action="open" ;;
+            *) continue ;;
+        esac
+        if [[ "$action" == "help" ]]; then
+            printf '\nNAVEGACIÓN: flechas arriba/abajo o j/k · Enter abre · 1–9 acceso directo · r refresca · q sale.\n'
+            printf 'Los diagnósticos son locales y de solo lectura. Las rutas no prueban salud funcional.\n'
+            read -r -n 1 -s -p 'Pulsa una tecla para continuar...' || true
+        elif [[ "$action" == "open" ]]; then
+            printf '\033[0m\033[?25h\033[H\033[2J'
+            blumix_tui_open "$selected"
+            printf '\n'
+            read -r -n 1 -s -p 'Pulsa una tecla para volver al centro de mando...' || true
+        fi
+    done
+}
