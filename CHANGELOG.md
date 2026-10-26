@@ -4,6 +4,10 @@ Cambios notables por versión.
 
 ## [Unreleased]
 
+- Añade `bin/blumix-web.py`: panel web responsive con API de diagnóstico de solo lectura, ligado a `127.0.0.1`, sin shell arbitraria ni dependencias externas.
+- Añade manifiesto, icono y service worker para cachear solo la interfaz; las respuestas API no se almacenan offline.
+- Añade pruebas de integración HTTP, esquemas JSON, cabeceras defensivas, rechazo de Host no permitido y métodos distintos de GET; CI ejecuta las pruebas web.
+
 - Añade `blumix projects [--json]` y `blumix services [--json]` con estados de evidencia y límites explícitos; la ausencia de coincidencias no se interpreta como ausencia de servicios.
 - Añade `blumix intelligence --json` con salida estructurada, fuentes y estados desconocidos.
 - Amplía pruebas automatizadas para esquemas JSON, estados desconocidos y argumentos inválidos.
