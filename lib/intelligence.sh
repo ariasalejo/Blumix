@@ -63,7 +63,7 @@ blumix_intelligence() {
     if [[ "$disk_pct" =~ ^[0-9]+$ ]]; then
         if (( disk_pct >= 95 )); then
             severity=2; findings=$((findings+1))
-            advice+=("Disco raíz casi lleno: localiza el consumo con du -xhd1 "$HOME" 2>/dev/null | sort -h; no borres archivos sin revisarlos.")
+            advice+=("Disco raíz casi lleno: localiza el consumo con du -xhd1 ~ 2>/dev/null | sort -h; no borres archivos sin revisarlos.")
         elif (( disk_pct >= 85 )); then
             (( severity < 1 )) && severity=1; findings=$((findings+1))
             advice+=("Espacio de disco en observación: revisa los directorios grandes antes de limpiar.")
@@ -92,7 +92,7 @@ blumix_intelligence() {
             (( severity < 1 )) && severity=1
             findings=$((findings+1))
             if [[ "$name" == "BLUMELIX" ]]; then
-                advice+=("BLUMELIX no se ha localizado en la ruta configurada. Busca primero sin modificar nada: find "$HOME/04_DEVELOPMENT/08_Proyectos/Blum" -maxdepth 2 -type d -iname '*blumelix*' -o -iname '*blumix*' 2>/dev/null")
+                advice+=("BLUMELIX no se ha localizado. Busca primero sin modificar nada: find ~/04_DEVELOPMENT/08_Proyectos/Blum -maxdepth 2 -type d -iname '*blumelix*' -o -iname '*blumix*' 2>/dev/null")
             fi
         fi
     done
