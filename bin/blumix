@@ -212,7 +212,7 @@ case "${1:-}" in
         elif [[ -z "${2:-}" ]]; then
             blumix_policy text
         else
-            printf 'Uso: blumix policy [--json]\\n' >&2
+            printf 'Uso: blumix policy [--json]\n' >&2
             exit 2
         fi
         ;;
