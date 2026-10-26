@@ -110,3 +110,18 @@ MIT, según el archivo LICENSE del repositorio.
 - `blumix services` observa nombres de procesos y unidades systemd que identifiquen explícitamente BLUMIX, BLUMCL, BLUMSEC o BLUMELIX. La ausencia de coincidencias queda como desconocida; no demuestra que un servicio esté detenido.
 - `blumix intelligence --json`, `blumix projects --json` y `blumix services --json` emiten JSON estructurado en stdout; los argumentos inválidos devuelven código 2.
 - El Atlas/PWA existente es una interfaz estática offline-first que importa informes elegidos por el usuario. No es un servidor de diagnóstico en vivo ni presenta informes antiguos como telemetría actual. El service worker solo cachea la interfaz estática.
+
+
+## Intelligence Center web local
+
+El panel conectado está en `bin/blumix-web.py`; usa solo Python estándar y no necesita instalar paquetes.
+
+```bash
+python3 bin/blumix-web.py
+# Abre http://127.0.0.1:8765/ en el navegador.
+# Para detenerlo, vuelve a la terminal y pulsa Ctrl+C.
+```
+
+Para elegir otro puerto local sin privilegios: `python3 bin/blumix-web.py --port 8877`. El servidor siempre escucha en `127.0.0.1`; no admite configurar una interfaz pública. Los endpoints GET permitidos son `/api/intelligence`, `/api/projects` y `/api/services`. No hay endpoint de ejecución de comandos, no se admiten operaciones POST y las respuestas API no se guardan en caché. Las solicitudes a diagnósticos tienen un límite de 8 segundos.
+
+La PWA cachea solo la carcasa estática (HTML, manifiesto, icono y service worker). Sin conexión, la interfaz puede abrirse desde caché, pero los diagnósticos no se actualizan ni se conservan como si fueran actuales. La instalación del service worker requiere un origen seguro como localhost; el servidor local satisface ese requisito. Este servidor es local y no constituye un despliegue público.
