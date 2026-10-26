@@ -53,3 +53,22 @@ Este roadmap diferencia la base existente de las mejoras propuestas. Una casilla
 - La instalación funciona en entornos documentados.
 - No se incluyen secretos, datos personales ni rutas específicas del autor como requisito.
 - Cada capacidad tiene límites y mensajes de error claros.
+
+
+## Experiencia de producto — Command Center
+
+### Ahora: BLUMIX 0.5.0
+- [x] Dashboard de terminal con logo, estaciones, HUD y accesos rápidos.
+- [x] Evitar animaciones en salida no interactiva.
+- [x] Atlas web responsive con tarjetas de comandos copiables y estados etiquetados como estáticos.
+- [x] No simular métricas de CPU/RAM ni fingir una conexión entre el navegador y el equipo.
+
+### Siguiente etapa: PWA móvil
+- [ ] Preparar manifiesto, iconos, estrategia offline y pruebas de instalación como PWA cuando se configure un origen HTTPS.
+- [ ] Validar accesibilidad, contraste, teclado, lectores de pantalla y tamaños de móvil.
+- [ ] Definir un protocolo local explícito si el navegador necesita consultar diagnósticos reales; no exponer un agente local sin autenticación ni protección CSRF.
+
+### Android nativo (decisión pendiente)
+- [ ] Comparar PWA con una aplicación Android empaquetada antes de añadir un framework.
+- [ ] Si se necesita acceso a capacidades Android nativas, crear una app independiente con permisos mínimos y API documentada.
+- [ ] No prometer estado en vivo desde una página estática; la conexión requiere un servicio local explícito y consentido.
