@@ -21,6 +21,10 @@ Abre una incidencia privada o sigue las opciones de contacto que ofrece GitHub p
 
 El archivo `config/blumix.conf` se carga como código Bash. Solo debe contener valores que el usuario haya revisado. Nunca cargues archivos de configuración descargados de fuentes no confiables.
 
+## Exportación de instantáneas
+
+`blumix report --json` produce una captura local para importar en el Atlas. El esquema omite rutas absolutas, usuario, hostname, variables de entorno y contenido de archivos, pero contiene detalles técnicos como sistema operativo, kernel, modelo de CPU, métricas de recursos y existencia de carpetas. Revísalo antes de compartirlo. El Atlas lo procesa en el navegador mediante selección explícita de archivo; no transmite el contenido a un servidor ni ejecuta código importado. La instantánea representa el momento en que se generó, no el estado actual.
+
 ## Alcance de los diagnósticos
 
 Los resultados son observaciones de herramientas locales y pueden estar incompletos por permisos, contenedores, distribuciones o herramientas ausentes. Para decisiones críticas, confirma los resultados con las herramientas nativas del sistema y una revisión profesional.
