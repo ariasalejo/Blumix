@@ -20,6 +20,7 @@ Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas
 | `blumix network` | Interfaces y DNS local |
 | `blumix security` | Estado detectable de firewall y SSH |
 | `blumix audit` / `blumix audit --json` | Revisiones locales de permisos, nombres de archivos de riesgo y estado Git; solo lectura |
+| `blumix policy` / `blumix policy --json` | Catálogo de capacidades, política de denegación por defecto y límites de privilegio |
 | `blumix integrations` | Descubrimiento de rutas configuradas y tolerante a mayúsculas/minúsculas para BLUMCL, BLUMSEC y BLUMELIX |
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
@@ -72,6 +73,12 @@ Puedes definir `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` como rutas absolu
 - **Offline-first:** las funciones de diagnóstico local no necesitan IA ni servicios externos.
 - **IA opcional:** no es requisito de instalación ni se activa por defecto.
 - **Honestidad de estado:** “directorio encontrado” no significa que una integración esté conectada ni que el servicio esté saludable.
+
+## Atlas y operaciones privilegiadas
+
+El Atlas de `docs/visual-atlas/index.html` es el plano visual del ecosistema: topología, integraciones, eventos, informes y operaciones. Las instantáneas describen una captura histórica y no prueban salud en tiempo real. La web no ejecuta comandos del sistema.
+
+`blumix policy --json` muestra el catálogo `blumix.policy.v1`. Los cambios privilegiados permanecen bloqueados y la shell arbitraria está denegada hasta implementar un agente local con autenticación, autorización por capacidad, aprobación por acción y auditoría. Consulta `docs/ATLAS-OPERATIONS-SECURITY.md` para la arquitectura y las condiciones de seguridad.
 
 ## Auditoría local
 

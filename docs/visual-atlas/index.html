@@ -3,244 +3,215 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07111e">
+<meta name="theme-color" content="#080b12">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
-<title>BLUMIX — Atlas Visual</title>
+<title>BLUMIX // Ecosystem Command</title>
 <style>
-:root{color-scheme:dark;--bg:#07111e;--panel:#101e30;--line:#263b52;--text:#edf5ff;--muted:#a5b7cc;--cyan:#66e6ff;--violet:#b7a2ff;--green:#8bf0c5;--amber:#ffd68a}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#142b49 0,transparent 42%),radial-gradient(ellipse at 90% 20%,#201943 0,transparent 35%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--cyan)}button,input{font:inherit}.wrap{max-width:1240px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:12px 0 22px}.brand{font-weight:900;letter-spacing:.18em}.badge{border:1px solid #3b5b77;border-radius:999px;padding:5px 11px;color:var(--green);font-size:.8rem}.hero{padding:70px 0 40px;display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);font-size:.78rem;font-weight:800}.hero h1{font-size:clamp(2.8rem,7vw,6rem);line-height:.98;letter-spacing:-.06em;margin:16px 0}.hero h1 span{color:var(--cyan)}.lead{font-size:1.18rem;color:var(--muted);max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-block;border:1px solid #47708f;border-radius:12px;padding:11px 16px;text-decoration:none;color:var(--text);background:#12243a;cursor:pointer}.btn.primary{background:linear-gradient(120deg,#17617a,#4c3c88);border-color:transparent}.orbit{border:1px solid #29455e;border-radius:28px;padding:18px;background:#0b1726cc;box-shadow:0 24px 80px #0005}.orbit svg{width:100%;height:auto;display:block}.section{padding:42px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:20px}.section h2{font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.04em;margin:0}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(155deg,#14253aee,#0b1726ee);border:1px solid var(--line);border-radius:20px;padding:22px;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-4px);border-color:#5c9cb6}.card .symbol{font-size:1.9rem}.card h3{margin:8px 0 4px;font-size:1.35rem}.tag{display:inline-block;border:1px solid #38526a;color:var(--cyan);border-radius:999px;padding:3px 9px;font-size:.75rem;margin:4px 4px 0 0}.card ul{padding-left:20px;color:var(--muted)}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{border-top:2px solid var(--cyan);padding:16px;background:#0e1b2c;border-radius:0 0 14px 14px}.step strong{display:block;font-size:1.1rem}.controls{display:flex;gap:10px;flex-wrap:wrap}.controls input{background:#0b1726;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:10px;min-width:240px}.map{display:grid;grid-template-columns:1fr 1fr;gap:16px}.mapbox{border:1px solid var(--line);border-radius:18px;padding:20px;background:#0c1929}.mapbox h3{margin-top:0}.node{display:block;padding:12px 14px;border:1px solid #38526a;border-radius:12px;margin:9px 0;background:#11243a}.node small{display:block;color:var(--muted)}.notice{border-left:3px solid var(--amber);background:#2b2415aa;padding:14px 17px;border-radius:0 12px 12px 0;color:#f5dfb4}.footer{border-top:1px solid var(--line);margin-top:38px;padding:26px 0;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.hidden{display:none!important}.tiny{font-size:.85rem}.pulse{animation:pulse 3s infinite}@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:42px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.map{grid-template-columns:1fr}}@media(max-width:480px){.wrap{padding:16px}.flow{grid-template-columns:1fr}.hero h1{font-size:3.1rem}}
-
-/* BLUMIX 0.5 — command-center layer, no frameworks or remote assets */
-:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
-.command-deck{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-.console{background:#050c16;border:1px solid #31516c;border-radius:20px;padding:20px;box-shadow:0 18px 50px #0004;min-width:0}
-.console-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
-.live-label{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--green);letter-spacing:.08em;text-transform:uppercase}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px #8bf0c5}
-.terminal-lines{font: .92rem/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;color:#b8d0e5;padding:14px 0 4px;overflow-wrap:anywhere}
-.terminal-lines .prompt{color:var(--cyan)}.terminal-lines .ok{color:var(--green)}.terminal-lines .warn{color:var(--amber)}
-.command-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.command-tile{display:flex;flex-direction:column;gap:9px;align-items:flex-start;text-align:left;background:#102136;border:1px solid #2a4760;border-radius:14px;padding:14px;color:var(--text);min-width:0}
-.command-tile:hover{border-color:var(--cyan);background:#142b42}
-.command-tile code{font-size:.8rem;color:var(--cyan);overflow-wrap:anywhere}
-.command-tile small{color:var(--muted)}
-.telemetry{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.metric{border:1px solid var(--line);border-radius:16px;padding:16px;background:#0d1a2a;min-width:0}
-.metric .metric-label{display:block;color:var(--muted);font-size:.8rem}
-.metric strong{display:block;font-size:1.12rem;margin-top:7px}
-.metric .metric-foot{display:block;color:var(--amber);font-size:.74rem;margin-top:6px}
-.metric .metric-mark{font-size:1.3rem}
-.command-note{margin-top:14px;font-size:.82rem;color:var(--muted)}
-.toast{min-height:1.5em;color:var(--green);font-size:.86rem;margin-top:8px}
-@media(max-width:850px){.command-deck{grid-template-columns:1fr}.telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){.command-grid{grid-template-columns:1fr}.console{padding:14px}.telemetry{gap:7px}.metric{padding:12px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-
-/* BLUMIX 0.6 — importación local de instantáneas verificables */
-.snapshot-panel{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;padding:20px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#10223aee,#081421ee)}
-.snapshot-intro{min-width:0}
-.snapshot-intro h3{margin:0 0 8px;font-size:1.2rem}
-.snapshot-intro p{color:var(--muted);margin:8px 0 14px}
-.snapshot-intro code{color:var(--cyan);overflow-wrap:anywhere}
-.snapshot-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.snapshot-kpi{min-width:0;border:1px solid #29455e;border-radius:15px;padding:15px;background:#071321}
-.snapshot-kpi span{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.09em}
-.snapshot-kpi strong{display:block;font-size:1.4rem;line-height:1.25;margin:8px 0;overflow-wrap:anywhere}
-.snapshot-kpi small{display:block;color:var(--muted);overflow-wrap:anywhere}
-.snapshot-integrations{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
-.integration-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:#0b1726;font-size:.82rem}
-.integration-chip strong{color:var(--amber);font-weight:700}
-.snapshot-meta{margin-top:14px;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
-.snapshot-feedback{min-height:1.5em;margin-top:12px;color:var(--green);font-size:.86rem}
-.snapshot-feedback.error{color:var(--amber)}
-.file-help{font-size:.8rem;color:var(--muted)}
-@media(max-width:850px){.snapshot-panel{grid-template-columns:1fr}}
-@media(max-width:480px){.snapshot-panel{padding:13px}.snapshot-kpi{padding:11px}.snapshot-kpi strong{font-size:1.15rem}.integration-chip{font-size:.75rem}}
-
+:root{color-scheme:dark;--bg:#080b12;--panel:#101620;--panel2:#0c111a;--line:#253140;--muted:#8292a6;--text:#edf4fb;--cyan:#67f4e0;--blue:#72a7ff;--lime:#c7ff72;--amber:#ffc66d;--red:#ff718b;--violet:#ba9cff;--r:15px;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;--sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 45% -15%,#152739 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 var(--sans);min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}a{color:var(--cyan);text-decoration:none}.mono{font-family:var(--mono);letter-spacing:.01em}.muted{color:var(--muted)}.eyebrow{font:10px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}.shell{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100vh}.rail{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:#090e16eF;padding:23px 15px;display:flex;flex-direction:column;gap:28px;z-index:5}.brand{display:flex;gap:11px;align-items:center;padding:0 7px}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid #4c9e9d;background:linear-gradient(145deg,#153d43,#0c1a26);color:var(--cyan);font:bold 18px var(--mono);clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%)}.brand strong{display:block;font:700 16px var(--mono);letter-spacing:.12em}.brand small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.nav-label{padding:0 10px 8px;color:#627187;font:10px var(--mono);letter-spacing:.16em;text-transform:uppercase}.nav{display:grid;gap:5px}.nav button{border:1px solid transparent;color:#9aaabd;background:transparent;text-align:left;border-radius:9px;padding:11px 12px;display:flex;align-items:center;gap:11px}.nav button .ico{width:19px;text-align:center;color:#7b8ea4;font-size:16px}.nav button:hover{background:#111d29;color:var(--text)}.nav button.active{border-color:#2c696b;background:linear-gradient(90deg,#123438,#101b27);color:var(--cyan);box-shadow:inset 3px 0 var(--cyan)}.rail-bottom{margin-top:auto;display:grid;gap:10px}.agent-box{border:1px solid #4e3d27;background:#211b14;border-radius:11px;padding:12px}.agent-head{display:flex;align-items:center;gap:8px;color:var(--amber);font:11px var(--mono)}.dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}.agent-box p{font-size:11px;color:#b4a48f;margin:8px 0 0}.rail-foot{color:#526175;font:10px var(--mono);padding:0 6px}.main{min-width:0;padding:0 30px 38px}.topbar{height:69px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:16px}.crumb{font:11px var(--mono);color:#7d8ca0}.crumb b{color:var(--text);font-weight:500}.top-actions{display:flex;align-items:center;gap:9px}.chip{border:1px solid var(--line);border-radius:7px;padding:6px 9px;font:10px var(--mono);color:#9aacc0;background:#0c121b}.chip strong{color:var(--lime);font-weight:500}.btn{border:1px solid #35505b;border-radius:8px;background:#10202b;color:var(--cyan);padding:9px 12px;font:11px var(--mono);transition:.15s}.btn:hover{border-color:var(--cyan);background:#17323a}.btn.secondary{color:#bac7d6;border-color:var(--line);background:#111720}.btn.warning{color:var(--amber);border-color:#6b5030;background:#211b14}.btn:disabled{opacity:.4;cursor:not-allowed}.hero{padding:29px 0 22px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.hero h1{margin:5px 0 7px;font-size:clamp(26px,3.1vw,43px);line-height:1.04;letter-spacing:-.045em;font-weight:650}.hero h1 span{color:var(--cyan)}.hero p{color:#9aaabd;margin:0;max-width:630px;font-size:13px}.hero-right{text-align:right;min-width:145px}.hero-right .stamp{font:10px var(--mono);color:#708198}.hero-right strong{display:block;font:12px var(--mono);color:var(--lime);margin-top:6px}.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.stat{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:linear-gradient(140deg,#131d29,#0d131c 72%);padding:15px 16px;min-height:112px}.stat:after{content:"";position:absolute;width:70px;height:70px;border:1px solid #ffffff09;border-radius:50%;right:-19px;top:-25px;box-shadow:0 0 0 12px #ffffff04,0 0 0 24px #ffffff02}.stat .label{font:10px var(--mono);letter-spacing:.1em;color:#8293a8;text-transform:uppercase}.stat .value{font:25px var(--mono);margin:8px 0 4px;letter-spacing:-.05em}.stat .detail{font-size:10px;color:#78889b}.v-cyan{color:var(--cyan)}.v-lime{color:var(--lime)}.v-amber{color:var(--amber)}.v-red{color:var(--red)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:27px 0 12px}.section-head h2{margin:0;font-size:14px;font-weight:600;letter-spacing:.01em}.section-head .meta{font:10px var(--mono);color:#708197}.layout-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.9fr);gap:13px}.panel{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(150deg,#111925,#0c1119);min-width:0;overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid var(--line);gap:10px}.panel-head h3{margin:0;font-size:12px;font-weight:600}.panel-head small{color:#74869a;font:10px var(--mono)}.panel-body{padding:15px}.network-panel{position:relative;min-height:385px;background:radial-gradient(ellipse at 50% 52%,#102d35 0,transparent 43%),linear-gradient(145deg,#101a27,#0a1018)}.net-topline{display:flex;justify-content:space-between;gap:12px;align-items:center;font:10px var(--mono);color:#7f92a7;padding:13px 15px 0}.net-legend{display:flex;gap:12px;flex-wrap:wrap}.legend-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px}.graph{width:100%;height:310px;display:block}.graph .edge{stroke:#38535e;stroke-width:1.4;stroke-dasharray:4 7;opacity:.8}.graph .edge.active{stroke:var(--cyan);stroke-dasharray:2 7;animation:flow 16s linear infinite}.graph .halo{fill:none;stroke:#4ee5d2;stroke-width:1;opacity:.13}.graph .node{cursor:pointer;outline:none}.graph .node:focus .node-core,.graph .node:hover .node-core{stroke:#fff;stroke-width:2}.graph .node-core{stroke-width:1.4}.graph text{font-family:var(--mono);text-anchor:middle;pointer-events:none}.graph .n-title{font-size:11px;fill:#edf6ff;font-weight:600}.graph .n-sub{font-size:8px;fill:#8299ac}.graph .n-icon{font-size:16px;fill:var(--cyan)}.graph .center .node-core{fill:#123b3d;stroke:var(--cyan)}.graph .connected .node-core{fill:#16283a;stroke:#6c9bff}.graph .unknown .node-core{fill:#211b15;stroke:var(--amber);stroke-dasharray:3 3}.graph .future .node-core{fill:#161823;stroke:#7867a8;stroke-dasharray:3 4}.graph .center .n-icon{fill:var(--cyan)}.graph .connected .n-icon{fill:var(--blue)}.graph .unknown .n-icon{fill:var(--amber)}.graph .future .n-icon{fill:var(--violet)}@keyframes flow{to{stroke-dashoffset:-180}}.node-detail{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 14px;border-top:1px solid var(--line);background:#0a1119}.node-detail strong{font:11px var(--mono)}.node-detail span{color:#8292a6;font-size:11px}.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:5px;padding:4px 7px;font:9px var(--mono);white-space:nowrap}.tag.good{color:var(--lime);border-color:#385a3b;background:#142219}.tag.warn{color:var(--amber);border-color:#5c482e;background:#211b14}.tag.dim{color:#9ba9bb}.tag.red{color:var(--red);border-color:#643342;background:#28141c}.feed{display:grid;gap:0}.event{display:grid;grid-template-columns:49px 8px minmax(0,1fr);gap:10px;padding:13px 0;border-bottom:1px solid #202b37}.event:last-child{border:0}.event time{font:10px var(--mono);color:#72839a;padding-top:2px}.event .edot{width:7px;height:7px;border-radius:50%;margin-top:5px;background:var(--blue);box-shadow:0 0 9px currentColor}.event.warn .edot{background:var(--amber)}.event.good .edot{background:var(--lime)}.event .event-title{font-size:11px;font-weight:600}.event p{font-size:10px;color:#8291a4;margin:4px 0 0;line-height:1.45}.empty-state{padding:21px 10px;text-align:center;color:#74849a;font-size:11px}.empty-state b{display:block;color:#b6c5d7;font:12px var(--mono);margin-bottom:5px}.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}.integration-list{display:grid;gap:8px}.integration{display:grid;grid-template-columns:35px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid #243140;background:#0d141e;border-radius:10px;padding:10px}.int-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:#172b39;color:var(--cyan);font:12px var(--mono)}.integration strong{display:block;font:11px var(--mono)}.integration small{display:block;color:#7e8ea2;font-size:10px;margin-top:3px}.action-list{display:grid;gap:8px}.action{display:flex;align-items:flex-start;gap:10px;border:1px solid #28313b;background:#0b121b;border-radius:10px;padding:11px}.action .aicon{width:31px;height:31px;flex:0 0 31px;display:grid;place-items:center;border:1px solid #3a3c39;background:#1b1b18;border-radius:8px;color:var(--amber);font-size:14px}.action strong{display:block;font-size:11px}.action p{margin:4px 0 0;color:#8493a5;font-size:10px}.action .action-status{margin-left:auto;flex:0 0 auto}.action-foot{font-size:10px;color:#9b8a70;line-height:1.55;margin:10px 0 0}.bottom-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:13px;margin-top:13px}.terminal{background:#070c12;border:1px solid #202f3d;border-radius:10px;padding:13px;font:11px/1.85 var(--mono);min-height:155px;color:#a3b5c7}.terminal .prompt{color:var(--lime)}.terminal .cmd{color:var(--cyan)}.terminal .hint{color:#61758c}.terminal pre{white-space:pre-wrap;margin:0}.terminal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.metric-row{display:grid;grid-template-columns:80px minmax(0,1fr) 43px;gap:9px;align-items:center;margin:13px 0;font-size:10px;color:#9bacc0}.track{height:5px;border-radius:99px;background:#202b38;overflow:hidden}.bar{height:100%;width:0;background:var(--cyan);border-radius:99px;transition:width .5s}.bar.amber{background:var(--amber)}.metric-row output{text-align:right;font:10px var(--mono);color:#d4e0ed}.report-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.file-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.report-status{font:10px var(--mono);color:var(--amber);padding:10px 12px;border:1px dashed #5a482f;background:#1a1713;border-radius:8px;margin-bottom:11px}.report-status.loaded{color:var(--lime);border-color:#36573c;background:#101c15}.footnote{margin-top:20px;padding:14px 0;border-top:1px solid var(--line);font-size:10px;color:#617187;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.mobile-toggle{display:none}.toast{position:fixed;right:20px;bottom:20px;z-index:20;max-width:min(420px,calc(100vw - 40px));border:1px solid #366a6b;background:#102329;color:#dffdfa;padding:12px 15px;border-radius:10px;box-shadow:0 14px 45px #0008;font-size:12px;display:none}.toast.show{display:block;animation:fade .18s ease-out}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.view{display:none}.view.active{display:block}.view-placeholder{border:1px dashed #344252;border-radius:12px;padding:26px;background:#0d131c}.view-placeholder h2{margin:8px 0;font-size:23px}.view-placeholder p{max-width:680px;color:#9baabd}.view-placeholder ul{color:#aebdce;line-height:1.9}.view-placeholder .tag{margin:3px}
+@media(min-width:1500px){.main{padding-left:40px;padding-right:40px}.stat{min-height:122px}.graph{height:345px}}
+@media(max-width:1050px){.shell{grid-template-columns:190px minmax(0,1fr)}.rail{padding:18px 10px}.main{padding:0 18px 30px}.layout-main,.bottom-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph{height:295px}}
+@media(max-width:700px){.shell{display:block}.rail{position:fixed;left:-245px;width:228px;transition:left .2s;box-shadow:20px 0 50px #0007}.rail.open{left:0}.mobile-toggle{display:inline-flex}.main{padding:0 13px 24px}.topbar{height:58px}.top-actions .chip{display:none}.hero{align-items:flex-start;padding-top:24px}.hero-right{display:none}.hero h1{font-size:31px}.hero p{font-size:12px}.stat-grid{gap:8px}.stat{padding:12px;min-height:100px}.stat .value{font-size:22px}.lower-grid{grid-template-columns:1fr}.section-head{margin-top:22px}.graph{height:260px}.network-panel{min-height:330px}.panel-head{padding:12px}.panel-body{padding:12px}.node-detail{align-items:flex-start;flex-direction:column}.footnote{display:grid}.nav button{padding:13px}.top-actions .btn{padding:8px}.terminal{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="top"><div class="brand">◆ BLUMIX <span style="color:var(--muted);font-weight:500;letter-spacing:0">/ ATLAS VISUAL</span></div><span class="badge">EDICIÓN LOCAL-FIRST · v0.7</span></header>
-<main>
-<section class="hero" id="inicio">
-<div><div class="eyebrow">Un centro de mando. Proyectos independientes.</div><h1>Un ecosistema.<br><span>Una visión.</span></h1><p class="lead">Atlas visual de BLUMIX: una guía interactiva para comprender cómo se conectan las herramientas, qué responsabilidad conserva cada proyecto y cómo crecer sin mezclar repositorios ni perder el control.</p><div class="actions"><a class="btn primary" href="#arquitectura">Explorar arquitectura ↓</a><a class="btn" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix" target="_blank" rel="noreferrer">Explorar rama de mejora ↗</a></div></div>
-<div class="orbit"><svg viewBox="0 0 500 380" role="img" aria-label="Diagrama de BLUMIX como orquestador de tres proyectos independientes"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#66e6ff"/><stop offset="1" stop-color="#b7a2ff"/></linearGradient></defs><circle cx="250" cy="180" r="132" fill="none" stroke="#2c4962" stroke-dasharray="5 8"/><circle cx="250" cy="180" r="92" fill="none" stroke="#29455e"/><path d="M250 180 L120 85 M250 180 L380 85 M250 180 L250 315" stroke="url(#g)" stroke-width="2" stroke-dasharray="5 5"/><rect x="168" y="135" width="164" height="90" rx="18" fill="#172f48" stroke="#66e6ff" stroke-width="2"/><text x="250" y="172" fill="#edf5ff" text-anchor="middle" font-size="24" font-weight="800">BLUMIX</text><text x="250" y="196" fill="#a5b7cc" text-anchor="middle" font-size="12">ORQUESTADOR</text><g><rect x="40" y="43" width="142" height="68" rx="14" fill="#11243a" stroke="#8bf0c5"/><text x="111" y="72" fill="#8bf0c5" text-anchor="middle" font-size="17" font-weight="700">BLUMCL</text><text x="111" y="92" fill="#a5b7cc" text-anchor="middle" font-size="11">Android / Termux</text></g><g><rect x="318" y="43" width="142" height="68" rx="14" fill="#11243a" stroke="#b7a2ff"/><text x="389" y="72" fill="#b7a2ff" text-anchor="middle" font-size="17" font-weight="700">BLUMSEC</text><text x="389" y="92" fill="#a5b7cc" text-anchor="middle" font-size="11">Seguridad / evidencias</text></g><g><rect x="170" y="287" width="160" height="68" rx="14" fill="#11243a" stroke="#ffd68a"/><text x="250" y="316" fill="#ffd68a" text-anchor="middle" font-size="17" font-weight="700">BLUMELIX</text><text x="250" y="336" fill="#a5b7cc" text-anchor="middle" font-size="11">Aplicación web</text></g><circle class="pulse" cx="250" cy="180" r="5" fill="#66e6ff"/></svg><p class="tiny muted">Modelo conceptual basado en la documentación visible del repositorio; validar las rutas reales de cada instalación antes de ejecutar acciones.</p></div>
-</section>
-
-<section class="section" id="command-center">
-<div class="section-head"><div><div class="eyebrow">00 / Puente de mando</div><h2>Command Center</h2><p class="muted">Diseñado para pasar de la estética a la operación verificable.</p></div><span class="badge">UI 0.6 · INFORME IMPORTABLE</span></div>
-<div class="command-deck">
-<div class="console">
-<div class="console-head"><div><div class="brand">BLUMIX <span style="color:var(--cyan)">// NAVE</span></div><span class="tiny muted">Protocolo local · diagnóstico primero</span></div><span class="live-label">INTERFAZ DISPONIBLE · SIN CONEXIÓN AL EQUIPO</span></div>
-<div class="terminal-lines" aria-label="Ejemplo de salida de terminal">
-<div><span class="prompt">ariaslondo@lubuntu</span>:~$ blumix doctor</div>
-<div><span class="ok">[INFO]</span> Comprobación local solicitada</div>
-<div><span class="warn">[PENDIENTE]</span> Ejecutar en el equipo para conocer el resultado</div>
-<div><span class="prompt">ariaslondo@lubuntu</span>:~$ blumix integrations</div>
-<div><span class="warn">[SIN DATOS EN VIVO]</span> Esta página no puede inspeccionar tu disco</div>
-</div>
-<div class="command-grid" aria-label="Comandos de diagnóstico para copiar">
-<button class="command-tile" type="button" data-command="blumix doctor"><span>🩺 Diagnóstico</span><code>blumix doctor</code><small>Comprobar instalación y rutas</small></button>
-<button class="command-tile" type="button" data-command="blumix integrations"><span>🧩 Integraciones</span><code>blumix integrations</code><small>Ver rutas detectadas</small></button>
-<button class="command-tile" type="button" data-command="blumix system"><span>🖥️ Sistema</span><code>blumix system</code><small>Consultar información local</small></button>
-<button class="command-tile" type="button" data-command="blumix security"><span>🛡️ Seguridad</span><code>blumix security</code><small>Revisar señales disponibles</small></button>
-<button class="command-tile" type="button" data-command="blumix audit"><span>🧪 Auditoría local</span><code>blumix audit</code><small>Revisar permisos y nombres de archivos de riesgo</small></button>
-<button class="command-tile" type="button" data-command='./bin/blumix report --json > "$HOME/blumix-report.json"'><span>📦 Exportar informe</span><code>report --json</code><small>Crear una instantánea privada para importar en el Atlas</small></button>
-</div>
-<div id="copy-status" class="toast" role="status" aria-live="polite"></div>
-<p class="command-note">Pulsa un comando para copiarlo. Esta página no lo ejecuta ni accede a tu terminal.</p>
-</div>
-<aside class="telemetry" aria-label="Estado de la página">
-<div class="metric"><span class="metric-mark">🛰️</span><span class="metric-label">Atlas</span><strong>Disponible</strong><span class="metric-foot">Contenido local de la página</span></div>
-<div class="metric"><span class="metric-mark">🔌</span><span class="metric-label">Conexión al equipo</span><strong>No conectada</strong><span class="metric-foot">Sin agente local</span></div>
-<div class="metric"><span class="metric-mark">📡</span><span class="metric-label">Estado de proyectos</span><strong>No verificado</strong><span class="metric-foot">Ejecuta el CLI para comprobar</span></div>
-<div class="metric"><span class="metric-mark">🔐</span><span class="metric-label">Permisos</span><strong>Solo lectura</strong><span class="metric-foot">La web no ejecuta acciones</span></div>
+<div class="shell">
+<aside class="rail" id="rail">
+ <div class="brand"><div class="brand-mark">B/</div><div><strong>BLUMIX</strong><small>ECOSYSTEM CONTROL PLANE</small></div></div>
+ <div><div class="nav-label">Command</div><nav class="nav" aria-label="Navegación principal">
+  <button class="active" data-view="overview"><span class="ico">◈</span>Atlas del ecosistema</button>
+  <button data-view="integrations"><span class="ico">⌘</span>Integraciones</button>
+  <button data-view="security"><span class="ico">⛨</span>Seguridad & auditoría</button>
+  <button data-view="operations"><span class="ico">⇧</span>Operaciones</button>
+  <button data-view="reports"><span class="ico">▤</span>Informes locales</button>
+ </nav></div>
+ <div><div class="nav-label">Control plane</div><nav class="nav" aria-label="Herramientas">
+  <button data-command="doctor"><span class="ico">✳</span>Diagnóstico CLI</button>
+  <button data-command="integrations"><span class="ico">⟷</span>Descubrir proyectos</button>
+  <button data-command="audit"><span class="ico">⌕</span>Auditoría local</button>
+ </nav></div>
+ <div class="rail-bottom">
+  <div class="agent-box"><div class="agent-head"><span class="dot"></span>AGENTE PRIVILEGIADO</div><p>No conectado. La interfaz no ejecuta comandos del sistema ni solicita sudo.</p></div>
+  <div class="rail-foot">BLUMIX 0.7.0 · ATLAS / R1<br>LOCAL-FIRST · ZERO TRUST</div>
+ </div>
 </aside>
-</div>
-
-</section>
-<section class="section" id="snapshot">
-<div class="section-head">
-  <div><div class="eyebrow">00.1 / Telemetría local</div><h2>El estado real, sin fingir conexión</h2>
-  <p class="muted">Genera un informe en la terminal e impórtalo aquí. El archivo se lee dentro del navegador; no se envía a ningún servidor.</p></div>
-  <span class="badge" id="snapshot-status">SIN INFORME IMPORTADO</span>
-</div>
-<div class="snapshot-panel">
-  <div class="snapshot-intro">
-    <h3>📡 Conectar mediante una instantánea</h3>
-    <p>Desde la carpeta del repositorio, ejecuta el comando y luego selecciona el archivo generado:</p>
-    <p><code>./bin/blumix report --json &gt; "$HOME/blumix-report.json"</code></p>
-    <button class="btn primary" id="choose-snapshot" type="button">Seleccionar informe JSON</button>
-    <input id="snapshot-file" type="file" accept=".json,application/json" hidden>
-    <p class="file-help">Máximo 1 MB. Solo se aceptan informes BLUMIX compatibles. No se ejecuta código del archivo ni se inicia una conexión de red.</p>
-    <div class="snapshot-feedback" id="snapshot-feedback" role="status" aria-live="polite">Aún no se ha importado ningún informe. Los indicadores muestran N/D hasta que cargues una instantánea.</div>
-    <div class="snapshot-meta" id="report-meta">Los informes incluyen sistema básico e indicador de existencia de carpetas; no incluyen rutas absolutas ni secretos.</div>
+<main class="main">
+ <header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px"><button class="btn secondary mobile-toggle" id="menuToggle" aria-label="Abrir menú">☰</button><div class="crumb">BLUMIX <span style="color:#3d5365">/</span> <b id="crumbTitle">ATLAS DEL ECOSISTEMA</b></div></div>
+  <div class="top-actions"><span class="chip">MODE <strong>READ-ONLY</strong></span><span class="chip">TRUST <strong>ZERO</strong></span><button class="btn" id="refreshBtn">↻ Actualizar vista</button></div>
+ </header>
+ <section class="view active" id="view-overview">
+  <div class="hero"><div><div class="eyebrow">Command plane / Ecosystem intelligence</div><h1>Tu ecosistema.<br><span>Un solo plano de control.</span></h1><p>BLUMIX descubre, observa y coordina proyectos independientes. Cada señal muestra su procedencia; ninguna integración se declara sana solo por existir en disco.</p></div><div class="hero-right"><div class="stamp">ESTADO DEL CONTROL PLANE</div><strong>LOCAL · READ ONLY</strong><div class="stamp" id="nowStamp" style="margin-top:7px">ESPERANDO DATOS</div></div></div>
+  <div class="stat-grid">
+   <article class="stat"><div class="label">Proyectos detectados</div><div class="value v-cyan" id="statProjects">— / 3</div><div class="detail">Existencia de directorio, no salud del servicio</div></article>
+   <article class="stat"><div class="label">Agente seguro</div><div class="value v-amber" style="font-size:19px">NO ENLAZADO</div><div class="detail">Sin ejecución privilegiada desde la web</div></article>
+   <article class="stat"><div class="label">Informe cargado</div><div class="value" id="statReport" style="font-size:19px">NINGUNO</div><div class="detail" id="statReportDetail">No se ha importado una captura</div></article>
+   <article class="stat"><div class="label">Acciones elevadas</div><div class="value v-lime">0</div><div class="detail">No hay operaciones en ejecución</div></article>
   </div>
-  <div>
-    <div class="snapshot-kpis" aria-label="Métricas del informe importado">
-      <div class="snapshot-kpi"><span>⚡ CPU</span><strong id="report-cpu">N/D</strong><small id="report-cpu-model">Sin datos</small></div>
-      <div class="snapshot-kpi"><span>🧠 Memoria RAM</span><strong id="report-ram">N/D</strong><small id="report-ram-detail">Sin datos</small></div>
-      <div class="snapshot-kpi"><span>💾 Disco raíz</span><strong id="report-disk">N/D</strong><small>Uso del sistema de archivos raíz</small></div>
-      <div class="snapshot-kpi"><span>⏱️ Tiempo activo</span><strong id="report-uptime">N/D</strong><small id="report-kernel">Kernel no verificado</small></div>
-    </div>
-    <div class="snapshot-integrations" aria-label="Estado de existencia de directorios reportado por la CLI">
-      <span class="integration-chip">BLUMCL <strong id="report-blumcl">Sin informe</strong></span>
-      <span class="integration-chip">BLUMSEC <strong id="report-blumsec">Sin informe</strong></span>
-      <span class="integration-chip">BLUMELIX <strong id="report-blumelix">Sin informe</strong></span>
-    </div>
-    <div class="snapshot-meta" id="report-os">Sistema operativo: sin datos.</div>
+  <div class="section-head"><h2>01 / Topología del ecosistema</h2><span class="meta">SELECCIONA UN NODO PARA INSPECCIONARLO</span></div>
+  <div class="layout-main">
+   <section class="panel network-panel"><div class="net-topline"><span>DEPENDENCY MAP · CONCEPTUAL + DETECCIÓN LOCAL</span><span class="tag dim">NO ES TELEMETRÍA EN VIVO</span></div>
+    <svg class="graph" viewBox="0 0 620 330" role="img" aria-label="Mapa de arquitectura de BLUMIX y sus integraciones">
+     <defs><filter id="glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+     <circle class="halo" cx="310" cy="164" r="75"/><circle class="halo" cx="310" cy="164" r="104" stroke-dasharray="3 7"/>
+     <path class="edge active" d="M310 164 L150 80"/><path class="edge active" d="M310 164 L470 80"/><path class="edge" d="M310 164 L150 252"/><path class="edge" d="M310 164 L470 252"/>
+     <g class="node center" tabindex="0" role="button" aria-label="BLUMIX, orquestador" data-node="BLUMIX" transform="translate(310 164)">
+      <circle class="node-core" r="45" filter="url(#glow)"/><text class="n-icon" y="-7">B/</text><text class="n-title" y="12">BLUMIX</text><text class="n-sub" y="27">ORCHESTRATOR</text>
+     </g>
+     <g class="node connected" tabindex="0" role="button" aria-label="BLUMCL" data-node="BLUMCL" transform="translate(150 80)"><circle class="node-core" r="35"/><text class="n-icon" y="-7">⌘</text><text class="n-title" y="11">BLUMCL</text><text class="n-sub" y="23" id="node-cl">NO VERIFICADO</text></g>
+     <g class="node connected" tabindex="0" role="button" aria-label="BLUMSEC" data-node="BLUMSEC" transform="translate(470 80)"><circle class="node-core" r="35"/><text class="n-icon" y="-7">⛨</text><text class="n-title" y="11">BLUMSEC</text><text class="n-sub" y="23" id="node-sec">NO VERIFICADO</text></g>
+     <g class="node unknown" tabindex="0" role="button" aria-label="BLUMELIX" data-node="BLUMELIX" transform="translate(150 252)"><circle class="node-core" r="35"/><text class="n-icon" y="-7">◇</text><text class="n-title" y="11">BLUMELIX</text><text class="n-sub" y="23" id="node-elx">NO VERIFICADO</text></g>
+     <g class="node future" tabindex="0" role="button" aria-label="Agente local futuro" data-node="AGENTE LOCAL" transform="translate(470 252)"><circle class="node-core" r="35"/><text class="n-icon" y="-7">⌁</text><text class="n-title" y="11">AGENTE</text><text class="n-sub" y="23">NO ENLAZADO</text></g>
+    </svg>
+    <div class="node-detail"><div><strong id="nodeDetailTitle">BLUMIX / ORQUESTADOR</strong><br><span id="nodeDetailText">Coordina descubrimiento, políticas y ejecución controlada.</span></div><span class="tag warn" id="nodeDetailTag">SOLO LECTURA</span></div>
+   </section>
+   <section class="panel"><div class="panel-head"><h3>02 / Registro de eventos</h3><small>EVENT LOG</small></div><div class="panel-body"><div class="feed" id="eventFeed">
+    <div class="event warn"><time>LOCAL</time><span class="edot"></span><div><div class="event-title">Agente privilegiado ausente</div><p>Las operaciones que modifican el sistema están bloqueadas hasta disponer de un agente local autenticado.</p></div></div>
+    <div class="event"><time>LOCAL</time><span class="edot"></span><div><div class="event-title">Modo seguro activado</div><p>La interfaz no ejecuta comandos, no llama a sudo y no contacta servicios externos.</p></div></div>
+    <div class="event"><time>LOCAL</time><span class="edot"></span><div><div class="event-title">Esperando instantánea</div><p>Importa un informe generado por <code>blumix report --json</code> para visualizar métricas capturadas.</p></div></div>
+   </div></div></section>
   </div>
-</div>
-</section>
-<section class="section" id="arquitectura"><div class="section-head"><div><div class="eyebrow">01 / Mapa del sistema</div><h2>Una puerta de entrada, tres identidades</h2></div><div class="controls"><input id="filter" type="search" placeholder="Filtrar proyectos o responsabilidades…" aria-label="Filtrar tarjetas"><button class="btn" id="reset">Restablecer</button></div></div>
-<div class="grid" id="cards">
-<article class="card" data-search="blumix orquestador terminal comandos diagnóstico integración"><div class="symbol">💎</div><span class="tag">NÚCLEO</span><h3>BLUMIX</h3><p class="muted">Centro de mando en terminal que ayuda a navegar y diagnosticar el entorno.</p><ul><li>Comandos de sistema, red y seguridad.</li><li>Comprobación de integraciones.</li><li>Acceso rápido sin fusionar proyectos.</li></ul><a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">Código y documentación ↗</a></article>
-<article class="card" data-search="blumcl android termux auditoría almacenamiento"><div class="symbol">📱</div><span class="tag">PROYECTO INDEPENDIENTE</span><h3>BLUMCL</h3><p class="muted">Proyecto referenciado por la configuración y documentación de BLUMIX.</p><ul><li>Enfoque descrito: auditoría de almacenamiento en Android/Termux.</li><li>Repositorio y estado deben verificarse por separado.</li><li>BLUMIX no debe modificarlo sin permiso.</li></ul><span class="tag">Integración a verificar</span></article>
-<article class="card" data-search="blumsec seguridad bóveda cifrada evidencias notario digital"><div class="symbol">🛡️</div><span class="tag">PROYECTO INDEPENDIENTE</span><h3>BLUMSEC</h3><p class="muted">Herramientas de seguridad y preservación de evidencias, según la descripción del proyecto.</p><ul><li>Bóveda cifrada y sellado de evidencias.</li><li>Revisar requisitos y protección de datos.</li><li>Separar las operaciones de lectura y escritura.</li></ul><span class="tag">Integración a verificar</span></article>
-<article class="card" data-search="blumelix flask web aplicación servicios"><div class="symbol">🌐</div><span class="tag">PROYECTO INDEPENDIENTE</span><h3>BLUMELIX</h3><p class="muted">Aplicación web referenciada por la documentación de BLUMIX.</p><ul><li>La documentación la describe como aplicación Flask.</li><li>Confirmar funciones y estado reales antes de prometer capacidades.</li><li>Respetar su base de datos y secretos.</li></ul><span class="tag">Integración a verificar</span></article>
-</div></section>
-<section class="section"><div class="section-head"><div><div class="eyebrow">02 / Flujo de trabajo</div><h2>De la señal a una decisión segura</h2></div></div><div class="flow"><div class="step"><strong>01 · Detectar</strong><span class="muted">Identificar sistema, herramientas disponibles y rutas configuradas.</span></div><div class="step"><strong>02 · Verificar</strong><span class="muted">Comprobar que cada ruta existe y que el repositorio corresponde al proyecto esperado.</span></div><div class="step"><strong>03 · Explicar</strong><span class="muted">Presentar estado, hallazgos y riesgos en lenguaje claro.</span></div><div class="step"><strong>04 · Actuar</strong><span class="muted">Pedir autorización para cambios; registrar resultado y permitir auditoría.</span></div></div></section>
-<section class="section" id="recorridos"><div class="section-head"><div><div class="eyebrow">03 / Recorridos</div><h2>Elige una ruta de exploración</h2></div></div><div class="map"><div class="mapbox"><h3>🧭 Recorrido de comprensión</h3><a class="node" href="#arquitectura">1. Conoce el núcleo<small>Qué hace BLUMIX y qué no hace.</small></a><a class="node" href="#principios">2. Aprende las reglas<small>Separación, seguridad y trazabilidad.</small></a><a class="node" href="#siguiente">3. Decide el siguiente hito<small>Priorizar mejoras comprobables.</small></a></div><div class="mapbox"><h3>🔧 Recorrido técnico</h3><a class="node" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix/bin" target="_blank" rel="noreferrer">1. Inspecciona el ejecutable<small>Entrypoint y comandos disponibles.</small></a><a class="node" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix/lib" target="_blank" rel="noreferrer">2. Revisa las bibliotecas<small>Lógica compartida y presentación.</small></a><a class="node" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix/docs" target="_blank" rel="noreferrer">3. Recorre la documentación<small>Arquitectura, módulos y roadmap.</small></a></div></div></section>
-<section class="section" id="principios"><div class="section-head"><div><div class="eyebrow">04 / Pacto de arquitectura</div><h2>Conectar no significa mezclar</h2></div></div><div class="grid"><article class="card"><div class="symbol">🔒</div><h3>Privacidad por defecto</h3><p class="muted">No mostrar tokens, claves, contenido de bóvedas ni variables sensibles. Nunca guardar secretos en Git.</p></article><article class="card"><div class="symbol">🧱</div><h3>Fronteras claras</h3><p class="muted">Cada proyecto mantiene su repositorio, pruebas, versión, documentación y ciclo de publicación.</p></article><article class="card"><div class="symbol">🧾</div><h3>Hechos verificables</h3><p class="muted">Diferenciar “detectado”, “configurado”, “probado” y “pendiente”. No inventar estados ni acuerdos.</p></article></div><p class="notice">Este atlas es una capa de documentación visual autónoma: no ejecuta comandos, no cambia archivos locales y no requiere claves API. Los nodos que describen integraciones son referencias de arquitectura, no una garantía de que una conexión esté activa.</p></section>
-<section class="section" id="siguiente"><div class="section-head"><div><div class="eyebrow">05 / Próxima frontera</div><h2>Convertir el atlas en un centro vivo</h2></div></div><div class="grid"><article class="card"><span class="tag">FASE A</span><h3>Inventario real</h3><p class="muted">Detectar repositorios, ramas, pruebas, versiones y rutas locales desde una fuente verificable.</p></article><article class="card"><span class="tag">FASE B</span><h3>Estado de GitHub</h3><p class="muted">Mostrar enlaces, último commit, workflows y PRs solo con permisos mínimos y datos confirmados.</p></article><article class="card"><span class="tag">FASE C</span><h3>Experiencia viva</h3><p class="muted">Añadir búsqueda avanzada, historial de cambios, accesibilidad, pruebas y despliegue documentado.</p></article></div><p class="muted">Recomendación: primero lograr una guía fiable y mantenible; después integrar APIs o automatizaciones. La espectacularidad visual nunca debe sustituir la seguridad ni la veracidad.</p></section>
+  <div class="lower-grid">
+   <section class="panel"><div class="panel-head"><h3>03 / Componentes del ecosistema</h3><small id="integrationCount">0/3 DETECTADOS</small></div><div class="panel-body"><div class="integration-list">
+    <div class="integration"><div class="int-icon">CL</div><div><strong>BLUMCL</strong><small id="int-cl-detail">Ruta aún no comprobada por el Atlas</small></div><span class="tag dim" id="int-cl-status">DESCONOCIDO</span></div>
+    <div class="integration"><div class="int-icon">SC</div><div><strong>BLUMSEC</strong><small id="int-sec-detail">Ruta aún no comprobada por el Atlas</small></div><span class="tag dim" id="int-sec-status">DESCONOCIDO</span></div>
+    <div class="integration"><div class="int-icon">EX</div><div><strong>BLUMELIX</strong><small id="int-elx-detail">Ruta aún no comprobada por el Atlas</small></div><span class="tag dim" id="int-elx-status">DESCONOCIDO</span></div>
+   </div></div></section>
+   <section class="panel"><div class="panel-head"><h3>04 / Operaciones privilegiadas</h3><small>POLICY GATE</small></div><div class="panel-body">
+    <div class="action-list">
+     <div class="action"><div class="aicon">⛨</div><div><strong>Inspeccionar controles de seguridad</strong><p>Solo lectura · disponible desde CLI local</p></div><span class="tag good action-status">CLI</span></div>
+     <div class="action"><div class="aicon">⇄</div><div><strong>Reiniciar servicio permitido</strong><p>Requerirá agente local, allowlist, autenticación y confirmación por operación</p></div><span class="tag warn action-status">BLOQUEADO</span></div>
+     <div class="action"><div class="aicon">⚿</div><div><strong>Aplicar cambio privilegiado</strong><p>Sin sudo genérico; política de privilegio mínimo y registro de auditoría</p></div><span class="tag warn action-status">BLOQUEADO</span></div>
+    </div><p class="action-foot">La web no simula ejecución. Los botones de cambio están bloqueados hasta implementar y probar el agente con límites verificables.</p>
+   </div></section>
+  </div>
+  <div class="bottom-grid">
+   <section class="panel"><div class="panel-head"><h3>05 / Terminal de operaciones</h3><small>COMANDOS REPRODUCIBLES</small></div><div class="panel-body"><div class="terminal"><div><span class="prompt">ariaslondo@lubuntu</span>:<span style="color:var(--blue)">~/Blumix</span>$ <span class="cmd" id="terminalCmd">./bin/blumix doctor</span></div><pre id="terminalHint">Ejecuta el comando en tu terminal real. El Atlas no tiene acceso directo a tu shell.</pre><div class="hint">LOCAL SHELL · NO REMOTE EXECUTION</div></div><div class="terminal-actions"><button class="btn" data-command="doctor">Preparar doctor</button><button class="btn secondary" data-command="integrations">Preparar integrations</button><button class="btn secondary" data-command="audit">Preparar audit --json</button></div></div></section>
+   <section class="panel"><div class="panel-head"><h3>06 / Métricas del último informe</h3><small>SNAPSHOT ONLY</small></div><div class="panel-body"><div class="report-status" id="snapshot-status">SIN INFORME · IMPORTA UNA CAPTURA JSON</div>
+    <div class="metric-row"><span>CPU</span><div class="track"><div class="bar" id="cpu-bar"></div></div><output id="report-cpu">—</output></div>
+    <div class="metric-row"><span>Memoria</span><div class="track"><div class="bar amber" id="ram-bar"></div></div><output id="report-ram">—</output></div>
+    <div class="metric-row"><span>Disco raíz</span><div class="track"><div class="bar" id="disk-bar"></div></div><output id="report-disk">—</output></div>
+    <div class="report-tools"><label class="btn" for="snapshot-file">Seleccionar informe JSON</label><input class="file-input" id="snapshot-file" type="file" accept=".json,application/json"><button class="btn secondary" id="clearReport">Limpiar informe</button></div>
+    <div id="snapshot-feedback" role="status" aria-live="polite" class="muted" style="font-size:10px;margin-top:10px">No se envía el archivo a ningún servidor. La validación del formato no autentica su origen.</div>
+    <div class="muted" style="font-size:10px;margin-top:8px" id="report-uptime">Uptime: —</div><div class="muted" style="font-size:10px;margin-top:3px" id="report-os">Sistema operativo: —</div><div class="muted" style="font-size:10px;margin-top:3px" id="report-kernel">Kernel: —</div><div class="muted" style="font-size:10px;margin-top:3px" id="report-cpu-model">CPU: —</div><div class="muted" style="font-size:10px;margin-top:3px" id="report-ram-detail">RAM: —</div><div class="muted" style="font-size:10px;margin-top:3px" id="report-meta">Captura histórica no autenticada.</div>
+   </div></section>
+  </div>
+ </section>
+ <section class="view" id="view-integrations"><div class="hero"><div><div class="eyebrow">Registry / Service discovery</div><h1>Integraciones<span>.</span></h1><p>Descubrimiento explícito de componentes. Directorio encontrado no equivale a API accesible, servicio sano o integración autenticada.</p></div></div><div class="view-placeholder"><span class="tag warn">ESTADO REAL REQUIERE CLI</span><h2>El Atlas no inventa conectividad.</h2><p>Genera una captura con <code>./bin/blumix report --json</code> y cárgala desde la vista principal. La siguiente fase incorporará un registro de capacidades versionado y comprobaciones de salud definidas por cada proyecto.</p><ul><li>Identidad independiente por proyecto y versión.</li><li>Contratos de integración declarados, no inferidos por nombre.</li><li>Permisos por capacidad y límites de tiempo.</li><li>Estado <em>desconocido</em> hasta obtener evidencia suficiente.</li></ul></div></section>
+ <section class="view" id="view-security"><div class="hero"><div><div class="eyebrow">Security operations / Evidence first</div><h1>Seguridad<span> & auditoría.</span></h1><p>La seguridad es una política verificable y un registro de evidencia, no una insignia decorativa.</p></div></div><div class="view-placeholder"><span class="tag good">CLI LOCAL · READ-ONLY</span><h2>Auditoría disponible; agente privilegiado aún no implementado.</h2><p>En el repositorio, ejecuta <code>./bin/blumix audit</code> o <code>./bin/blumix audit --json</code>. Los resultados son heurísticos y no sustituyen un escáner de secretos, revisión de dependencias o auditoría profesional.</p><ul><li>Denegar por defecto las operaciones que no estén en una lista permitida.</li><li>Separar identidad, autenticación, autorización y registro.</li><li>No aceptar shell arbitraria, rutas arbitrarias ni argumentos libres desde la web.</li><li>Exigir una confirmación nueva por operación privilegiada y registrar el resultado real.</li></ul></div></section>
+ <section class="view" id="view-operations"><div class="hero"><div><div class="eyebrow">Policy engine / Human approval</div><h1>Operaciones<span>.</span></h1><p>Una operación de impacto se prepara, valida, revisa, autoriza y registra. Nunca se ejecuta solo porque alguien pulse un botón en la web.</p></div></div><div class="view-placeholder"><span class="tag warn">BLOQUEADO · NO HAY AGENTE LOCAL</span><h2>La interfaz de operaciones está en modo de diseño seguro.</h2><p>Las acciones privilegiadas se habilitarán solo tras implementar un agente local con socket protegido, autenticación, lista cerrada de operaciones, límites de argumentos, expiración de aprobación y auditoría append-only.</p><ul><li><code>inspect_firewall</code> — lectura sin elevación cuando sea posible.</li><li><code>restart_service</code> — solo servicios preconfigurados y autorizados por el operador.</li><li><code>apply_system_change</code> — deshabilitado por defecto, con revisión explícita y rollback cuando proceda.</li><li><code>run_shell</code> — no se ofrece como capacidad de la API.</li></ul></div></section>
+ <section class="view" id="view-reports"><div class="hero"><div><div class="eyebrow">Evidence store / Local artifacts</div><h1>Informes locales<span>.</span></h1><p>Las capturas son archivos proporcionados por el operador. El Atlas valida el formato, no su autenticidad ni la vigencia de los datos.</p></div></div><div class="view-placeholder"><span class="tag dim">SIN SUBIDA DE ARCHIVOS</span><h2>Importación local, sin telemetría oculta.</h2><p>En la vista principal, selecciona el JSON generado por <code>./bin/blumix report --json</code>. El contenido se procesa en el navegador y no se envía a un servidor.</p><ul><li>Esquema admitido: <code>blumix.snapshot.v1</code>.</li><li>Tamaño máximo: 1 MiB.</li><li>Campos numéricos validados por tipo y rango.</li><li>El archivo no está firmado: revisa su procedencia antes de confiar en él.</li></ul></div></section>
+ <footer class="footnote"><span>BLUMIX // ECOSYSTEM CONTROL PLANE · v0.7.0 ATLAS REDESIGN</span><span>LOCAL-FIRST · NO TELEMETRY · NO GENERIC ROOT SHELL</span><span>La interfaz no sustituye los controles de seguridad del sistema.</span></footer>
 </main>
-<footer class="footer"><div><strong>BLUMIX · Atlas Visual</strong><br><span class="tiny">Atlas local-first · importación JSON en navegador · español · responsive · sin dependencias externas</span></div><div class="tiny">Fuente de proyecto: <a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">ariasalejo/Blumix</a><br>Sin agente ni conexión continua; los datos solo aparecen tras importar un informe local.<br>Instalable como PWA desde HTTPS; la vista file:// funciona sin instalación.</div></footer>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-const filter=document.getElementById('filter'),cards=[...document.querySelectorAll('#cards .card')];
-filter.addEventListener('input',()=>{const q=filter.value.trim().toLocaleLowerCase('es');cards.forEach(c=>c.classList.toggle('hidden',!((c.dataset.search+' '+c.innerText).toLocaleLowerCase('es').includes(q))))});
-document.getElementById('reset').addEventListener('click',()=>{filter.value='';cards.forEach(c=>c.classList.remove('hidden'));filter.focus()});
-
-document.querySelectorAll('[data-command]').forEach(button=>button.addEventListener('click',async()=>{
- const command=button.dataset.command, status=document.getElementById('copy-status');
- try{
-  if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(command)}
-  else{
-   const field=document.createElement('textarea');field.value=command;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();
-   const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('clipboard unavailable');
-  }
-  status.textContent='Copiado: '+command+' · pégalo en tu terminal para ejecutarlo.';
- }catch(e){status.textContent='Comando: '+command+' · selecciónalo y cópialo manualmente.';}
+'use strict';
+const $=id=>document.getElementById(id);
+const toast=$('toast');
+let toastTimer;
+function notify(message){toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),4200)}
+const viewTitles={overview:'ATLAS DEL ECOSISTEMA',integrations:'INTEGRACIONES',security:'SEGURIDAD & AUDITORÍA',operations:'OPERACIONES',reports:'INFORMES LOCALES'};
+document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b===button));
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+button.dataset.view));
+ $('crumbTitle').textContent=viewTitles[button.dataset.view]||button.dataset.view.toUpperCase();
+ $('rail').classList.remove('open');
 }));
-
-const snapshotInput=document.getElementById('snapshot-file');
-const snapshotStatus=document.getElementById('snapshot-status');
-const snapshotFeedback=document.getElementById('snapshot-feedback');
-const setReportText=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=value;};
-const formatPercent=value=>Number.isFinite(value)&&value>=0&&value<=100?Math.round(value)+'%':'N/D';
-const formatGiB=value=>Number.isFinite(value)&&value>=0?(value/1073741824).toLocaleString('es-CO',{maximumFractionDigits:1})+' GiB':'N/D';
-const formatUptime=value=>{
- if(!Number.isFinite(value)||value<0)return 'N/D';
- const seconds=Math.floor(value),days=Math.floor(seconds/86400),hours=Math.floor((seconds%86400)/3600),mins=Math.floor((seconds%3600)/60);
- if(days>0)return days+' d '+hours+' h';
- if(hours>0)return hours+' h '+mins+' min';
- return mins+' min';
+$('menuToggle').addEventListener('click',()=>$('rail').classList.toggle('open'));
+const commands={doctor:['./bin/blumix doctor','Ejecuta el diagnóstico en la terminal local; revisa cualquier fallo antes de cambiar el sistema.'],integrations:['./bin/blumix integrations','Busca los directorios de integración configurados. No confirma que sus servicios estén activos.'],audit:['./bin/blumix audit --json','Genera señales locales de auditoría. El resultado es heurístico y no demuestra ausencia de vulnerabilidades.']};
+document.querySelectorAll('[data-command]').forEach(button=>button.addEventListener('click',()=>{
+ const item=commands[button.dataset.command];
+ if(!item)return;
+ $('terminalCmd').textContent=item[0];$('terminalHint').textContent=item[1];
+ document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='overview'));
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-overview'));
+ $('crumbTitle').textContent=viewTitles.overview;
+ $('rail').classList.remove('open');
+ notify('Comando preparado, no ejecutado. Cópialo y ejecútalo en tu terminal real.');
+ $('terminalCmd').scrollIntoView({block:'nearest',behavior:'smooth'});
+}));
+const nodeData={
+ BLUMIX:['BLUMIX / ORQUESTADOR','Plano de control: descubrimiento, políticas y coordinación.','SOLO LECTURA','warn'],
+ BLUMCL:['BLUMCL / COMPONENTE','El Atlas necesita una instantánea de la CLI para verificar si el directorio existe.','NO VERIFICADO','dim'],
+ BLUMSEC:['BLUMSEC / SEGURIDAD','El Atlas necesita una instantánea de la CLI para verificar si el directorio existe.','NO VERIFICADO','dim'],
+ BLUMELIX:['BLUMELIX / COMPONENTE','La ruta configurada debe verificarse; no se confunde con BLUMTHERAPY.','NO VERIFICADO','warn'],
+ 'AGENTE LOCAL':['AGENTE LOCAL / FUTURO','Sin agente autenticado. La UI no tiene capacidad para ejecutar comandos privilegiados.','NO ENLAZADO','warn']
 };
-const clearSnapshot=()=>{
- ['report-cpu','report-ram','report-disk','report-uptime'].forEach(id=>setReportText(id,'N/D'));
- ['report-cpu-model','report-ram-detail','report-kernel'].forEach(id=>setReportText(id,'Sin datos'));
- ['report-blumcl','report-blumsec','report-blumelix'].forEach(id=>setReportText(id,'Sin informe'));
- setReportText('report-os','Sistema operativo: sin datos.');
- setReportText('report-meta','Los informes incluyen sistema básico e indicador de existencia de carpetas; no incluyen rutas absolutas ni secretos.');
- snapshotStatus.textContent='SIN INFORME IMPORTADO';
-};
-document.getElementById('choose-snapshot').addEventListener('click',()=>snapshotInput.click());
-const isRecord=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const isBoundedString=(value,max)=>typeof value==='string'&&value.length<=max;
-const isPercent=value=>value===null||(Number.isSafeInteger(value)&&value>=0&&value<=100);
-const isNonNegativeInteger=(value,max)=>value===null||(Number.isSafeInteger(value)&&value>=0&&value<=max);
+function selectNode(name){const d=nodeData[name];if(!d)return;$('nodeDetailTitle').textContent=d[0];$('nodeDetailText').textContent=d[1];$('nodeDetailTag').textContent=d[2];$('nodeDetailTag').className='tag '+d[3]}
+document.querySelectorAll('[data-node]').forEach(node=>{node.addEventListener('click',()=>selectNode(node.dataset.node));node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectNode(node.dataset.node)}})});
+$('nowStamp').textContent=new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'});
+$('refreshBtn').addEventListener('click',()=>notify('Vista actualizada. Para obtener datos nuevos, genera e importa una nueva captura desde la CLI.'));
+const snapshotInput=$('snapshot-file');
+function isRecord(v){return v!==null&&typeof v==='object'&&!Array.isArray(v)}
+function boundedString(v,max){return typeof v==='string'&&v.length>0&&v.length<=max}
+function percent(v){return v===null||(Number.isSafeInteger(v)&&v>=0&&v<=100)}
+function nonNegative(v,max){return v===null||(Number.isSafeInteger(v)&&v>=0&&v<=max)}
 function validateSnapshot(report){
  if(!isRecord(report)||report.schema!=='blumix.snapshot.v1')throw new Error('Esquema BLUMIX no reconocido.');
- if(!isBoundedString(report.generated_at,64)||!isBoundedString(report.blumix_version,32))throw new Error('Metadatos ausentes o demasiado largos.');
+ if(!boundedString(report.generated_at,64)||!boundedString(report.blumix_version,32))throw new Error('Metadatos ausentes o demasiado largos.');
  if(!isRecord(report.system)||!isRecord(report.integrations)||!isRecord(report.safety))throw new Error('Faltan secciones obligatorias.');
  const s=report.system;
- if(!isBoundedString(s.os,160)||!isBoundedString(s.kernel,128)||!isBoundedString(s.cpu_model,160))throw new Error('Campos de sistema no válidos.');
- if(!isPercent(s.cpu_percent)||!isPercent(s.memory_percent)||!isPercent(s.root_disk_percent))throw new Error('Porcentajes fuera de rango.');
- if(!isNonNegativeInteger(s.uptime_seconds,315360000)||!isNonNegativeInteger(s.memory_total_bytes,1000000000000000)||!isNonNegativeInteger(s.memory_used_bytes,1000000000000000))throw new Error('Métrica numérica fuera de rango.');
+ if(!boundedString(s.os,160)||!boundedString(s.kernel,128)||!boundedString(s.cpu_model,160))throw new Error('Campos de sistema no válidos.');
+ if(!percent(s.cpu_percent)||!percent(s.memory_percent)||!percent(s.root_disk_percent))throw new Error('Porcentajes fuera de rango.');
+ if(!nonNegative(s.uptime_seconds,315360000)||!nonNegative(s.memory_total_bytes,1000000000000000)||!nonNegative(s.memory_used_bytes,1000000000000000))throw new Error('Métrica numérica fuera de rango.');
  if(Number.isSafeInteger(s.memory_total_bytes)&&Number.isSafeInteger(s.memory_used_bytes)&&s.memory_used_bytes>s.memory_total_bytes)throw new Error('La memoria usada supera la memoria total.');
- for(const name of ['BLUMCL','BLUMSEC','BLUMELIX']){
-  if(!isRecord(report.integrations[name])||typeof report.integrations[name].directory_found!=='boolean')throw new Error('Indicador de integración no válido: '+name+'.');
- }
- if(report.safety.absolute_paths_included!==false||report.safety.secrets_included!==false||report.safety.live_service_health_checked!==false)throw new Error('Los indicadores de seguridad del informe no son compatibles.');
+ for(const name of ['BLUMCL','BLUMSEC','BLUMELIX'])if(!isRecord(report.integrations[name])||typeof report.integrations[name].directory_found!=='boolean')throw new Error('Indicador de integración no válido: '+name+'.');
+ if(report.safety.absolute_paths_included!==false||report.safety.secrets_included!==false||report.safety.live_service_health_checked!==false)throw new Error('Indicadores de seguridad del informe incompatibles.');
  return report;
 }
-snapshotInput.addEventListener('change',async()=>{
- const file=snapshotInput.files&&snapshotInput.files[0];
- if(!file)return;
- try{
-  if(file.size>1024*1024)throw new Error('El archivo supera el límite de 1 MB.');
-  const report=validateSnapshot(JSON.parse(await file.text()));
-  const s=report.system, integrations=report.integrations;
-  clearSnapshot();
-  setReportText('report-cpu',formatPercent(s.cpu_percent));
-  setReportText('report-cpu-model',s.cpu_model);
-  setReportText('report-ram',formatPercent(s.memory_percent));
-  setReportText('report-ram-detail',formatGiB(s.memory_used_bytes)+' usados / '+formatGiB(s.memory_total_bytes));
-  setReportText('report-disk',formatPercent(s.root_disk_percent));
-  setReportText('report-uptime',formatUptime(s.uptime_seconds));
-  setReportText('report-kernel','Kernel: '+s.kernel);
-  setReportText('report-os','Sistema operativo: '+s.os);
-  setReportText('report-meta','Instantánea local · BLUMIX '+report.blumix_version+' · Generada: '+report.generated_at+'. Captura histórica; datos no firmados ni autenticados.');
-  const dirState=value=>value.directory_found?'Carpeta encontrada':'No encontrada';
-  setReportText('report-blumcl',dirState(integrations.BLUMCL));
-  setReportText('report-blumsec',dirState(integrations.BLUMSEC));
-  setReportText('report-blumelix',dirState(integrations.BLUMELIX));
-  snapshotStatus.textContent='INFORME LOCAL IMPORTADO · NO FIRMADO';
-  snapshotFeedback.classList.remove('error');
-  snapshotFeedback.textContent='Formato validado localmente: '+file.name+'. El JSON puede ser editado; los valores no son prueba criptográfica ni telemetría en vivo.';
- }catch(error){
-  clearSnapshot();
-  snapshotFeedback.classList.add('error');
-  snapshotFeedback.textContent='No se pudo importar el informe. '+(error&&error.message?error.message:'Revisa que sea un JSON compatible.');
- }finally{
-  snapshotInput.value='';
- }
-});
-
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
- window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));
+function setText(id,text){$(id).textContent=String(text)}
+function pctText(value){return value===null?'N/D':value+'%'}
+function setBar(id,value){$(id).style.width=(Number.isInteger(value)&&value>=0&&value<=100?value:0)+'%'}
+function bytes(v){return Number.isSafeInteger(v)?(v/1073741824).toFixed(2)+' GiB':'N/D'}
+function uptime(v){if(!Number.isSafeInteger(v))return 'N/D';const days=Math.floor(v/86400),hours=Math.floor(v%86400/3600),mins=Math.floor(v%3600/60);return (days?days+'d ':'')+hours+'h '+mins+'m'}
+function updateIntegration(name,key,shortId,statusId,detailId){
+ const found=key.directory_found;
+ setText(shortId,found?'DETECTADO':'NO ENCONTRADO');
+ setText(statusId,found?'DETECTADO':'NO ENCONTRADO');
+ $(statusId).className='tag '+(found?'good':'warn');
+ setText(detailId,found?'Directorio presente; salud del servicio no comprobada.':'No se encontró el directorio en la configuración de esta captura.');
 }
+function clearReport(){
+ setText('snapshot-status','SIN INFORME · IMPORTA UNA CAPTURA JSON');$('snapshot-status').className='report-status';
+ setText('snapshot-feedback','No se envía el archivo a ningún servidor. La validación del formato no autentica su origen.');
+ setText('statReport','NINGUNO');setText('statReportDetail','No se ha importado una captura');
+ for(const id of ['report-cpu','report-ram','report-disk'])setText(id,'—');
+ for(const id of ['cpu-bar','ram-bar','disk-bar'])setBar(id,0);
+ for(const [id,text] of [['report-uptime','Uptime: —'],['report-os','Sistema operativo: —'],['report-kernel','Kernel: —'],['report-cpu-model','CPU: —'],['report-ram-detail','RAM: —'],['report-meta','Captura histórica no autenticada.']])setText(id,text);
+ setText('statProjects','— / 3');setText('integrationCount','0/3 DETECTADOS');
+ for(const [s,d,t] of [['int-cl-status','int-cl-detail','node-cl'],['int-sec-status','int-sec-detail','node-sec'],['int-elx-status','int-elx-detail','node-elx']]){setText(s,'DESCONOCIDO');$(s).className='tag dim';setText(d,'Ruta aún no comprobada por el Atlas');setText(t,'NO VERIFICADO')}
+ selectNode('BLUMIX');
+}
+snapshotInput.addEventListener('change',async()=>{
+ const file=snapshotInput.files&&snapshotInput.files[0];if(!file)return;
+ try{
+  if(file.size>1048576)throw new Error('El archivo supera el límite de 1 MiB.');
+  const report=validateSnapshot(JSON.parse(await file.text())),s=report.system,ints=report.integrations;
+  setText('report-cpu',pctText(s.cpu_percent));setText('report-ram',pctText(s.memory_percent));setText('report-disk',pctText(s.root_disk_percent));
+  setBar('cpu-bar',s.cpu_percent);setBar('ram-bar',s.memory_percent);setBar('disk-bar',s.root_disk_percent);
+  setText('report-uptime','Uptime: '+uptime(s.uptime_seconds));setText('report-os','Sistema operativo: '+s.os);setText('report-kernel','Kernel: '+s.kernel);setText('report-cpu-model','CPU: '+s.cpu_model);
+  setText('report-ram-detail','RAM: '+bytes(s.memory_used_bytes)+' usados / '+bytes(s.memory_total_bytes));
+  setText('report-meta','Captura: '+report.generated_at+' · BLUMIX '+report.blumix_version+' · NO FIRMADA');
+  setText('snapshot-status','INFORME IMPORTADO · NO FIRMADO');$('snapshot-status').className='report-status loaded';
+  setText('snapshot-feedback','Formato validado localmente: '+file.name+'. Datos editables, históricos y no autenticados.');
+  setText('statReport','CARGADO');setText('statReportDetail',report.generated_at);
+  const entries=[['BLUMCL',ints.BLUMCL,'node-cl','int-cl-status','int-cl-detail'],['BLUMSEC',ints.BLUMSEC,'node-sec','int-sec-status','int-sec-detail'],['BLUMELIX',ints.BLUMELIX,'node-elx','int-elx-status','int-elx-detail']];
+  entries.forEach(([name,obj,node,status,detail])=>{updateIntegration(name,obj,node,status,detail);setText(node,obj.directory_found?'DETECTADO':'AUSENTE')});
+  const count=entries.filter(e=>e[1].directory_found).length;setText('statProjects',count+' / 3');setText('integrationCount',count+'/3 DETECTADOS');
+  const feed=$('eventFeed');feed.replaceChildren();
+  const event=(time,title,desc,cls='')=>{const row=document.createElement('div');row.className='event '+cls;const tm=document.createElement('time');tm.textContent=time;const dot=document.createElement('span');dot.className='edot';const content=document.createElement('div');const h=document.createElement('div');h.className='event-title';h.textContent=title;const p=document.createElement('p');p.textContent=desc;content.append(h,p);row.append(tm,dot,content);return row};
+  feed.append(event('IMPORT','Instantánea local importada','El informe no está firmado; el contenido se validó como formato, no como evidencia auténtica.'));
+  feed.append(event('CHECK',count+' de 3 directorios detectados','La presencia de carpetas no prueba que los servicios estén activos.',count===3?'good':'warn'));
+  feed.append(event('SCOPE','Sin telemetría en vivo','La captura representa el momento en que se generó el JSON.'));
+  notify('Instantánea validada e importada localmente. No se ha ejecutado ninguna operación.');
+ }catch(error){clearReport();$('snapshot-feedback').className='muted';$('snapshot-feedback').textContent='Importación rechazada: '+(error&&error.message?error.message:'JSON no compatible');notify('Informe rechazado: formato no válido.')}
+ finally{snapshotInput.value=''}
+});
+$('clearReport').addEventListener('click',()=>{clearReport();notify('Se limpiaron las métricas importadas de esta vista.')});
+if('serviceWorker'in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));
 </script>
-</body></html>
+</body>
+</html>

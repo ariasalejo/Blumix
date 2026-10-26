@@ -33,6 +33,23 @@ assert all(x["status"] in {"pass", "warn", "info"} for x in d["checks"])
 '
 fi
 pass "auditoría local JSON: esquema, alcance y controles presentes"
+policy="$(bash "$R/bin/blumix" policy --json)" || fail "policy --json devolvió error"
+if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' "$policy" | python3 -c '
+import json, sys
+d = json.load(sys.stdin)
+assert d["schema"] == "blumix.policy.v1"
+assert d["default_deny"] is True
+assert d["privileged_agent"]["elevation_enabled"] is False
+ops = {x["id"]: x for x in d["operations"]}
+assert ops["restart_service"]["status"] == "blocked"
+assert ops["apply_system_change"]["status"] == "blocked"
+assert ops["run_shell"]["status"] == "denied"
+assert d["safety"]["executes_operations"] is False
+assert d["safety"]["invokes_sudo"] is False
+'
+fi
+pass "catálogo de capacidades: denegar por defecto y sin elevación"
 
 # La configuración se interpreta como datos: nunca se ejecuta como Bash.
 config_tmp="$(mktemp -d)"
@@ -90,6 +107,9 @@ grep -q 'NO FIRMADO' "$atlas" || fail "Atlas no advierte que el informe no está
 [[ -s "$R/docs/visual-atlas/manifest.webmanifest" ]] || fail "falta manifiesto PWA"
 [[ -s "$R/docs/visual-atlas/sw.js" ]] || fail "falta service worker PWA"
 grep -q 'No se envía' "$atlas" || grep -q 'no se envía' "$atlas" || fail "Atlas no explica el procesamiento local"
+grep -q 'Tu ecosistema' "$atlas" || fail "Atlas no usa el diseño de centro de mando"
+grep -q 'AGENTE PRIVILEGIADO' "$atlas" || fail "Atlas no muestra estado del agente"
+grep -q 'run_shell' "$atlas" || fail "Atlas no documenta el bloqueo de shell arbitraria"
 if command -v node >/dev/null 2>&1; then
     node -e 'const fs=require("fs");const html=fs.readFileSync(process.argv[1],"utf8");const match=html.match(/<script>([\s\S]*?)<\/script>/);if(!match)process.exit(2);new Function(match[1]);' "$atlas" || fail "sintaxis JavaScript del Atlas"
     pass "sintaxis JavaScript del Atlas"
@@ -138,6 +158,7 @@ grep -q 'doctor' <<<"$help" || fail "help no anuncia doctor"
 grep -q 'integrations' <<<"$help" || fail "help no anuncia integrations"
 grep -q 'report --json' <<<"$help" || fail "help no anuncia report --json"
 grep -q 'audit' <<<"$help" || fail "help no anuncia audit"
+grep -q 'policy' <<<"$help" || fail "help no anuncia policy"
 pass "ayuda contiene comandos clave"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
