@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111e">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>BLUMIX — Atlas Visual</title>
 <style>
 :root{color-scheme:dark;--bg:#07111e;--panel:#101e30;--line:#263b52;--text:#edf5ff;--muted:#a5b7cc;--cyan:#66e6ff;--violet:#b7a2ff;--green:#8bf0c5;--amber:#ffd68a}
@@ -144,7 +146,7 @@
 <section class="section" id="principios"><div class="section-head"><div><div class="eyebrow">04 / Pacto de arquitectura</div><h2>Conectar no significa mezclar</h2></div></div><div class="grid"><article class="card"><div class="symbol">🔒</div><h3>Privacidad por defecto</h3><p class="muted">No mostrar tokens, claves, contenido de bóvedas ni variables sensibles. Nunca guardar secretos en Git.</p></article><article class="card"><div class="symbol">🧱</div><h3>Fronteras claras</h3><p class="muted">Cada proyecto mantiene su repositorio, pruebas, versión, documentación y ciclo de publicación.</p></article><article class="card"><div class="symbol">🧾</div><h3>Hechos verificables</h3><p class="muted">Diferenciar “detectado”, “configurado”, “probado” y “pendiente”. No inventar estados ni acuerdos.</p></article></div><p class="notice">Este atlas es una capa de documentación visual autónoma: no ejecuta comandos, no cambia archivos locales y no requiere claves API. Los nodos que describen integraciones son referencias de arquitectura, no una garantía de que una conexión esté activa.</p></section>
 <section class="section" id="siguiente"><div class="section-head"><div><div class="eyebrow">05 / Próxima frontera</div><h2>Convertir el atlas en un centro vivo</h2></div></div><div class="grid"><article class="card"><span class="tag">FASE A</span><h3>Inventario real</h3><p class="muted">Detectar repositorios, ramas, pruebas, versiones y rutas locales desde una fuente verificable.</p></article><article class="card"><span class="tag">FASE B</span><h3>Estado de GitHub</h3><p class="muted">Mostrar enlaces, último commit, workflows y PRs solo con permisos mínimos y datos confirmados.</p></article><article class="card"><span class="tag">FASE C</span><h3>Experiencia viva</h3><p class="muted">Añadir búsqueda avanzada, historial de cambios, accesibilidad, pruebas y despliegue documentado.</p></article></div><p class="muted">Recomendación: primero lograr una guía fiable y mantenible; después integrar APIs o automatizaciones. La espectacularidad visual nunca debe sustituir la seguridad ni la veracidad.</p></section>
 </main>
-<footer class="footer"><div><strong>BLUMIX · Atlas Visual</strong><br><span class="tiny">Atlas local-first · importación JSON en navegador · español · responsive · sin dependencias externas</span></div><div class="tiny">Fuente de proyecto: <a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">ariasalejo/Blumix</a><br>Sin agente ni conexión continua; los datos solo aparecen tras importar un informe local.</div></footer>
+<footer class="footer"><div><strong>BLUMIX · Atlas Visual</strong><br><span class="tiny">Atlas local-first · importación JSON en navegador · español · responsive · sin dependencias externas</span></div><div class="tiny">Fuente de proyecto: <a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">ariasalejo/Blumix</a><br>Sin agente ni conexión continua; los datos solo aparecen tras importar un informe local.<br>Instalable como PWA desde HTTPS; la vista file:// funciona sin instalación.</div></footer>
 </div>
 <script>
 const filter=document.getElementById('filter'),cards=[...document.querySelectorAll('#cards .card')];
@@ -237,5 +239,8 @@ snapshotInput.addEventListener('change',async()=>{
  }
 });
 
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}));
+}
 </script>
 </body></html>
