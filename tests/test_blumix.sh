@@ -29,6 +29,14 @@ intel_alias="$(bash "$R/bin/blumix" intel)" || fail "alias intel devolvió error
 grep -q 'CENTRO DE INTELIGENCIA' <<<"$intel_alias" || fail "alias intel no funciona"
 pass "centro de inteligencia: diagnóstico local, recomendaciones y límites explícitos"
 
+intel_json="$(bash "$R/bin/blumix" intelligence --json)" || fail "intelligence --json devolvió error"
+if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' "$intel_json" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["schema"]=="blumix.intelligence.v1"; assert d["safety"]["read_only"] is True; assert d["safety"]["service_health_checked"] is False; assert {x["id"] for x in d["checks"]}=={"cpu","memory","root_disk"}; assert all(x["status"] in {"OBSERVED","REVIEW","DEGRADED","UNKNOWN"} for x in d["checks"])'
+fi
+pass "intelligence --json: esquema, fuentes y límites de salud"
+if bash "$R/bin/blumix" intelligence --invalid >/dev/null 2>&1; then fail "intelligence aceptó un argumento desconocido"; else code=$?; [[ "$code" -eq 2 ]] || fail "intelligence no devolvió código 2"; fi
+pass "argumentos inválidos de intelligence devuelven código 2"
+
 projects_text="$(bash "$R/bin/blumix" projects)" || fail "projects devolvió error"
 grep -q 'BLUMCL' <<<"$projects_text" || fail "projects omite BLUMCL"
 grep -q 'BLUMSEC' <<<"$projects_text" || fail "projects omite BLUMSEC"
