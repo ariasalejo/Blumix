@@ -39,6 +39,43 @@ assert all(isinstance(v["directory_found"], bool) for v in d["integrations"].val
 fi
 pass "instantánea JSON válida y sin rutas absolutas"
 
+atlas="$R/docs/visual-atlas/index.html"
+[[ -s "$atlas" ]] || fail "falta el Atlas HTML"
+grep -q 'id="snapshot-file"' "$atlas" || fail "Atlas no permite importar instantáneas"
+grep -q 'blumix.snapshot.v1' "$atlas" || fail "Atlas no valida el esquema de informe"
+grep -q 'No se envía' "$atlas" || grep -q 'no se envía' "$atlas" || fail "Atlas no explica el procesamiento local"
+if command -v node >/dev/null 2>&1; then
+    node -e 'const fs=require("fs");const html=fs.readFileSync(process.argv[1],"utf8");const match=html.match(/<script>([\\s\\S]*?)<\\/script>/);if(!match)process.exit(2);new Function(match[1]);' "$atlas" || fail "sintaxis JavaScript del Atlas"
+    pass "sintaxis JavaScript del Atlas"
+fi
+if command -v python3 >/dev/null 2>&1; then
+    python3 - "$atlas" <<'PY'
+from html.parser import HTMLParser
+import sys
+class AtlasParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.ids = set()
+        self.duplicates = set()
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key == "id" and value:
+                if value in self.ids:
+                    self.duplicates.add(value)
+                self.ids.add(value)
+parser = AtlasParser()
+with open(sys.argv[1], encoding="utf-8") as source:
+    parser.feed(source.read())
+required = {"snapshot-file", "snapshot-status", "report-cpu", "report-ram", "report-disk", "report-uptime"}
+missing = required - parser.ids
+if parser.duplicates:
+    raise SystemExit("IDs duplicados en Atlas: " + ", ".join(sorted(parser.duplicates)))
+if missing:
+    raise SystemExit("Faltan IDs del Atlas: " + ", ".join(sorted(missing)))
+PY
+    pass "estructura HTML e identificadores únicos del Atlas"
+fi
+
 
 help="$(bash "$R/bin/blumix" --help)"
 grep -q 'doctor' <<<"$help" || fail "help no anuncia doctor"
