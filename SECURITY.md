@@ -25,6 +25,10 @@ El archivo `config/blumix.conf` se carga como código Bash. Solo debe contener v
 
 `blumix report --json` produce una captura local para importar en el Atlas. El esquema omite rutas absolutas, usuario, hostname, variables de entorno y contenido de archivos, pero contiene detalles técnicos como sistema operativo, kernel, modelo de CPU, métricas de recursos y existencia de carpetas. Revísalo antes de compartirlo. El Atlas lo procesa en el navegador mediante selección explícita de archivo; no transmite el contenido a un servidor ni ejecuta código importado. La instantánea representa el momento en que se generó, no el estado actual.
 
+## Auditoría local de señales
+
+`blumix audit` comprueba únicamente indicadores locales limitados. No lee el contenido de archivos sospechosos ni imprime rutas; busca nombres de archivo de riesgo dentro del repositorio BLUMIX, no en todo el equipo ni dentro de los repositorios conectados. Un resultado limpio no demuestra ausencia de secretos ni seguridad del sistema. El JSON de auditoría no está firmado y sus resultados deben tratarse como datos informativos.
+
 ## Alcance de los diagnósticos
 
 Los resultados son observaciones de herramientas locales y pueden estar incompletos por permisos, contenedores, distribuciones o herramientas ausentes. Para decisiones críticas, confirma los resultados con las herramientas nativas del sistema y una revisión profesional.
