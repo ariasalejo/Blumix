@@ -60,14 +60,31 @@ HELP
 }
 
 blumix_dashboard() {
-    printf '\\n'
-    blx_title "BLUMIX — CENTRO DE MANDO"
-    printf 'Filosofía: entender → detectar → verificar → decidir\\n\\n'
-    blumix_status
-    printf '\\n'
+    # Mantener la salida rápida y legible en pipes, logs y terminales pequeñas.
+    if [[ ! -t 1 || "${BLUMIX_ANIM:-auto}" == "0" ]]; then
+        export BLUMIX_ANIM=0
+    fi
+    if [[ -t 1 && "${BLUMIX_ANIM:-auto}" != "0" ]]; then
+        blx_stars
+        blx_matrix
+    fi
+    blx_ascii_art
+    blx_title "BLUMIX // CENTRO DE MANDO"
+    printf '  %bENTENDER%b → %bDETECTAR%b → %bVERIFICAR%b → %bDECIDIR%b\n' "$BLX_CYAN" "$BLX_RESET" "$BLX_BLUE" "$BLX_RESET" "$BLX_GREEN" "$BLX_RESET" "$BLX_MAGENTA" "$BLX_RESET"
+    printf '  Modo: diagnóstico local · sin cambios automáticos\n\n'
+    blx_stations
+    blx_hud
+    blumix_system
     blumix_integrations
-    printf '\\n'
-    printf 'Consejo: ejecuta «blumix help» para consultar los módulos.\\n'
+    printf '\n'
+    printf '  %bACCESO RÁPIDO%b\n' "$BLX_BOLD"
+    printf '  blumix doctor        Verificar instalación y rutas\n'
+    printf '  blumix integrations  Inspeccionar proyectos\n'
+    printf '  blumix security      Revisar señales de seguridad\n'
+    printf '  blumix network       Consultar red y DNS\n'
+    printf '  blumix nave          Volver a mostrar este centro de mando\n'
+    printf '\n  Atlas visual: docs/visual-atlas/index.html\n'
+    printf '  La presencia de un directorio no confirma que un servicio esté activo.\n'
 }
 
 blumix_doctor() {
