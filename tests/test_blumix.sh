@@ -29,6 +29,24 @@ intel_alias="$(bash "$R/bin/blumix" intel)" || fail "alias intel devolvió error
 grep -q 'CENTRO DE INTELIGENCIA' <<<"$intel_alias" || fail "alias intel no funciona"
 pass "centro de inteligencia: diagnóstico local, recomendaciones y límites explícitos"
 
+projects_text="$(bash "$R/bin/blumix" projects)" || fail "projects devolvió error"
+grep -q 'BLUMCL' <<<"$projects_text" || fail "projects omite BLUMCL"
+grep -q 'BLUMSEC' <<<"$projects_text" || fail "projects omite BLUMSEC"
+grep -q 'BLUMELIX' <<<"$projects_text" || fail "projects omite BLUMELIX"
+grep -q 'UNKNOWN' <<<"$projects_text" || fail "projects no declara salud desconocida"
+services_text="$(bash "$R/bin/blumix" services)" || fail "services devolvió error"
+grep -q 'UNKNOWN' <<<"$services_text" || fail "services no declara limitaciones"
+projects_json="$(bash "$R/bin/blumix" projects --json)" || fail "projects --json devolvió error"
+services_json="$(bash "$R/bin/blumix" services --json)" || fail "services --json devolvió error"
+if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' "$projects_json" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["schema"]=="blumix.projects.v1"; assert d["read_only"] is True; assert {x["id"] for x in d["projects"]}=={"BLUMCL","BLUMSEC","BLUMELIX"}; assert all(x["functional_health"]=="UNKNOWN" for x in d["projects"])'
+    printf '%s\n' "$services_json" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["schema"]=="blumix.services.v1"; assert d["read_only"] is True; assert d["functional_health"]=="UNKNOWN"; assert isinstance(d["processes"],list) and isinstance(d["services"],list)'
+fi
+pass "inventario y observación de servicios: JSON válido y sin falsos positivos de salud"
+if bash "$R/bin/blumix" projects --bad >/dev/null 2>&1; then fail "projects aceptó un argumento desconocido"; else code=$?; [[ "$code" -eq 2 ]] || fail "projects no devolvió código 2"; fi
+if bash "$R/bin/blumix" services --bad >/dev/null 2>&1; then fail "services aceptó un argumento desconocido"; else code=$?; [[ "$code" -eq 2 ]] || fail "services no devolvió código 2"; fi
+pass "argumentos inválidos de projects/services devuelven código 2"
+
 audit="$(bash "$R/bin/blumix" audit --json)" || fail "audit --json devolvió error"
 if command -v python3 >/dev/null 2>&1; then
     printf '%s\n' "$audit" | python3 -c '
