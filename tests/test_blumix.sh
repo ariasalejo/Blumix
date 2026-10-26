@@ -17,12 +17,33 @@ for file in "$R"/lib/*.sh; do
 done
 
 version="$(bash "$R/bin/blumix" version)"
-[[ "$version" == "BLUMIX 0.5.0" ]] || fail "versión inesperada: $version"
+[[ "$version" == "BLUMIX 0.6.0" ]] || fail "versión inesperada: $version"
 pass "comando version"
+
+report="$(bash "$R/bin/blumix" report --json)" || fail "report --json devolvió error"
+grep -q '"schema": "blumix.snapshot.v1"' <<<"$report" || fail "report no incluye el esquema esperado"
+grep -q '"absolute_paths_included": false' <<<"$report" || fail "report no declara el control de privacidad"
+if grep -Fq "$HOME" <<<"$report"; then
+    fail "report contiene la ruta HOME"
+fi
+if command -v python3 >/dev/null 2>&1; then
+    printf '%s\n' "$report" | python3 -c '
+import json, sys
+d = json.load(sys.stdin)
+assert d["schema"] == "blumix.snapshot.v1"
+assert d["safety"]["absolute_paths_included"] is False
+assert d["safety"]["secrets_included"] is False
+assert set(d["integrations"]) == {"BLUMCL", "BLUMSEC", "BLUMELIX"}
+assert all(isinstance(v["directory_found"], bool) for v in d["integrations"].values())
+'
+fi
+pass "instantánea JSON válida y sin rutas absolutas"
+
 
 help="$(bash "$R/bin/blumix" --help)"
 grep -q 'doctor' <<<"$help" || fail "help no anuncia doctor"
 grep -q 'integrations' <<<"$help" || fail "help no anuncia integrations"
+grep -q 'report --json' <<<"$help" || fail "help no anuncia report --json"
 pass "ayuda contiene comandos clave"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
