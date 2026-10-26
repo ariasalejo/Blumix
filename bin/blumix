@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 # BLUMIX · Centro de Mando modular.
 set -o pipefail
-BLUMIX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BLUMIX_ENTRY="${BASH_SOURCE[0]}"
+while [[ -L "$BLUMIX_ENTRY" ]]; do
+    BLUMIX_ENTRY_DIR="$(cd -P "$(dirname "$BLUMIX_ENTRY")" && pwd)"
+    BLUMIX_LINK="$(readlink "$BLUMIX_ENTRY")"
+    if [[ "$BLUMIX_LINK" == /* ]]; then BLUMIX_ENTRY="$BLUMIX_LINK"
+    else BLUMIX_ENTRY="$BLUMIX_ENTRY_DIR/$BLUMIX_LINK"; fi
+done
+BLUMIX_ROOT="$(cd "$(dirname "$BLUMIX_ENTRY")/.." && pwd)"
 source "$BLUMIX_ROOT/lib/core.sh"
 source "$BLUMIX_ROOT/lib/ui.sh"
 source "$BLUMIX_ROOT/lib/system.sh"
@@ -13,6 +20,7 @@ source "$BLUMIX_ROOT/lib/development.sh"
 source "$BLUMIX_ROOT/lib/integrations.sh"
 source "$BLUMIX_ROOT/lib/intelligence.sh"
 source "$BLUMIX_ROOT/lib/evidence.sh"
+source "$BLUMIX_ROOT/lib/tui.sh"
 blumix_load_config
 
 blumix_status() {
@@ -117,11 +125,11 @@ Uso: blumix <comando>
 
 Comandos:
   help, --help, -h       Mostrar esta ayuda
-  menu                   Menú interactivo con selección segura
+  menu                   Centro visual interactivo con navegación por teclado
   watch [2-60]           Actualizar el centro de mando cada N segundos (Ctrl+C)
   completion bash        Generar autocompletado para Bash
   paths                  Mostrar rutas configuradas del ecosistema
-  install-user           Instalar enlace en ~/.local/bin (no toca perfiles)
+  install-user [--replace] Instalar enlace; --replace respalda el lanzador existente
   version, --version     Mostrar versión
   system                 Información básica del sistema
   network, net           Interfaces de red y DNS local
@@ -225,23 +233,38 @@ blumix_paths() {
 }
 
 blumix_install_user() {
-    local target="$HOME/.local/bin/blumix"
-    mkdir -p "$HOME/.local/bin" || { printf 'No se pudo crear ~/.local/bin.\n' >&2; return 1; }
+    local mode="${1:-}" extra="${2:-}" target="$HOME/.local/bin/blumix" backup
+    if [[ -n "$extra" || ( -n "$mode" && "$mode" != "--replace" ) ]]; then
+        printf 'Uso: blumix install-user [--replace]\\n' >&2
+        return 2
+    fi
+    mkdir -p "$HOME/.local/bin" || return 1
     if [[ -e "$target" || -L "$target" ]]; then
         if [[ -L "$target" && "$(readlink "$target" 2>/dev/null)" == "$BLUMIX_ROOT/bin/blumix" ]]; then
-            printf 'BLUMIX ya está enlazado: %s\n' "$target"
+            printf 'BLUMIX ya está enlazado a esta copia: %s\\n' "$target"
+        elif [[ "$mode" == "--replace" ]]; then
+            backup="${target}.respaldo-$(date +%Y%m%d-%H%M%S)"
+            mv -- "$target" "$backup" || { printf 'No se pudo respaldar el lanzador anterior.\\n' >&2; return 1; }
+            if ! ln -s "$BLUMIX_ROOT/bin/blumix" "$target"; then
+                mv -- "$backup" "$target"
+                printf 'No se pudo crear el enlace; se restauró el lanzador anterior.\\n' >&2
+                return 1
+            fi
+            printf 'Lanzador anterior respaldado en: %s\\n' "$backup"
+            printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
         else
-            printf 'No se modifica nada: ya existe %s y no apunta a esta copia.\n' "$target" >&2
+            printf 'Ya existe %s y no apunta a esta copia. No se modificó.\\n' "$target" >&2
+            printf 'Para conservarlo como respaldo y enlazar esta versión, usa: blumix install-user --replace\\n' >&2
             return 1
         fi
     else
         ln -s "$BLUMIX_ROOT/bin/blumix" "$target" || return 1
-        printf 'Enlace creado: %s -> %s\n' "$target" "$BLUMIX_ROOT/bin/blumix"
+        printf 'Enlace creado: %s -> %s\\n' "$target" "$BLUMIX_ROOT/bin/blumix"
     fi
     case ":$PATH:" in
-        *":$HOME/.local/bin:"*) printf 'PATH ya incluye ~/.local/bin; abre una terminal nueva si hace falta.\n' ;;
-        *) printf 'Para esta sesión ejecuta: export PATH="$HOME/.local/bin:$PATH"\n'
-           printf 'Para hacerlo permanente, añade esa línea a ~/.bashrc manualmente. No se ha editado ningún perfil.\n' ;;
+        *":$HOME/.local/bin:"*) printf 'PATH incluye ~/.local/bin.\\n' ;;
+        *) printf 'Para esta sesión: export PATH="$HOME/.local/bin:$PATH"\\n'
+           printf 'No se ha modificado ningún perfil de shell.\\n' ;;
     esac
 }
 
@@ -343,9 +366,9 @@ case "${1:-}" in
         blumix_paths
         ;;
     completion) blumix_completion "${2:-}" "${3:-}" ;;
-    install-user) [[ -z "${2:-}" ]] || { printf 'Uso: blumix install-user\\n' >&2; exit 2; }; blumix_install_user ;;
+    install-user) blumix_install_user "${2:-}" "${3:-}" ;;
     watch) blumix_watch "$@" ;;
-    menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\\n' >&2; exit 2; }; blumix_menu ;;
+    menu) [[ -z "${2:-}" ]] || { printf 'Uso: blumix menu\\n' >&2; exit 2; }; blumix_tui_menu ;;
     intelligence|intel|center)
         if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then blumix_intelligence_json
         elif [[ -z "${2:-}" ]]; then blumix_intelligence
@@ -377,10 +400,10 @@ case "${1:-}" in
         fi
         ;;
     about) blumix_about ;;
-    nave) blumix_dashboard ;;
+    nave) if [[ -t 0 && -t 1 ]]; then blumix_tui_menu; else blumix_dashboard; fi ;;
     version|--version|-V) printf 'BLUMIX %s\n' "$BLUMIX_VERSION" ;;
     help|--help|-h) blumix_help ;;
-    "") blumix_dashboard ;;
+    "") if [[ -t 0 && -t 1 ]]; then blumix_tui_menu; else blumix_dashboard; fi ;;
     *)
         printf 'BLUMIX: comando desconocido: %s\n' "$1" >&2
         printf 'Ejecuta «blumix help» para ver los comandos.\n' >&2
