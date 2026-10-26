@@ -6,6 +6,18 @@ Cambios notables por versión.
 
 - Próximas mejoras sujetas a implementación y pruebas.
 
+## [0.6.0] - En desarrollo
+
+### Añadido
+- Exportación `blumix report --json` con esquema versionado y sin rutas absolutas, usuario, hostname ni secretos.
+- Atlas local-first capaz de importar una instantánea JSON seleccionada por el usuario, sin servidor, API ni conexión de red.
+- Métricas de CPU, RAM, disco y tiempo activo junto con el estado de existencia de carpetas detectado por la CLI.
+
+### Seguridad y calidad
+- Informe limitado a observaciones locales; no declara salud de servicios ni conexión en vivo.
+- `NO_COLOR` y salida redirigida sin secuencias ANSI.
+- Pruebas de regresión para validez JSON, metadatos de privacidad, ayuda y versión.
+
 ## [0.5.0] - En desarrollo
 
 ### Añadido
