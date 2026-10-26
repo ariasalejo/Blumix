@@ -49,7 +49,7 @@ bash tests/test_blumix.sh
 
 Para ejecutar sin instalar nada en el sistema, utiliza `./bin/blumix` desde el repositorio. Si deseas el comando global, añade el directorio `bin` de tu copia local al PATH; no pegues una ruta de otra máquina sin revisarla.
 
-Para llevar el diagnóstico a la vista visual, abre `docs/visual-atlas/index.html`, pulsa **Seleccionar informe JSON** e importa `~/blumix-report.json`. El informe incluye sistema operativo, kernel, métricas básicas y existencia de carpetas; no contiene rutas absolutas, nombre de usuario ni secretos. Revísalo antes de compartirlo: incluso la información técnica general puede revelar características de tu equipo.
+Para llevar el diagnóstico a la vista visual, abre `docs/visual-atlas/index.html`, pulsa **Seleccionar informe JSON** e importa `~/blumix-report.json`. La página valida tipos y rangos antes de mostrarlo y avisa que el JSON no está firmado. El Atlas también puede instalarse como PWA desde un origen HTTPS; abrirlo como archivo local permite previsualizarlo, pero no registra el service worker. El informe incluye sistema operativo, kernel, métricas básicas y existencia de carpetas; no contiene rutas absolutas, nombre de usuario ni secretos. Revísalo antes de compartirlo: incluso la información técnica general puede revelar características de tu equipo.
 
 ## Configuración
 
@@ -62,7 +62,7 @@ nano config/blumix.conf
 
 Puedes definir `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` como rutas absolutas. También se pueden pasar como variables de entorno para una ejecución. El archivo local `config/blumix.conf` está excluido de Git.
 
-**Seguridad de configuración:** el archivo se carga como código Bash. Solo uses archivos que tú hayas creado o revisado; nunca cargues una configuración de una fuente no confiable.
+**Seguridad de configuración:** BLUMIX lee el archivo como datos mediante una lista cerrada de claves; no lo ejecuta como Bash. Solo expande el prefijo literal `$HOME` al inicio de rutas. Las variables de entorno explícitas prevalecen sobre las rutas configuradas.
 
 ## Principios de diseño
 
