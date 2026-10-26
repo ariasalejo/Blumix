@@ -209,6 +209,22 @@ if bash "$R/bin/blumix" completion zsh >/dev/null 2>&1; then fail "completion ac
 if bash "$R/bin/blumix" watch 1 >/dev/null 2>&1; then fail "watch aceptó un intervalo inferior al mínimo"; else code=$?; [[ "$code" -eq 2 ]] || fail "watch inválido no devolvió código 2"; fi
 pass "validación estricta de argumentos de funciones avanzadas"
 
+# El centro interactivo debe conservar una jerarquía de orquestación navegable.
+grep -q 'BLUMIX ORCHESTRATOR' "$R/lib/tui.sh" || fail "falta el nodo raíz del orquestador"
+grep -q 'SYSTEM CORE' "$R/lib/tui.sh" || fail "falta la rama del sistema"
+grep -q 'INTELLIGENCE ENGINE' "$R/lib/tui.sh" || fail "falta la rama de inteligencia"
+grep -q 'PROJECT ECOSYSTEM' "$R/lib/tui.sh" || fail "falta la rama de proyectos"
+grep -q 'EVIDENCE VAULT' "$R/lib/tui.sh" || fail "falta la rama de evidencias"
+grep -q 'blumix_tui_render_node' "$R/lib/tui.sh" || fail "falta el renderizado recursivo del árbol"
+grep -q 'collapse/parent' "$R/lib/tui.sh" || fail "faltan instrucciones de navegación jerárquica"
+if bash "$R/bin/blumix" menu >/dev/null 2>&1; then
+    fail "menu aceptó ejecución sin terminal interactiva"
+else
+    code=$?
+    [[ "$code" -eq 2 ]] || fail "menu no interactivo no devolvió código 2"
+fi
+pass "árbol del orquestador: ramas, navegación y modo no interactivo seguro"
+
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
     fail "un comando desconocido devolvió éxito"
 else
