@@ -19,7 +19,7 @@ Abre una incidencia privada o sigue las opciones de contacto que ofrece GitHub p
 
 ## Configuración Bash
 
-El archivo `config/blumix.conf` se carga como código Bash. Solo debe contener valores que el usuario haya revisado. Nunca cargues archivos de configuración descargados de fuentes no confiables.
+El archivo `config/blumix.conf` se lee como datos: BLUMIX acepta una lista cerrada de claves y nunca ejecuta el archivo como Bash. Solo expande el prefijo literal `$HOME` al comienzo de una ruta. Las variables de entorno explícitas prevalecen sobre las rutas del archivo. Las claves desconocidas o los valores no admitidos se ignoran. Esta protección no sustituye la revisión de la configuración ni los permisos del archivo.
 
 ## Exportación de instantáneas
 
@@ -27,7 +27,7 @@ El archivo `config/blumix.conf` se carga como código Bash. Solo debe contener v
 
 ## Auditoría local de señales
 
-`blumix audit` comprueba únicamente indicadores locales limitados. No lee el contenido de archivos sospechosos ni imprime rutas; busca nombres de archivo de riesgo dentro del repositorio BLUMIX, no en todo el equipo ni dentro de los repositorios conectados. Un resultado limpio no demuestra ausencia de secretos ni seguridad del sistema. El JSON de auditoría no está firmado y sus resultados deben tratarse como datos informativos.
+`blumix audit` comprueba únicamente indicadores locales limitados. No contacta la red ni eleva privilegios. La CLI sigue siendo una herramienta de diagnóstico, no una barrera de seguridad del sistema. No lee el contenido de archivos sospechosos ni imprime rutas; busca nombres de archivo de riesgo dentro del repositorio BLUMIX, no en todo el equipo ni dentro de los repositorios conectados. Un resultado limpio no demuestra ausencia de secretos ni seguridad del sistema. El JSON de auditoría no está firmado y sus resultados deben tratarse como datos informativos.
 
 ## Alcance de los diagnósticos
 
