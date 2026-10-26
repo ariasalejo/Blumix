@@ -197,6 +197,18 @@ grep -q 'policy' <<<"$help" || fail "help no anuncia policy"
 grep -q 'intelligence' <<<"$help" || fail "help no anuncia intelligence"
 pass "ayuda contiene comandos clave"
 
+# Capacidades avanzadas de terminal: rutas explícitas, autocompletado y menú seguro.
+completion="$(bash "$R/bin/blumix" completion bash)" || fail "completion bash falló"
+grep -q 'complete -F _blumix_complete blumix' <<<"$completion" || fail "autocompletado Bash incompleto"
+pass "autocompletado Bash para comandos y opciones"
+paths="$(bash "$R/bin/blumix" paths)" || fail "paths falló"
+grep -q 'BLUMCL:' <<<"$paths" || fail "paths omite BLUMCL"
+grep -q 'BLUMELIX:' <<<"$paths" || fail "paths omite BLUMELIX"
+pass "rutas configuradas visibles bajo petición explícita"
+if bash "$R/bin/blumix" completion zsh >/dev/null 2>&1; then fail "completion aceptó una shell no soportada"; else code=$?; [[ "$code" -eq 2 ]] || fail "completion inválido no devolvió código 2"; fi
+if bash "$R/bin/blumix" watch 1 >/dev/null 2>&1; then fail "watch aceptó un intervalo inferior al mínimo"; else code=$?; [[ "$code" -eq 2 ]] || fail "watch inválido no devolvió código 2"; fi
+pass "validación estricta de argumentos de funciones avanzadas"
+
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
     fail "un comando desconocido devolvió éxito"
 else
