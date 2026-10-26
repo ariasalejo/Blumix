@@ -5,15 +5,15 @@
 declare -ag BLX_NODE_LABELS BLX_NODE_PARENTS BLX_NODE_ACTIONS BLX_NODE_ICONS
 declare -Ag BLX_NODE_EXPANDED
 BLX_NODE_LABELS=(
-  "BLUMIX ORCHESTRATOR"
-  "SYSTEM CORE" "Live telemetry" "Processes and resources"
-  "INTELLIGENCE ENGINE" "Evidence diagnostics" "Recommendations"
-  "PROJECT ECOSYSTEM" "Project inventory" "Configured paths"
-  "OPERATIONS BRANCH" "Service observation" "Local audit"
-  "SECURITY BRANCH" "Security posture" "Policy checks"
-  "NETWORK BRANCH" "Network and DNS"
-  "DEV TOOLCHAIN" "Development tools"
-  "EVIDENCE VAULT" "JSON snapshot" "Command reference"
+  "ORQUESTADOR BLUMIX"
+  "NUCLEO DEL SISTEMA" "Telemetria en vivo" "Procesos y recursos"
+  "MOTOR DE INTELIGENCIA" "Diagnostico por evidencias" "Recomendaciones accionables"
+  "ECOSISTEMA DE PROYECTOS" "Inventario de proyectos" "Rutas configuradas"
+  "CENTRO DE OPERACIONES" "Observacion de servicios" "Auditoria local"
+  "SEGURIDAD Y POLITICAS" "Postura de seguridad" "Verificacion de politicas"
+  "RED Y CONECTIVIDAD" "Red y DNS"
+  "FABRICA DE DESARROLLO" "Herramientas de desarrollo"
+  "BOVEDA DE EVIDENCIAS" "Instantanea JSON" "Ayuda y comandos"
 )
 BLX_NODE_PARENTS=(-1 0 1 1 0 4 4 0 7 7 0 10 10 0 13 13 0 16 0 18 0 20 20)
 BLX_NODE_ACTIONS=(
@@ -92,26 +92,26 @@ blumix_tui_render() {
     [[ "$disk" =~ ^[0-9]+$ ]] || disk=0
     printf '\\033[H\\033[2J\\033[?25l'
     printf '%b╭' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '╮%b\\n' "$BLX_RESET"
-    printf '%b│%b  ◈ BLUMIX ORCHESTRATOR  /  NODE GRAPH & OPERATIONS BUS%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-57))" "" "$BLX_RESET"
-    printf '%b│%b  DOMAIN ROUTING  →  MODULE EXECUTION  →  LOCAL EVIDENCE%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-57))" "" "$BLX_RESET"
+    printf '%b│%b  ◈ BLUMIX ORQUESTADOR  /  ARBOL DE NODOS Y OPERACIONES%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-57))" "" "$BLX_RESET"
+    printf '%b│%b  ENRUTAR DOMINIO  →  EJECUTAR MODULO  →  VERIFICAR EVIDENCIA%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-57))" "" "$BLX_RESET"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
     printf '%b│%b  HOST %-20.20s  %s%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$(hostname 2>/dev/null || printf Linux)" "$(date '+%Y-%m-%d %H:%M:%S')" "$((width-57))" "" "$BLX_RESET"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
-    printf '%b│%b  SYSTEM TELEMETRY%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-19))" "" "$BLX_RESET"
+    printf '%b│%b  TELEMETRIA DEL SISTEMA%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-19))" "" "$BLX_RESET"
     printf '%b│%b  CPU  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$cpu" 12 "$BLX_CYAN"; printf ' %3s%%   RAM ' "$cpu"; blx_bar "$ram" 12 "$BLX_YELLOW"; printf ' %3s%%%*s│%b\\n' "$ram" "$((width-58))" "" "$BLX_RESET"
     printf '%b│%b  DISK ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$disk" 12 "$BLX_GREEN"; printf ' %3s%%   LOAD %-5s  MEM %s/%s GiB%*s│%b\\n' "$disk" "\${load:-N/D}" "\${mem_total:-?}" "\${mem_avail:-?}" "$((width-58))" "" "$BLX_RESET"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
-    printf '%b│%b  PROJECT SIGNALS  ' "$BLX_CYAN" "$BLX_BOLD"
+    printf '%b│%b  SENALES DEL ECOSISTEMA  ' "$BLX_CYAN" "$BLX_BOLD"
     printf '%bBLUMCL:%s%b  ' "$([[ "$cl" == "MISSING" ]] && printf '%s' "$BLX_RED" || printf '%s' "$BLX_GREEN")" "$cl" "$BLX_RESET"
     printf '%bBLUMSEC:%s%b  ' "$([[ "$sec" == "MISSING" ]] && printf '%s' "$BLX_RED" || printf '%s' "$BLX_GREEN")" "$sec" "$BLX_RESET"
     printf '%bBLUMELIX:%s%b%*s│%b\\n' "$([[ "$elx" == "MISSING" ]] && printf '%s' "$BLX_RED" || printf '%s' "$BLX_GREEN")" "$elx" "$BLX_RESET" "$((width-68))" "" "$BLX_RESET"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
-    printf '%b│%b  ORCHESTRATION TREE  /  select a node to route into its branch%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-66))" "" "$BLX_RESET"
-    printf '%b│%b  ◆ ROOT   ◈ DOMAIN   ◉ LIVE VIEW   · MODULE%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-49))" "" "$BLX_RESET"
+    printf '%b│%b  ARBOL DE ORQUESTACION  /  selecciona un nodo para abrir su rama%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-66))" "" "$BLX_RESET"
+    printf '%b│%b  ◆ RAIZ   ◈ DOMINIO   ◉ VISTA   · MODULO%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-49))" "" "$BLX_RESET"
     blumix_tui_render_node 0 "" 1 "$selected"
     printf '%b├' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '┤%b\\n' "$BLX_RESET"
-    printf '%b│%b  ↑↓ select  → expand  ← collapse/parent  Enter route  Space toggle%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-69))" "" "$BLX_RESET"
-    printf '%b│%b  1–8 jump to domain  r refresh  ? help  q exit%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-51))" "" "$BLX_RESET"
+    printf '%b│%b  ↑↓ seleccionar  → expandir  ← plegar/padre  Enter ejecutar  Espacio alternar%*s│%b\\n' "$BLX_CYAN" "$BLX_BOLD" "$((width-69))" "" "$BLX_RESET"
+    printf '%b│%b  1–8 saltar a rama  r actualizar  ? ayuda  q salir%*s│%b\\n' "$BLX_CYAN" "$BLX_RESET" "$((width-51))" "" "$BLX_RESET"
     printf '%b╰' "$BLX_CYAN"; printf '─%.0s' $(seq 1 "$width"); printf '╯%b\\n' "$BLX_RESET"
 }
 
