@@ -59,6 +59,17 @@ Seguridad: los comandos de diagnóstico no modifican la configuración del siste
 HELP
 }
 
+blumix_dashboard() {
+    printf '\\n'
+    blx_title "BLUMIX — CENTRO DE MANDO"
+    printf 'Filosofía: entender → detectar → verificar → decidir\\n\\n'
+    blumix_status
+    printf '\\n'
+    blumix_integrations
+    printf '\\n'
+    printf 'Consejo: ejecuta «blumix help» para consultar los módulos.\\n'
+}
+
 blumix_doctor() {
     local failures=0
     printf 'BLUMIX doctor — comprobaciones locales\n\n'
@@ -93,7 +104,7 @@ blumix_doctor() {
     printf '\nDoctor: comprobaciones básicas superadas. No es una auditoría de seguridad completa.\n'
 }
 
-case "${1:-help}" in
+case "${1:-}" in
     system) blumix_system ;;
     network|net) blumix_network ;;
     security|sec) blumix_security ;;
