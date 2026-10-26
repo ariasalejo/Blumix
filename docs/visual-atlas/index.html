@@ -60,7 +60,7 @@
 </head>
 <body>
 <div class="wrap">
-<header class="top"><div class="brand">◆ BLUMIX <span style="color:var(--muted);font-weight:500;letter-spacing:0">/ ATLAS VISUAL</span></div><span class="badge">EDICIÓN LOCAL-FIRST · v0.6</span></header>
+<header class="top"><div class="brand">◆ BLUMIX <span style="color:var(--muted);font-weight:500;letter-spacing:0">/ ATLAS VISUAL</span></div><span class="badge">EDICIÓN LOCAL-FIRST · v0.7</span></header>
 <main>
 <section class="hero" id="inicio">
 <div><div class="eyebrow">Un centro de mando. Proyectos independientes.</div><h1>Un ecosistema.<br><span>Una visión.</span></h1><p class="lead">Atlas visual de BLUMIX: una guía interactiva para comprender cómo se conectan las herramientas, qué responsabilidad conserva cada proyecto y cómo crecer sin mezclar repositorios ni perder el control.</p><div class="actions"><a class="btn primary" href="#arquitectura">Explorar arquitectura ↓</a><a class="btn" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix" target="_blank" rel="noreferrer">Explorar rama de mejora ↗</a></div></div>
@@ -84,6 +84,7 @@
 <button class="command-tile" type="button" data-command="blumix integrations"><span>🧩 Integraciones</span><code>blumix integrations</code><small>Ver rutas detectadas</small></button>
 <button class="command-tile" type="button" data-command="blumix system"><span>🖥️ Sistema</span><code>blumix system</code><small>Consultar información local</small></button>
 <button class="command-tile" type="button" data-command="blumix security"><span>🛡️ Seguridad</span><code>blumix security</code><small>Revisar señales disponibles</small></button>
+<button class="command-tile" type="button" data-command="blumix audit"><span>🧪 Auditoría local</span><code>blumix audit</code><small>Revisar permisos y nombres de archivos de riesgo</small></button>
 <button class="command-tile" type="button" data-command='./bin/blumix report --json > "$HOME/blumix-report.json"'><span>📦 Exportar informe</span><code>report --json</code><small>Crear una instantánea privada para importar en el Atlas</small></button>
 </div>
 <div id="copy-status" class="toast" role="status" aria-live="polite"></div>
@@ -184,32 +185,49 @@ const clearSnapshot=()=>{
  snapshotStatus.textContent='SIN INFORME IMPORTADO';
 };
 document.getElementById('choose-snapshot').addEventListener('click',()=>snapshotInput.click());
+const isRecord=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+const isBoundedString=(value,max)=>typeof value==='string'&&value.length<=max;
+const isPercent=value=>value===null||(Number.isSafeInteger(value)&&value>=0&&value<=100);
+const isNonNegativeInteger=(value,max)=>value===null||(Number.isSafeInteger(value)&&value>=0&&value<=max);
+function validateSnapshot(report){
+ if(!isRecord(report)||report.schema!=='blumix.snapshot.v1')throw new Error('Esquema BLUMIX no reconocido.');
+ if(!isBoundedString(report.generated_at,64)||!isBoundedString(report.blumix_version,32))throw new Error('Metadatos ausentes o demasiado largos.');
+ if(!isRecord(report.system)||!isRecord(report.integrations)||!isRecord(report.safety))throw new Error('Faltan secciones obligatorias.');
+ const s=report.system;
+ if(!isBoundedString(s.os,160)||!isBoundedString(s.kernel,128)||!isBoundedString(s.cpu_model,160))throw new Error('Campos de sistema no válidos.');
+ if(!isPercent(s.cpu_percent)||!isPercent(s.memory_percent)||!isPercent(s.root_disk_percent))throw new Error('Porcentajes fuera de rango.');
+ if(!isNonNegativeInteger(s.uptime_seconds,315360000)||!isNonNegativeInteger(s.memory_total_bytes,1000000000000000)||!isNonNegativeInteger(s.memory_used_bytes,1000000000000000))throw new Error('Métrica numérica fuera de rango.');
+ if(Number.isSafeInteger(s.memory_total_bytes)&&Number.isSafeInteger(s.memory_used_bytes)&&s.memory_used_bytes>s.memory_total_bytes)throw new Error('La memoria usada supera la memoria total.');
+ for(const name of ['BLUMCL','BLUMSEC','BLUMELIX']){
+  if(!isRecord(report.integrations[name])||typeof report.integrations[name].directory_found!=='boolean')throw new Error('Indicador de integración no válido: '+name+'.');
+ }
+ if(report.safety.absolute_paths_included!==false||report.safety.secrets_included!==false||report.safety.live_service_health_checked!==false)throw new Error('Los indicadores de seguridad del informe no son compatibles.');
+ return report;
+}
 snapshotInput.addEventListener('change',async()=>{
  const file=snapshotInput.files&&snapshotInput.files[0];
  if(!file)return;
  try{
   if(file.size>1024*1024)throw new Error('El archivo supera el límite de 1 MB.');
-  const report=JSON.parse(await file.text());
-  if(!report||report.schema!=='blumix.snapshot.v1'||!report.system||!report.integrations)throw new Error('El archivo no tiene el formato de instantánea BLUMIX esperado.');
+  const report=validateSnapshot(JSON.parse(await file.text()));
   const s=report.system, integrations=report.integrations;
-  if(!integrations.BLUMCL||!integrations.BLUMSEC||!integrations.BLUMELIX)throw new Error('El informe no contiene las tres integraciones esperadas.');
   clearSnapshot();
   setReportText('report-cpu',formatPercent(s.cpu_percent));
-  setReportText('report-cpu-model',typeof s.cpu_model==='string'?s.cpu_model:'Modelo no disponible');
+  setReportText('report-cpu-model',s.cpu_model);
   setReportText('report-ram',formatPercent(s.memory_percent));
   setReportText('report-ram-detail',formatGiB(s.memory_used_bytes)+' usados / '+formatGiB(s.memory_total_bytes));
   setReportText('report-disk',formatPercent(s.root_disk_percent));
   setReportText('report-uptime',formatUptime(s.uptime_seconds));
-  setReportText('report-kernel','Kernel: '+(typeof s.kernel==='string'?s.kernel:'N/D'));
-  setReportText('report-os','Sistema operativo: '+(typeof s.os==='string'?s.os:'N/D'));
-  setReportText('report-meta','Instantánea local · BLUMIX '+(typeof report.blumix_version==='string'?report.blumix_version:'versión no indicada')+' · Generada: '+(typeof report.generated_at==='string'?report.generated_at:'fecha no indicada')+'. Valores capturados al generar el informe.');
-  const dirState=value=>value.directory_found===true?'Carpeta encontrada':'No encontrada';
+  setReportText('report-kernel','Kernel: '+s.kernel);
+  setReportText('report-os','Sistema operativo: '+s.os);
+  setReportText('report-meta','Instantánea local · BLUMIX '+report.blumix_version+' · Generada: '+report.generated_at+'. Captura histórica; datos no firmados ni autenticados.');
+  const dirState=value=>value.directory_found?'Carpeta encontrada':'No encontrada';
   setReportText('report-blumcl',dirState(integrations.BLUMCL));
   setReportText('report-blumsec',dirState(integrations.BLUMSEC));
   setReportText('report-blumelix',dirState(integrations.BLUMELIX));
-  snapshotStatus.textContent='INFORME LOCAL IMPORTADO';
+  snapshotStatus.textContent='INFORME LOCAL IMPORTADO · NO FIRMADO';
   snapshotFeedback.classList.remove('error');
-  snapshotFeedback.textContent='Informe leído localmente: '+file.name+'. Los indicadores describen la captura realizada por la CLI, no el estado actual en tiempo real.';
+  snapshotFeedback.textContent='Formato validado localmente: '+file.name+'. El JSON puede ser editado; los valores no son prueba criptográfica ni telemetría en vivo.';
  }catch(error){
   clearSnapshot();
   snapshotFeedback.classList.add('error');
