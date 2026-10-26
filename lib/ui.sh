@@ -109,17 +109,38 @@ blx_hud() {
     local cpu=$(blx_cpu_pct)
     local ram=$(free 2>/dev/null | awk '/^Mem:/ {printf "%.0f", ($3/$2)*100}')
     local disk=$(df -h / 2>/dev/null | awk 'NR==2 {gsub("%","",$5); print $5}')
-    local bat=""
-    command -v upower >/dev/null 2>&1 && bat=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 2>/dev/null | grep percentage | awk '{gsub("%","",$2); print $2}')
+    local bat="" device
+    if command -v upower >/dev/null 2>&1; then
+        while IFS= read -r device; do
+            [[ "$device" == */battery_* ]] || continue
+            bat="$(upower -i "$device" 2>/dev/null | awk -F: '/percentage:/ {gsub(/[%[:space:]]/, "", $2); print $2; exit}')"
+            [[ "$bat" =~ ^[0-9]+$ ]] && break
+            bat=""
+        done < <(upower -e 2>/dev/null)
+    fi
 
     printf '%b╔═[%b HUD VITAL %b]%b' "$BLX_CYAN" "$BLX_BOLD" "$BLX_RESET" "$BLX_CYAN"
     printf '═%.0s' $(seq 1 $((w-15))); printf '╗%b\n' "$BLX_RESET"
-    printf '%b║%b ⚡ CPU  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$cpu" 14 "$BLX_RED";    printf ' %b%3s%%%b\n' "$BLX_RED" "$cpu" "$BLX_RESET"
-    printf '%b║%b 🧠 RAM  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "${ram:-0}" 14 "$BLX_YELLOW"; printf ' %b%3s%%%b\n' "$BLX_YELLOW" "${ram:-?}" "$BLX_RESET"
-    printf '%b║%b 💾 DISK ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "${disk:-0}" 14 "$BLX_GREEN"; printf ' %b%3s%%%b\n' "$BLX_GREEN" "${disk:-?}" "$BLX_RESET"
-    if [[ -n "$bat" ]]; then
+    if [[ "$cpu" =~ ^[0-9]+$ ]]; then
+        printf '%b║%b ⚡ CPU  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$cpu" 14 "$BLX_RED"; printf ' %b%3s%%%b\n' "$BLX_RED" "$cpu" "$BLX_RESET"
+    else
+        printf '%b║%b ⚡ CPU  Métrica no disponible\n' "$BLX_CYAN" "$BLX_RESET"
+    fi
+    if [[ "$ram" =~ ^[0-9]+$ ]]; then
+        printf '%b║%b 🧠 RAM  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$ram" 14 "$BLX_YELLOW"; printf ' %b%3s%%%b\n' "$BLX_YELLOW" "$ram" "$BLX_RESET"
+    else
+        printf '%b║%b 🧠 RAM  Métrica no disponible\n' "$BLX_CYAN" "$BLX_RESET"
+    fi
+    if [[ "$disk" =~ ^[0-9]+$ ]]; then
+        printf '%b║%b 💾 DISK ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$disk" 14 "$BLX_GREEN"; printf ' %b%3s%%%b\n' "$BLX_GREEN" "$disk" "$BLX_RESET"
+    else
+        printf '%b║%b 💾 DISK Métrica no disponible\n' "$BLX_CYAN" "$BLX_RESET"
+    fi
+    if [[ "$bat" =~ ^[0-9]+$ ]]; then
         local bc=$BLX_GREEN; (( bat<=20 )) && bc=$BLX_RED; (( bat<=50 )) && bc=$BLX_YELLOW
         printf '%b║%b 🔋 BAT  ' "$BLX_CYAN" "$BLX_RESET"; blx_bar "$bat" 14 "$bc"; printf ' %b%3s%%%b\n' "$bc" "$bat" "$BLX_RESET"
+    else
+        printf '%b║%b 🔋 BAT  No detectada / no disponible\n' "$BLX_CYAN" "$BLX_RESET"
     fi
     printf '%b╚' "$BLX_CYAN"; printf '═%.0s' $(seq 1 $w); printf '╝%b\n' "$BLX_RESET"
     printf '\n'
