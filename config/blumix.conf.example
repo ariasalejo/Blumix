@@ -1,6 +1,7 @@
 # Plantilla local de configuración BLUMIX.
 # Copia a config/blumix.conf y edita solo las rutas reales de tu equipo.
-# Este archivo se interpreta como código Bash: no cargues archivos no confiables.
+# Solo se aceptan asignaciones simples de una lista cerrada; nunca se ejecuta como Bash.
+# $HOME se expande solo al inicio de una ruta. No se admiten sustituciones de comandos.
 #
 # BLUMCL_HOME="$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumcl"
 # BLUMSEC_HOME="$HOME/04_DEVELOPMENT/08_Proyectos/Blum/Blumsec"
