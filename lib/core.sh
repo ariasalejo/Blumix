@@ -8,14 +8,13 @@ blumix_dir_exists()    { [[ -d "$1" ]]; }
 blumix_file_exists()   { [[ -f "$1" ]]; }
 
 # Emit a JSON string without depending on Python, jq, or network access.
+# Values passed here are single-line system identifiers and timestamps.
 blumix_json_quote() {
-    local input="${1:-}" output="" ch i
-    for ((i = 0; i < ${#input}; i++)); do
-        ch="${input:i:1}"
-        case "$ch" in
-            \\) output+='\\\\' ;;
-            '"') output+='\\"' ;;
-            
+    printf '"'
+    printf '%s' "${1:-}" | sed 's/\\\\/\\\\\\\\/g; s/"/\\\\"/g'
+    printf '"'
+}
+
 # Resolución segura y portable:
 # 1) Una variable explícita del usuario siempre prevalece.
 # 2) Buscar coincidencia exacta y luego sin distinguir mayúsculas/minúsculas
