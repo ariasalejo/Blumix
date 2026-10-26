@@ -59,6 +59,8 @@ if BLUMCL_HOME="$config_tmp/from-env" BLUMIX_CONFIG="$config_tmp/config" HOME="$
 else
     fail "la configuración sobrescribió una ruta explícita del entorno"
 fi
+rm -rf "$config_tmp"
+trap - EXIT
 
 report="$(bash "$R/bin/blumix" report --json)" || fail "report --json devolvió error"
 grep -q '"schema": "blumix.snapshot.v1"' <<<"$report" || fail "report no incluye el esquema esperado"
