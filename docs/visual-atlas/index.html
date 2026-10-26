@@ -8,6 +8,32 @@
 <style>
 :root{color-scheme:dark;--bg:#07111e;--panel:#101e30;--line:#263b52;--text:#edf5ff;--muted:#a5b7cc;--cyan:#66e6ff;--violet:#b7a2ff;--green:#8bf0c5;--amber:#ffd68a}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#142b49 0,transparent 42%),radial-gradient(ellipse at 90% 20%,#201943 0,transparent 35%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--cyan)}button,input{font:inherit}.wrap{max-width:1240px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:12px 0 22px}.brand{font-weight:900;letter-spacing:.18em}.badge{border:1px solid #3b5b77;border-radius:999px;padding:5px 11px;color:var(--green);font-size:.8rem}.hero{padding:70px 0 40px;display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);font-size:.78rem;font-weight:800}.hero h1{font-size:clamp(2.8rem,7vw,6rem);line-height:.98;letter-spacing:-.06em;margin:16px 0}.hero h1 span{color:var(--cyan)}.lead{font-size:1.18rem;color:var(--muted);max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-block;border:1px solid #47708f;border-radius:12px;padding:11px 16px;text-decoration:none;color:var(--text);background:#12243a;cursor:pointer}.btn.primary{background:linear-gradient(120deg,#17617a,#4c3c88);border-color:transparent}.orbit{border:1px solid #29455e;border-radius:28px;padding:18px;background:#0b1726cc;box-shadow:0 24px 80px #0005}.orbit svg{width:100%;height:auto;display:block}.section{padding:42px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;flex-wrap:wrap;margin-bottom:20px}.section h2{font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.04em;margin:0}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(155deg,#14253aee,#0b1726ee);border:1px solid var(--line);border-radius:20px;padding:22px;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-4px);border-color:#5c9cb6}.card .symbol{font-size:1.9rem}.card h3{margin:8px 0 4px;font-size:1.35rem}.tag{display:inline-block;border:1px solid #38526a;color:var(--cyan);border-radius:999px;padding:3px 9px;font-size:.75rem;margin:4px 4px 0 0}.card ul{padding-left:20px;color:var(--muted)}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{border-top:2px solid var(--cyan);padding:16px;background:#0e1b2c;border-radius:0 0 14px 14px}.step strong{display:block;font-size:1.1rem}.controls{display:flex;gap:10px;flex-wrap:wrap}.controls input{background:#0b1726;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:10px;min-width:240px}.map{display:grid;grid-template-columns:1fr 1fr;gap:16px}.mapbox{border:1px solid var(--line);border-radius:18px;padding:20px;background:#0c1929}.mapbox h3{margin-top:0}.node{display:block;padding:12px 14px;border:1px solid #38526a;border-radius:12px;margin:9px 0;background:#11243a}.node small{display:block;color:var(--muted)}.notice{border-left:3px solid var(--amber);background:#2b2415aa;padding:14px 17px;border-radius:0 12px 12px 0;color:#f5dfb4}.footer{border-top:1px solid var(--line);margin-top:38px;padding:26px 0;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.hidden{display:none!important}.tiny{font-size:.85rem}.pulse{animation:pulse 3s infinite}@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:42px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.map{grid-template-columns:1fr}}@media(max-width:480px){.wrap{padding:16px}.flow{grid-template-columns:1fr}.hero h1{font-size:3.1rem}}
+
+/* BLUMIX 0.5 — command-center layer, no frameworks or remote assets */
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.command-deck{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.console{background:#050c16;border:1px solid #31516c;border-radius:20px;padding:20px;box-shadow:0 18px 50px #0004;min-width:0}
+.console-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+.live-label{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--green);letter-spacing:.08em;text-transform:uppercase}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px #8bf0c5}
+.terminal-lines{font: .92rem/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;color:#b8d0e5;padding:14px 0 4px;overflow-wrap:anywhere}
+.terminal-lines .prompt{color:var(--cyan)}.terminal-lines .ok{color:var(--green)}.terminal-lines .warn{color:var(--amber)}
+.command-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.command-tile{display:flex;flex-direction:column;gap:9px;align-items:flex-start;text-align:left;background:#102136;border:1px solid #2a4760;border-radius:14px;padding:14px;color:var(--text);min-width:0}
+.command-tile:hover{border-color:var(--cyan);background:#142b42}
+.command-tile code{font-size:.8rem;color:var(--cyan);overflow-wrap:anywhere}
+.command-tile small{color:var(--muted)}
+.telemetry{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{border:1px solid var(--line);border-radius:16px;padding:16px;background:#0d1a2a;min-width:0}
+.metric .metric-label{display:block;color:var(--muted);font-size:.8rem}
+.metric strong{display:block;font-size:1.12rem;margin-top:7px}
+.metric .metric-foot{display:block;color:var(--amber);font-size:.74rem;margin-top:6px}
+.metric .metric-mark{font-size:1.3rem}
+.command-note{margin-top:14px;font-size:.82rem;color:var(--muted)}
+.toast{min-height:1.5em;color:var(--green);font-size:.86rem;margin-top:8px}
+@media(max-width:850px){.command-deck{grid-template-columns:1fr}.telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.command-grid{grid-template-columns:1fr}.console{padding:14px}.telemetry{gap:7px}.metric{padding:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -18,7 +44,36 @@
 <div><div class="eyebrow">Un centro de mando. Proyectos independientes.</div><h1>Un ecosistema.<br><span>Una visión.</span></h1><p class="lead">Atlas visual de BLUMIX: una guía interactiva para comprender cómo se conectan las herramientas, qué responsabilidad conserva cada proyecto y cómo crecer sin mezclar repositorios ni perder el control.</p><div class="actions"><a class="btn primary" href="#arquitectura">Explorar arquitectura ↓</a><a class="btn" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix" target="_blank" rel="noreferrer">Explorar rama de mejora ↗</a></div></div>
 <div class="orbit"><svg viewBox="0 0 500 380" role="img" aria-label="Diagrama de BLUMIX como orquestador de tres proyectos independientes"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#66e6ff"/><stop offset="1" stop-color="#b7a2ff"/></linearGradient></defs><circle cx="250" cy="180" r="132" fill="none" stroke="#2c4962" stroke-dasharray="5 8"/><circle cx="250" cy="180" r="92" fill="none" stroke="#29455e"/><path d="M250 180 L120 85 M250 180 L380 85 M250 180 L250 315" stroke="url(#g)" stroke-width="2" stroke-dasharray="5 5"/><rect x="168" y="135" width="164" height="90" rx="18" fill="#172f48" stroke="#66e6ff" stroke-width="2"/><text x="250" y="172" fill="#edf5ff" text-anchor="middle" font-size="24" font-weight="800">BLUMIX</text><text x="250" y="196" fill="#a5b7cc" text-anchor="middle" font-size="12">ORQUESTADOR</text><g><rect x="40" y="43" width="142" height="68" rx="14" fill="#11243a" stroke="#8bf0c5"/><text x="111" y="72" fill="#8bf0c5" text-anchor="middle" font-size="17" font-weight="700">BLUMCL</text><text x="111" y="92" fill="#a5b7cc" text-anchor="middle" font-size="11">Android / Termux</text></g><g><rect x="318" y="43" width="142" height="68" rx="14" fill="#11243a" stroke="#b7a2ff"/><text x="389" y="72" fill="#b7a2ff" text-anchor="middle" font-size="17" font-weight="700">BLUMSEC</text><text x="389" y="92" fill="#a5b7cc" text-anchor="middle" font-size="11">Seguridad / evidencias</text></g><g><rect x="170" y="287" width="160" height="68" rx="14" fill="#11243a" stroke="#ffd68a"/><text x="250" y="316" fill="#ffd68a" text-anchor="middle" font-size="17" font-weight="700">BLUMELIX</text><text x="250" y="336" fill="#a5b7cc" text-anchor="middle" font-size="11">Aplicación web</text></g><circle class="pulse" cx="250" cy="180" r="5" fill="#66e6ff"/></svg><p class="tiny muted">Modelo conceptual basado en la documentación visible del repositorio; validar las rutas reales de cada instalación antes de ejecutar acciones.</p></div>
 </section>
-<section class="section" id="arquitectura"><div class="section-head"><div><div class="eyebrow">01 / Mapa del sistema</div><h2>Una puerta de entrada, tres identidades</h2></div><div class="controls"><input id="filter" type="search" placeholder="Filtrar proyectos o responsabilidades…" aria-label="Filtrar tarjetas"><button class="btn" id="reset">Restablecer</button></div></div>
+
+<section class="section" id="command-center">
+<div class="section-head"><div><div class="eyebrow">00 / Puente de mando</div><h2>Command Center</h2><p class="muted">Diseñado para pasar de la estética a la operación verificable.</p></div><span class="badge">UI 0.5 · VISTA ESTÁTICA</span></div>
+<div class="command-deck">
+<div class="console">
+<div class="console-head"><div><div class="brand">BLUMIX <span style="color:var(--cyan)">// NAVE</span></div><span class="tiny muted">Protocolo local · diagnóstico primero</span></div><span class="live-label"><span class="live-dot"></span>Atlas disponible</span></div>
+<div class="terminal-lines" aria-label="Ejemplo de salida de terminal">
+<div><span class="prompt">ariaslondo@lubuntu</span>:~$ blumix doctor</div>
+<div><span class="ok">[INFO]</span> Comprobación local solicitada</div>
+<div><span class="warn">[PENDIENTE]</span> Ejecutar en el equipo para conocer el resultado</div>
+<div><span class="prompt">ariaslondo@lubuntu</span>:~$ blumix integrations</div>
+<div><span class="warn">[SIN DATOS EN VIVO]</span> Esta página no puede inspeccionar tu disco</div>
+</div>
+<div class="command-grid" aria-label="Comandos de diagnóstico para copiar">
+<button class="command-tile" type="button" data-command="blumix doctor"><span>🩺 Diagnóstico</span><code>blumix doctor</code><small>Comprobar instalación y rutas</small></button>
+<button class="command-tile" type="button" data-command="blumix integrations"><span>🧩 Integraciones</span><code>blumix integrations</code><small>Ver rutas detectadas</small></button>
+<button class="command-tile" type="button" data-command="blumix system"><span>🖥️ Sistema</span><code>blumix system</code><small>Consultar información local</small></button>
+<button class="command-tile" type="button" data-command="blumix security"><span>🛡️ Seguridad</span><code>blumix security</code><small>Revisar señales disponibles</small></button>
+</div>
+<div id="copy-status" class="toast" role="status" aria-live="polite"></div>
+<p class="command-note">Pulsa un comando para copiarlo. Esta página no lo ejecuta ni accede a tu terminal.</p>
+</div>
+<aside class="telemetry" aria-label="Estado de la página">
+<div class="metric"><span class="metric-mark">🛰️</span><span class="metric-label">Atlas</span><strong>Disponible</strong><span class="metric-foot">Contenido local de la página</span></div>
+<div class="metric"><span class="metric-mark">🔌</span><span class="metric-label">Conexión al equipo</span><strong>No conectada</strong><span class="metric-foot">Sin agente local</span></div>
+<div class="metric"><span class="metric-mark">📡</span><span class="metric-label">Estado de proyectos</span><strong>No verificado</strong><span class="metric-foot">Ejecuta el CLI para comprobar</span></div>
+<div class="metric"><span class="metric-mark">🔐</span><span class="metric-label">Permisos</span><strong>Solo lectura</strong><span class="metric-foot">La web no ejecuta acciones</span></div>
+</aside>
+</div>
+</section>\n<section class="section" id="arquitectura"><div class="section-head"><div><div class="eyebrow">01 / Mapa del sistema</div><h2>Una puerta de entrada, tres identidades</h2></div><div class="controls"><input id="filter" type="search" placeholder="Filtrar proyectos o responsabilidades…" aria-label="Filtrar tarjetas"><button class="btn" id="reset">Restablecer</button></div></div>
 <div class="grid" id="cards">
 <article class="card" data-search="blumix orquestador terminal comandos diagnóstico integración"><div class="symbol">💎</div><span class="tag">NÚCLEO</span><h3>BLUMIX</h3><p class="muted">Centro de mando en terminal que ayuda a navegar y diagnosticar el entorno.</p><ul><li>Comandos de sistema, red y seguridad.</li><li>Comprobación de integraciones.</li><li>Acceso rápido sin fusionar proyectos.</li></ul><a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">Código y documentación ↗</a></article>
 <article class="card" data-search="blumcl android termux auditoría almacenamiento"><div class="symbol">📱</div><span class="tag">PROYECTO INDEPENDIENTE</span><h3>BLUMCL</h3><p class="muted">Proyecto referenciado por la configuración y documentación de BLUMIX.</p><ul><li>Enfoque descrito: auditoría de almacenamiento en Android/Termux.</li><li>Repositorio y estado deben verificarse por separado.</li><li>BLUMIX no debe modificarlo sin permiso.</li></ul><span class="tag">Integración a verificar</span></article>
@@ -36,5 +91,17 @@
 const filter=document.getElementById('filter'),cards=[...document.querySelectorAll('#cards .card')];
 filter.addEventListener('input',()=>{const q=filter.value.trim().toLocaleLowerCase('es');cards.forEach(c=>c.classList.toggle('hidden',!((c.dataset.search+' '+c.innerText).toLocaleLowerCase('es').includes(q))))});
 document.getElementById('reset').addEventListener('click',()=>{filter.value='';cards.forEach(c=>c.classList.remove('hidden'));filter.focus()});
+
+document.querySelectorAll('[data-command]').forEach(button=>button.addEventListener('click',async()=>{
+ const command=button.dataset.command, status=document.getElementById('copy-status');
+ try{
+  if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(command)}
+  else{
+   const field=document.createElement('textarea');field.value=command;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();
+   const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('clipboard unavailable');
+  }
+  status.textContent='Copiado: '+command+' · pégalo en tu terminal para ejecutarlo.';
+ }catch(e){status.textContent='Comando: '+command+' · selecciónalo y cópialo manualmente.';}
+}));
 </script>
 </body></html>
