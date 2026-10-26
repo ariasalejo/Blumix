@@ -11,7 +11,7 @@ blumix_file_exists()   { [[ -f "$1" ]]; }
 # Values passed here are single-line system identifiers and timestamps.
 blumix_json_quote() {
     printf '"'
-    printf '%s' "${1:-}" | sed 's/\\\\/\\\\\\\\/g; s/"/\\\\"/g'
+    printf '%s' "${1:-}" | sed 's/\\/\\\\/g; s/"/\\"/g'
     printf '"'
 }
 
