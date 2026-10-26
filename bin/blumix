@@ -158,7 +158,7 @@ blumix_dashboard() {
     printf '  blumix integrations  Inspeccionar proyectos\n'
     printf '  blumix security      Revisar señales de seguridad\n'
     printf '  blumix network       Consultar red y DNS\n'
-    printf '  blumix report --json Exportar instantánea para el Atlas\\n'
+    printf '  blumix report --json Exportar instantánea para el Atlas\n'
     printf '  blumix nave          Volver a mostrar este centro de mando\n'
     printf '\n  Atlas visual: docs/visual-atlas/index.html\n'
     printf '  La presencia de un directorio no confirma que un servicio esté activo.\n'
