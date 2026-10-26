@@ -45,7 +45,7 @@ grep -q 'id="snapshot-file"' "$atlas" || fail "Atlas no permite importar instant
 grep -q 'blumix.snapshot.v1' "$atlas" || fail "Atlas no valida el esquema de informe"
 grep -q 'No se envía' "$atlas" || grep -q 'no se envía' "$atlas" || fail "Atlas no explica el procesamiento local"
 if command -v node >/dev/null 2>&1; then
-    node -e 'const fs=require("fs");const html=fs.readFileSync(process.argv[1],"utf8");const match=html.match(/<script>([\\s\\S]*?)<\\/script>/);if(!match)process.exit(2);new Function(match[1]);' "$atlas" || fail "sintaxis JavaScript del Atlas"
+    node -e 'const fs=require("fs");const html=fs.readFileSync(process.argv[1],"utf8");const match=html.match(/<script>([\s\S]*?)<\/script>/);if(!match)process.exit(2);new Function(match[1]);' "$atlas" || fail "sintaxis JavaScript del Atlas"
     pass "sintaxis JavaScript del Atlas"
 fi
 if command -v python3 >/dev/null 2>&1; then
