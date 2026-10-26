@@ -34,11 +34,33 @@
 @media(max-width:850px){.command-deck{grid-template-columns:1fr}.telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.command-grid{grid-template-columns:1fr}.console{padding:14px}.telemetry{gap:7px}.metric{padding:12px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* BLUMIX 0.6 — importación local de instantáneas verificables */
+.snapshot-panel{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;padding:20px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#10223aee,#081421ee)}
+.snapshot-intro{min-width:0}
+.snapshot-intro h3{margin:0 0 8px;font-size:1.2rem}
+.snapshot-intro p{color:var(--muted);margin:8px 0 14px}
+.snapshot-intro code{color:var(--cyan);overflow-wrap:anywhere}
+.snapshot-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.snapshot-kpi{min-width:0;border:1px solid #29455e;border-radius:15px;padding:15px;background:#071321}
+.snapshot-kpi span{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.09em}
+.snapshot-kpi strong{display:block;font-size:1.4rem;line-height:1.25;margin:8px 0;overflow-wrap:anywhere}
+.snapshot-kpi small{display:block;color:var(--muted);overflow-wrap:anywhere}
+.snapshot-integrations{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.integration-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:#0b1726;font-size:.82rem}
+.integration-chip strong{color:var(--amber);font-weight:700}
+.snapshot-meta{margin-top:14px;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
+.snapshot-feedback{min-height:1.5em;margin-top:12px;color:var(--green);font-size:.86rem}
+.snapshot-feedback.error{color:var(--amber)}
+.file-help{font-size:.8rem;color:var(--muted)}
+@media(max-width:850px){.snapshot-panel{grid-template-columns:1fr}}
+@media(max-width:480px){.snapshot-panel{padding:13px}.snapshot-kpi{padding:11px}.snapshot-kpi strong{font-size:1.15rem}.integration-chip{font-size:.75rem}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="top"><div class="brand">◆ BLUMIX <span style="color:var(--muted);font-weight:500;letter-spacing:0">/ ATLAS VISUAL</span></div><span class="badge">EDICIÓN EXPLORABLE · v0.2</span></header>
+<header class="top"><div class="brand">◆ BLUMIX <span style="color:var(--muted);font-weight:500;letter-spacing:0">/ ATLAS VISUAL</span></div><span class="badge">EDICIÓN LOCAL-FIRST · v0.6</span></header>
 <main>
 <section class="hero" id="inicio">
 <div><div class="eyebrow">Un centro de mando. Proyectos independientes.</div><h1>Un ecosistema.<br><span>Una visión.</span></h1><p class="lead">Atlas visual de BLUMIX: una guía interactiva para comprender cómo se conectan las herramientas, qué responsabilidad conserva cada proyecto y cómo crecer sin mezclar repositorios ni perder el control.</p><div class="actions"><a class="btn primary" href="#arquitectura">Explorar arquitectura ↓</a><a class="btn" href="https://github.com/ariasalejo/Blumix/tree/feat/visual-atlas-blumix" target="_blank" rel="noreferrer">Explorar rama de mejora ↗</a></div></div>
@@ -46,10 +68,10 @@
 </section>
 
 <section class="section" id="command-center">
-<div class="section-head"><div><div class="eyebrow">00 / Puente de mando</div><h2>Command Center</h2><p class="muted">Diseñado para pasar de la estética a la operación verificable.</p></div><span class="badge">UI 0.5 · VISTA ESTÁTICA</span></div>
+<div class="section-head"><div><div class="eyebrow">00 / Puente de mando</div><h2>Command Center</h2><p class="muted">Diseñado para pasar de la estética a la operación verificable.</p></div><span class="badge">UI 0.6 · INFORME IMPORTABLE</span></div>
 <div class="command-deck">
 <div class="console">
-<div class="console-head"><div><div class="brand">BLUMIX <span style="color:var(--cyan)">// NAVE</span></div><span class="tiny muted">Protocolo local · diagnóstico primero</span></div><span class="live-label"><span class="live-dot"></span>Atlas disponible</span></div>
+<div class="console-head"><div><div class="brand">BLUMIX <span style="color:var(--cyan)">// NAVE</span></div><span class="tiny muted">Protocolo local · diagnóstico primero</span></div><span class="live-label">INTERFAZ DISPONIBLE · SIN CONEXIÓN AL EQUIPO</span></div>
 <div class="terminal-lines" aria-label="Ejemplo de salida de terminal">
 <div><span class="prompt">ariaslondo@lubuntu</span>:~$ blumix doctor</div>
 <div><span class="ok">[INFO]</span> Comprobación local solicitada</div>
@@ -62,6 +84,7 @@
 <button class="command-tile" type="button" data-command="blumix integrations"><span>🧩 Integraciones</span><code>blumix integrations</code><small>Ver rutas detectadas</small></button>
 <button class="command-tile" type="button" data-command="blumix system"><span>🖥️ Sistema</span><code>blumix system</code><small>Consultar información local</small></button>
 <button class="command-tile" type="button" data-command="blumix security"><span>🛡️ Seguridad</span><code>blumix security</code><small>Revisar señales disponibles</small></button>
+<button class="command-tile" type="button" data-command='./bin/blumix report --json > "$HOME/blumix-report.json"'><span>📦 Exportar informe</span><code>report --json</code><small>Crear una instantánea privada para importar en el Atlas</small></button>
 </div>
 <div id="copy-status" class="toast" role="status" aria-live="polite"></div>
 <p class="command-note">Pulsa un comando para copiarlo. Esta página no lo ejecuta ni accede a tu terminal.</p>
@@ -73,7 +96,42 @@
 <div class="metric"><span class="metric-mark">🔐</span><span class="metric-label">Permisos</span><strong>Solo lectura</strong><span class="metric-foot">La web no ejecuta acciones</span></div>
 </aside>
 </div>
-</section>\n<section class="section" id="arquitectura"><div class="section-head"><div><div class="eyebrow">01 / Mapa del sistema</div><h2>Una puerta de entrada, tres identidades</h2></div><div class="controls"><input id="filter" type="search" placeholder="Filtrar proyectos o responsabilidades…" aria-label="Filtrar tarjetas"><button class="btn" id="reset">Restablecer</button></div></div>
+
+</section>
+<section class="section" id="snapshot">
+<div class="section-head">
+  <div><div class="eyebrow">00.1 / Telemetría local</div><h2>El estado real, sin fingir conexión</h2>
+  <p class="muted">Genera un informe en la terminal e impórtalo aquí. El archivo se lee dentro del navegador; no se envía a ningún servidor.</p></div>
+  <span class="badge" id="snapshot-status">SIN INFORME IMPORTADO</span>
+</div>
+<div class="snapshot-panel">
+  <div class="snapshot-intro">
+    <h3>📡 Conectar mediante una instantánea</h3>
+    <p>Desde la carpeta del repositorio, ejecuta el comando y luego selecciona el archivo generado:</p>
+    <p><code>./bin/blumix report --json &gt; "$HOME/blumix-report.json"</code></p>
+    <button class="btn primary" id="choose-snapshot" type="button">Seleccionar informe JSON</button>
+    <input id="snapshot-file" type="file" accept=".json,application/json" hidden>
+    <p class="file-help">Máximo 1 MB. Solo se aceptan informes BLUMIX compatibles. No se ejecuta código del archivo ni se inicia una conexión de red.</p>
+    <div class="snapshot-feedback" id="snapshot-feedback" role="status" aria-live="polite">Aún no se ha importado ningún informe. Los indicadores muestran N/D hasta que cargues una instantánea.</div>
+    <div class="snapshot-meta" id="report-meta">Los informes incluyen sistema básico e indicador de existencia de carpetas; no incluyen rutas absolutas ni secretos.</div>
+  </div>
+  <div>
+    <div class="snapshot-kpis" aria-label="Métricas del informe importado">
+      <div class="snapshot-kpi"><span>⚡ CPU</span><strong id="report-cpu">N/D</strong><small id="report-cpu-model">Sin datos</small></div>
+      <div class="snapshot-kpi"><span>🧠 Memoria RAM</span><strong id="report-ram">N/D</strong><small id="report-ram-detail">Sin datos</small></div>
+      <div class="snapshot-kpi"><span>💾 Disco raíz</span><strong id="report-disk">N/D</strong><small>Uso del sistema de archivos raíz</small></div>
+      <div class="snapshot-kpi"><span>⏱️ Tiempo activo</span><strong id="report-uptime">N/D</strong><small id="report-kernel">Kernel no verificado</small></div>
+    </div>
+    <div class="snapshot-integrations" aria-label="Estado de existencia de directorios reportado por la CLI">
+      <span class="integration-chip">BLUMCL <strong id="report-blumcl">Sin informe</strong></span>
+      <span class="integration-chip">BLUMSEC <strong id="report-blumsec">Sin informe</strong></span>
+      <span class="integration-chip">BLUMELIX <strong id="report-blumelix">Sin informe</strong></span>
+    </div>
+    <div class="snapshot-meta" id="report-os">Sistema operativo: sin datos.</div>
+  </div>
+</div>
+</section>
+<section class="section" id="arquitectura"><div class="section-head"><div><div class="eyebrow">01 / Mapa del sistema</div><h2>Una puerta de entrada, tres identidades</h2></div><div class="controls"><input id="filter" type="search" placeholder="Filtrar proyectos o responsabilidades…" aria-label="Filtrar tarjetas"><button class="btn" id="reset">Restablecer</button></div></div>
 <div class="grid" id="cards">
 <article class="card" data-search="blumix orquestador terminal comandos diagnóstico integración"><div class="symbol">💎</div><span class="tag">NÚCLEO</span><h3>BLUMIX</h3><p class="muted">Centro de mando en terminal que ayuda a navegar y diagnosticar el entorno.</p><ul><li>Comandos de sistema, red y seguridad.</li><li>Comprobación de integraciones.</li><li>Acceso rápido sin fusionar proyectos.</li></ul><a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">Código y documentación ↗</a></article>
 <article class="card" data-search="blumcl android termux auditoría almacenamiento"><div class="symbol">📱</div><span class="tag">PROYECTO INDEPENDIENTE</span><h3>BLUMCL</h3><p class="muted">Proyecto referenciado por la configuración y documentación de BLUMIX.</p><ul><li>Enfoque descrito: auditoría de almacenamiento en Android/Termux.</li><li>Repositorio y estado deben verificarse por separado.</li><li>BLUMIX no debe modificarlo sin permiso.</li></ul><span class="tag">Integración a verificar</span></article>
@@ -85,7 +143,7 @@
 <section class="section" id="principios"><div class="section-head"><div><div class="eyebrow">04 / Pacto de arquitectura</div><h2>Conectar no significa mezclar</h2></div></div><div class="grid"><article class="card"><div class="symbol">🔒</div><h3>Privacidad por defecto</h3><p class="muted">No mostrar tokens, claves, contenido de bóvedas ni variables sensibles. Nunca guardar secretos en Git.</p></article><article class="card"><div class="symbol">🧱</div><h3>Fronteras claras</h3><p class="muted">Cada proyecto mantiene su repositorio, pruebas, versión, documentación y ciclo de publicación.</p></article><article class="card"><div class="symbol">🧾</div><h3>Hechos verificables</h3><p class="muted">Diferenciar “detectado”, “configurado”, “probado” y “pendiente”. No inventar estados ni acuerdos.</p></article></div><p class="notice">Este atlas es una capa de documentación visual autónoma: no ejecuta comandos, no cambia archivos locales y no requiere claves API. Los nodos que describen integraciones son referencias de arquitectura, no una garantía de que una conexión esté activa.</p></section>
 <section class="section" id="siguiente"><div class="section-head"><div><div class="eyebrow">05 / Próxima frontera</div><h2>Convertir el atlas en un centro vivo</h2></div></div><div class="grid"><article class="card"><span class="tag">FASE A</span><h3>Inventario real</h3><p class="muted">Detectar repositorios, ramas, pruebas, versiones y rutas locales desde una fuente verificable.</p></article><article class="card"><span class="tag">FASE B</span><h3>Estado de GitHub</h3><p class="muted">Mostrar enlaces, último commit, workflows y PRs solo con permisos mínimos y datos confirmados.</p></article><article class="card"><span class="tag">FASE C</span><h3>Experiencia viva</h3><p class="muted">Añadir búsqueda avanzada, historial de cambios, accesibilidad, pruebas y despliegue documentado.</p></article></div><p class="muted">Recomendación: primero lograr una guía fiable y mantenible; después integrar APIs o automatizaciones. La espectacularidad visual nunca debe sustituir la seguridad ni la veracidad.</p></section>
 </main>
-<footer class="footer"><div><strong>BLUMIX · Atlas Visual</strong><br><span class="tiny">Guía interactiva autónoma · español · responsive · sin dependencias externas</span></div><div class="tiny">Fuente de proyecto: <a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">ariasalejo/Blumix</a><br>Documento conceptual, no un panel de estado en tiempo real.</div></footer>
+<footer class="footer"><div><strong>BLUMIX · Atlas Visual</strong><br><span class="tiny">Atlas local-first · importación JSON en navegador · español · responsive · sin dependencias externas</span></div><div class="tiny">Fuente de proyecto: <a href="https://github.com/ariasalejo/Blumix" target="_blank" rel="noreferrer">ariasalejo/Blumix</a><br>Sin agente ni conexión continua; los datos solo aparecen tras importar un informe local.</div></footer>
 </div>
 <script>
 const filter=document.getElementById('filter'),cards=[...document.querySelectorAll('#cards .card')];
@@ -103,5 +161,63 @@ document.querySelectorAll('[data-command]').forEach(button=>button.addEventListe
   status.textContent='Copiado: '+command+' · pégalo en tu terminal para ejecutarlo.';
  }catch(e){status.textContent='Comando: '+command+' · selecciónalo y cópialo manualmente.';}
 }));
+
+const snapshotInput=document.getElementById('snapshot-file');
+const snapshotStatus=document.getElementById('snapshot-status');
+const snapshotFeedback=document.getElementById('snapshot-feedback');
+const setReportText=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=value;};
+const formatPercent=value=>Number.isFinite(value)&&value>=0&&value<=100?Math.round(value)+'%':'N/D';
+const formatGiB=value=>Number.isFinite(value)&&value>=0?(value/1073741824).toLocaleString('es-CO',{maximumFractionDigits:1})+' GiB':'N/D';
+const formatUptime=value=>{
+ if(!Number.isFinite(value)||value<0)return 'N/D';
+ const seconds=Math.floor(value),days=Math.floor(seconds/86400),hours=Math.floor((seconds%86400)/3600),mins=Math.floor((seconds%3600)/60);
+ if(days>0)return days+' d '+hours+' h';
+ if(hours>0)return hours+' h '+mins+' min';
+ return mins+' min';
+};
+const clearSnapshot=()=>{
+ ['report-cpu','report-ram','report-disk','report-uptime'].forEach(id=>setReportText(id,'N/D'));
+ ['report-cpu-model','report-ram-detail','report-kernel'].forEach(id=>setReportText(id,'Sin datos'));
+ ['report-blumcl','report-blumsec','report-blumelix'].forEach(id=>setReportText(id,'Sin informe'));
+ setReportText('report-os','Sistema operativo: sin datos.');
+ setReportText('report-meta','Los informes incluyen sistema básico e indicador de existencia de carpetas; no incluyen rutas absolutas ni secretos.');
+ snapshotStatus.textContent='SIN INFORME IMPORTADO';
+};
+document.getElementById('choose-snapshot').addEventListener('click',()=>snapshotInput.click());
+snapshotInput.addEventListener('change',async()=>{
+ const file=snapshotInput.files&&snapshotInput.files[0];
+ if(!file)return;
+ try{
+  if(file.size>1024*1024)throw new Error('El archivo supera el límite de 1 MB.');
+  const report=JSON.parse(await file.text());
+  if(!report||report.schema!=='blumix.snapshot.v1'||!report.system||!report.integrations)throw new Error('El archivo no tiene el formato de instantánea BLUMIX esperado.');
+  const s=report.system, integrations=report.integrations;
+  if(!integrations.BLUMCL||!integrations.BLUMSEC||!integrations.BLUMELIX)throw new Error('El informe no contiene las tres integraciones esperadas.');
+  clearSnapshot();
+  setReportText('report-cpu',formatPercent(s.cpu_percent));
+  setReportText('report-cpu-model',typeof s.cpu_model==='string'?s.cpu_model:'Modelo no disponible');
+  setReportText('report-ram',formatPercent(s.memory_percent));
+  setReportText('report-ram-detail',formatGiB(s.memory_used_bytes)+' usados / '+formatGiB(s.memory_total_bytes));
+  setReportText('report-disk',formatPercent(s.root_disk_percent));
+  setReportText('report-uptime',formatUptime(s.uptime_seconds));
+  setReportText('report-kernel','Kernel: '+(typeof s.kernel==='string'?s.kernel:'N/D'));
+  setReportText('report-os','Sistema operativo: '+(typeof s.os==='string'?s.os:'N/D'));
+  setReportText('report-meta','Instantánea local · BLUMIX '+(typeof report.blumix_version==='string'?report.blumix_version:'versión no indicada')+' · Generada: '+(typeof report.generated_at==='string'?report.generated_at:'fecha no indicada')+'. Valores capturados al generar el informe.');
+  const dirState=value=>value.directory_found===true?'Carpeta encontrada':'No encontrada';
+  setReportText('report-blumcl',dirState(integrations.BLUMCL));
+  setReportText('report-blumsec',dirState(integrations.BLUMSEC));
+  setReportText('report-blumelix',dirState(integrations.BLUMELIX));
+  snapshotStatus.textContent='INFORME LOCAL IMPORTADO';
+  snapshotFeedback.classList.remove('error');
+  snapshotFeedback.textContent='Informe leído localmente: '+file.name+'. Los indicadores describen la captura realizada por la CLI, no el estado actual en tiempo real.';
+ }catch(error){
+  clearSnapshot();
+  snapshotFeedback.classList.add('error');
+  snapshotFeedback.textContent='No se pudo importar el informe. '+(error&&error.message?error.message:'Revisa que sea un JSON compatible.');
+ }finally{
+  snapshotInput.value='';
+ }
+});
+
 </script>
 </body></html>
