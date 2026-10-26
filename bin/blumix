@@ -7,6 +7,7 @@ source "$BLUMIX_ROOT/lib/ui.sh"
 source "$BLUMIX_ROOT/lib/system.sh"
 source "$BLUMIX_ROOT/lib/network.sh"
 source "$BLUMIX_ROOT/lib/security.sh"
+source "$BLUMIX_ROOT/lib/audit.sh"
 source "$BLUMIX_ROOT/lib/development.sh"
 source "$BLUMIX_ROOT/lib/integrations.sh"
 blumix_load_config
@@ -117,6 +118,7 @@ Comandos:
   system                 Información básica del sistema
   network, net           Interfaces de red y DNS local
   security, sec           Estado detectable de firewall y SSH
+  audit [--json]          Revisiones locales de permisos y archivos de riesgo
   integrations, int      Rutas de proyectos conectados
   development, dev        Herramientas de desarrollo
   status                 Resumen breve del equipo e integraciones
@@ -175,7 +177,7 @@ blumix_doctor() {
             failures=$((failures + 1))
         fi
     done
-    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh"; do
+    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh"; do
         if [[ -r "$file" ]]; then
             printf '[OK]      %s\n' "${file#"$BLUMIX_ROOT/"}"
         else
@@ -202,6 +204,16 @@ case "${1:-}" in
     system) blumix_system ;;
     network|net) blumix_network ;;
     security|sec) blumix_security ;;
+    audit)
+        if [[ "${2:-}" == "--json" && -z "${3:-}" ]]; then
+            blumix_audit json
+        elif [[ -z "${2:-}" ]]; then
+            blumix_audit text
+        else
+            printf 'Uso: blumix audit [--json]\n' >&2
+            exit 2
+        fi
+        ;;
     integrations|int) blumix_integrations ;;
     development|dev) blumix_development ;;
     blumcl|cl) blumix_go_blumcl ;;
