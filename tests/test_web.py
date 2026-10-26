@@ -44,7 +44,7 @@ class WebTests(unittest.TestCase):
     def test_dashboard_and_security_headers(self):
         status, headers, body = self.request("/")
         self.assertEqual(status, 200)
-        self.assertIn(b"BLUMIX Intelligence Center", body)
+        self.assertIn(b"Centro de", body)
         self.assertEqual(headers.get("X-Content-Type-Options"), "nosniff")
         self.assertEqual(headers.get("X-Frame-Options"), "DENY")
         self.assertIn("127.0.0.1", str(WEB.ROOT))
