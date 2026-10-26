@@ -4,6 +4,10 @@ Cambios notables por versión.
 
 ## [Unreleased]
 
+- Añade `blumix projects [--json]` y `blumix services [--json]` con estados de evidencia y límites explícitos; la ausencia de coincidencias no se interpreta como ausencia de servicios.
+- Añade `blumix intelligence --json` con salida estructurada, fuentes y estados desconocidos.
+- Amplía pruebas automatizadas para esquemas JSON, estados desconocidos y argumentos inválidos.
+
 - Nuevo `blumix intelligence` / `blumix intel`: reglas locales para detectar carga elevada, memoria disponible reducida, disco bajo y brechas de integración; recomienda comprobaciones de solo lectura sin ejecutarlas.
 - El centro de mando muestra el diagnóstico accionable y la detección de herramientas de desarrollo.
 - Pruebas automatizadas para el nuevo comando, alias y declaración de límites.
