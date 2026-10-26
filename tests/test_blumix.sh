@@ -210,19 +210,24 @@ if bash "$R/bin/blumix" watch 1 >/dev/null 2>&1; then fail "watch aceptó un int
 pass "validación estricta de argumentos de funciones avanzadas"
 
 # El centro interactivo debe conservar una jerarquía de orquestación navegable.
-grep -q 'BLUMIX ORCHESTRATOR' "$R/lib/tui.sh" || fail "falta el nodo raíz del orquestador"
-grep -q 'SYSTEM CORE' "$R/lib/tui.sh" || fail "falta la rama del sistema"
-grep -q 'INTELLIGENCE ENGINE' "$R/lib/tui.sh" || fail "falta la rama de inteligencia"
-grep -q 'PROJECT ECOSYSTEM' "$R/lib/tui.sh" || fail "falta la rama de proyectos"
-grep -q 'EVIDENCE VAULT' "$R/lib/tui.sh" || fail "falta la rama de evidencias"
+grep -q 'ORQUESTADOR BLUMIX' "$R/lib/tui.sh" || fail "falta el nodo raíz del orquestador"
+grep -q 'NUCLEO DEL SISTEMA' "$R/lib/tui.sh" || fail "falta la rama del sistema"
+grep -q 'MOTOR DE INTELIGENCIA' "$R/lib/tui.sh" || fail "falta la rama de inteligencia"
+grep -q 'ECOSISTEMA DE PROYECTOS' "$R/lib/tui.sh" || fail "falta la rama de proyectos"
+grep -q 'BOVEDA DE EVIDENCIAS' "$R/lib/tui.sh" || fail "falta la rama de evidencias"
 grep -q 'blumix_tui_render_node' "$R/lib/tui.sh" || fail "falta el renderizado recursivo del árbol"
-grep -q 'collapse/parent' "$R/lib/tui.sh" || fail "faltan instrucciones de navegación jerárquica"
+grep -q 'plegar/padre' "$R/lib/tui.sh" || fail "faltan instrucciones de navegación jerárquica"
 if bash "$R/bin/blumix" menu >/dev/null 2>&1; then
     fail "menu aceptó ejecución sin terminal interactiva"
 else
     code=$?
     [[ "$code" -eq 2 ]] || fail "menu no interactivo no devolvió código 2"
 fi
+rendered_tree="$(bash -c 'source "$1/lib/core.sh"; source "$1/lib/ui.sh"; source "$1/lib/tui.sh"; blumix_load_config; blumix_tui_render 0' _ "$R")" || fail "el árbol no pudo renderizarse"
+grep -q 'ORQUESTADOR BLUMIX' <<<"$rendered_tree" || fail "el árbol no muestra el nodo raíz"
+grep -q 'NUCLEO DEL SISTEMA' <<<"$rendered_tree" || fail "el árbol no muestra la rama del sistema"
+grep -q 'BOVEDA DE EVIDENCIAS' <<<"$rendered_tree" || fail "el árbol no muestra la rama de evidencias"
+pass "renderizado real del árbol y sus ramas raíz"
 pass "árbol del orquestador: ramas, navegación y modo no interactivo seguro"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
