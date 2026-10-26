@@ -1,0 +1,34 @@
+name: BLUMIX CI
+
+on:
+  push:
+    branches: ["main", "feat/**", "fix/**", "docs/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bash-tests:
+    name: Bash syntax and smoke tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bash version
+        run: bash --version
+
+      - name: Syntax checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n bin/blumix
+          for file in lib/*.sh tests/*.sh; do
+            bash -n "$file"
+          done
+
+      - name: Run test suite
+        shell: bash
+        run: bash tests/test_blumix.sh
