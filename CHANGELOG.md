@@ -6,6 +6,16 @@ Cambios notables por versión.
 
 - Próximas mejoras sujetas a implementación y pruebas.
 
+## [0.4.1] - En desarrollo
+
+### Corregido
+- Descubrimiento de carpetas de proyectos sin asumir una capitalización exacta del nombre en Linux.
+- Etiqueta de CPU con alternativa a `/proc/cpuinfo` cuando `lscpu` no devuelve el modelo.
+- HUD: no dibuja métricas desconocidas como cero y no interpreta una batería ausente como 0%. 
+
+### Pruebas
+- Añadida regresión para rutas con capitalización mixta en un HOME temporal; no toca los proyectos del usuario.
+
 ## [0.4.0] - En desarrollo
 
 ### Corregido
