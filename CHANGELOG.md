@@ -4,6 +4,10 @@ Cambios notables por versión.
 
 ## [Unreleased]
 
+- Nuevo `blumix intelligence` / `blumix intel`: reglas locales para detectar carga elevada, memoria disponible reducida, disco bajo y brechas de integración; recomienda comprobaciones de solo lectura sin ejecutarlas.
+- El centro de mando muestra el diagnóstico accionable y la detección de herramientas de desarrollo.
+- Pruebas automatizadas para el nuevo comando, alias y declaración de límites.
+
 - Agente local autenticado, comprobaciones reales de salud por integración y aplicación Android nativa; aún no implementados.
 
 ## [0.7.0-atlas-redesign] - En desarrollo

@@ -11,6 +11,7 @@ source "$BLUMIX_ROOT/lib/audit.sh"
 source "$BLUMIX_ROOT/lib/policy.sh"
 source "$BLUMIX_ROOT/lib/development.sh"
 source "$BLUMIX_ROOT/lib/integrations.sh"
+source "$BLUMIX_ROOT/lib/intelligence.sh"
 blumix_load_config
 
 blumix_status() {
@@ -121,6 +122,7 @@ Comandos:
   security, sec           Estado detectable de firewall y SSH
   audit [--json]          Revisiones locales de permisos y archivos de riesgo
   policy [--json]         Catálogo de capacidades y límites de privilegio
+  intelligence, intel     Diagnóstico accionable por reglas locales (solo lectura)
   integrations, int      Rutas de proyectos conectados
   development, dev        Herramientas de desarrollo
   status                 Resumen breve del equipo e integraciones
@@ -156,8 +158,10 @@ blumix_dashboard() {
     blx_hud
     blumix_system
     blumix_integrations
+    blumix_intelligence
     printf '\n'
     printf '  %bACCESO RÁPIDO%b\n' "$BLX_BOLD"
+    printf '  blumix intelligence  Diagnóstico y siguientes pasos sugeridos\n'
     printf '  blumix doctor        Verificar instalación y rutas\n'
     printf '  blumix integrations  Inspeccionar proyectos\n'
     printf '  blumix security      Revisar señales de seguridad\n'
@@ -179,7 +183,7 @@ blumix_doctor() {
             failures=$((failures + 1))
         fi
     done
-    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh"; do
+    for file in "$BLUMIX_ROOT/lib/core.sh" "$BLUMIX_ROOT/lib/ui.sh" "$BLUMIX_ROOT/lib/system.sh" "$BLUMIX_ROOT/lib/network.sh" "$BLUMIX_ROOT/lib/security.sh" "$BLUMIX_ROOT/lib/audit.sh" "$BLUMIX_ROOT/lib/policy.sh" "$BLUMIX_ROOT/lib/integrations.sh" "$BLUMIX_ROOT/lib/development.sh" "$BLUMIX_ROOT/lib/intelligence.sh"; do
         if [[ -r "$file" ]]; then
             printf '[OK]      %s\n' "${file#"$BLUMIX_ROOT/"}"
         else
@@ -227,6 +231,7 @@ case "${1:-}" in
         fi
         ;;
     integrations|int) blumix_integrations ;;
+    intelligence|intel|center) blumix_intelligence ;;
     development|dev) blumix_development ;;
     blumcl|cl) blumix_go_blumcl ;;
     blumsec) blumix_go_blumsec ;;

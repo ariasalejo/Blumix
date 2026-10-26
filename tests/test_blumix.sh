@@ -20,6 +20,15 @@ version="$(bash "$R/bin/blumix" version)"
 [[ "$version" == "BLUMIX 0.7.0" ]] || fail "versión inesperada: $version"
 pass "comando version"
 
+intel="$(bash "$R/bin/blumix" intelligence)" || fail "intelligence devolvió error"
+grep -q 'CENTRO DE INTELIGENCIA' <<<"$intel" || fail "intelligence no muestra el centro de diagnóstico"
+grep -q 'INTEGRIDAD DEL ECOSISTEMA' <<<"$intel" || fail "intelligence no revisa integraciones"
+grep -q 'HERRAMIENTAS CLAVE' <<<"$intel" || fail "intelligence no detecta herramientas"
+grep -q 'no cambia servicios ni archivos' <<<"$intel" || fail "intelligence no declara sus límites de solo lectura"
+intel_alias="$(bash "$R/bin/blumix" intel)" || fail "alias intel devolvió error"
+grep -q 'CENTRO DE INTELIGENCIA' <<<"$intel_alias" || fail "alias intel no funciona"
+pass "centro de inteligencia: diagnóstico local, recomendaciones y límites explícitos"
+
 audit="$(bash "$R/bin/blumix" audit --json)" || fail "audit --json devolvió error"
 if command -v python3 >/dev/null 2>&1; then
     printf '%s\n' "$audit" | python3 -c '
@@ -159,6 +168,7 @@ grep -q 'integrations' <<<"$help" || fail "help no anuncia integrations"
 grep -q 'report --json' <<<"$help" || fail "help no anuncia report --json"
 grep -q 'audit' <<<"$help" || fail "help no anuncia audit"
 grep -q 'policy' <<<"$help" || fail "help no anuncia policy"
+grep -q 'intelligence' <<<"$help" || fail "help no anuncia intelligence"
 pass "ayuda contiene comandos clave"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then

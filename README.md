@@ -25,6 +25,7 @@ Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
 | `blumix doctor` | Comprobaciones básicas de instalación |
+| `blumix intelligence` / `blumix intel` | Diagnóstico determinista de CPU, memoria disponible, disco, integraciones y herramientas; recomienda siguientes pasos sin ejecutarlos |
 | `blumix report --json` | Crear una instantánea JSON sin rutas absolutas ni secretos para importar en el Atlas |
 | `blumix blumcl` | Abrir el directorio de BLUMCL si existe |
 | `blumix blumsec` | Abrir el directorio de BLUMSEC si existe |
@@ -73,6 +74,10 @@ Puedes definir `BLUMCL_HOME`, `BLUMSEC_HOME` y `BLUMELIX_HOME` como rutas absolu
 - **Offline-first:** las funciones de diagnóstico local no necesitan IA ni servicios externos.
 - **IA opcional:** no es requisito de instalación ni se activa por defecto.
 - **Honestidad de estado:** “directorio encontrado” no significa que una integración esté conectada ni que el servicio esté saludable.
+
+## Centro de inteligencia local
+
+`blumix intelligence` o `blumix intel` calcula un resumen basado en umbrales explícitos: CPU, memoria disponible (MemAvailable), disco raíz, carpetas de integración y herramientas de desarrollo detectables. Si encuentra señales de riesgo, sugiere comandos de inspección; no los ejecuta. Los resultados son heurísticos, locales y no equivalen a un análisis de causa raíz ni a una auditoría completa. No necesita IA ni conexión de red.
 
 ## Atlas y operaciones privilegiadas
 
