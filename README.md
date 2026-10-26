@@ -4,11 +4,11 @@
 
 BLUMIX es una herramienta modular de terminal para consultar el estado de un equipo Linux y localizar herramientas del ecosistema BLUM sin fusionar sus repositorios. Su interfaz visual es una capa de operación; los proyectos integrados conservan sus propios ciclos de vida, permisos, datos y versiones.
 
-> Estado del proyecto: versión de desarrollo 0.5.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
+> Estado del proyecto: versión de desarrollo 0.6.0. La CLI y los diagnósticos son locales y de solo lectura. La integración profunda con otros proyectos debe verificarse por separado.
 
 ## Atlas visual
 
-Explora la arquitectura, los componentes y la hoja de ruta en el [Atlas Visual Interactivo](docs/visual-atlas/index.html). La guía explica el diseño; no es un panel conectado en tiempo real.
+Explora la arquitectura y la hoja de ruta en el [Atlas Visual](docs/visual-atlas/index.html). El Atlas puede importar una instantánea JSON creada por la CLI: no necesita servidor, API ni conexión continua, y nunca se presenta como telemetría en vivo.
 
 ## Capacidades de la CLI
 
@@ -23,6 +23,7 @@ Explora la arquitectura, los componentes y la hoja de ruta en el [Atlas Visual I
 | `blumix development` | Disponibilidad de herramientas de desarrollo |
 | `blumix status` | Resumen breve del equipo y las rutas |
 | `blumix doctor` | Comprobaciones básicas de instalación |
+| `blumix report --json` | Crear una instantánea JSON sin rutas absolutas ni secretos para importar en el Atlas |
 | `blumix blumcl` | Abrir el directorio de BLUMCL si existe |
 | `blumix blumsec` | Abrir el directorio de BLUMSEC si existe |
 | `blumix blumelix` | Abrir el directorio de BLUMELIX si existe |
@@ -40,9 +41,12 @@ cd Blumix
 bash tests/test_blumix.sh
 ./bin/blumix help
 ./bin/blumix system
+./bin/blumix report --json > "$HOME/blumix-report.json"
 ~~~
 
 Para ejecutar sin instalar nada en el sistema, utiliza `./bin/blumix` desde el repositorio. Si deseas el comando global, añade el directorio `bin` de tu copia local al PATH; no pegues una ruta de otra máquina sin revisarla.
+
+Para llevar el diagnóstico a la vista visual, abre `docs/visual-atlas/index.html`, pulsa **Seleccionar informe JSON** e importa `~/blumix-report.json`. El informe incluye sistema operativo, kernel, métricas básicas y existencia de carpetas; no contiene rutas absolutas, nombre de usuario ni secretos. Revísalo antes de compartirlo: incluso la información técnica general puede revelar características de tu equipo.
 
 ## Configuración
 
