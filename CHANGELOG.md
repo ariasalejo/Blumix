@@ -6,6 +6,17 @@ Cambios notables por versión.
 
 - Próximas mejoras sujetas a implementación y pruebas.
 
+## [0.7.0] - En desarrollo
+
+### Seguridad y diagnóstico
+- Nuevo `blumix audit` y `blumix audit --json`: comprobaciones locales de permisos, nombres de archivos de riesgo y estado Git, sin imprimir rutas ni contenidos.
+- La configuración se interpreta como datos con lista cerrada de claves; elimina la ejecución accidental de código Bash desde `config/blumix.conf`.
+- El Atlas valida tipos, rangos y secciones de los JSON importados y advierte que las instantáneas no están firmadas ni autenticadas.
+
+### Web / PWA
+- Manifiesto, icono SVG y service worker con caché de la interfaz estática para instalación PWA desde HTTPS.
+- La caché no incluye informes locales ni datos de API; el Atlas mantiene su modo local-first sin dependencias remotas.
+
 ## [0.6.0] - En desarrollo
 
 ### Añadido
