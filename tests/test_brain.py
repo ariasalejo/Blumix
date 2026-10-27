@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from brain.network import (
     BrainDataError, FEATURE_NAMES, SCHEMA_DATASET, load_dataset, load_model,
     new_model, predict, save_model, train, validate_features,
