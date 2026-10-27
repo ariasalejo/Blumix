@@ -28,7 +28,7 @@ jobs:
           for file in lib/*.sh tests/*.sh; do
             bash -n "$file"
           done
-          python3 -m py_compile bin/blumix-web.py tests/test_web.py brain/network.py brain/reasoning.py brain/cli.py tests/test_brain.py
+          python3 -m py_compile bin/blumix-web.py tests/test_web.py brain/network.py brain/reasoning.py brain/evidence.py brain/cli.py tests/test_brain.py
 
       - name: Run test suite
         shell: bash
