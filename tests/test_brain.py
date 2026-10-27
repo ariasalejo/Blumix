@@ -10,6 +10,7 @@ from brain.network import (
     new_model, predict, save_model, train, validate_features,
 )
 from brain.cli import main
+from brain.reasoning import analyze_features
 
 
 def features(level):
@@ -72,6 +73,13 @@ class BrainTests(unittest.TestCase):
 
     def test_cli_status_is_available(self):
         self.assertEqual(main(["status"]), 0)
+
+    def test_deterministic_reasoner_is_explainable_and_bounded(self):
+        result = analyze_features(features(0.8))
+        self.assertGreaterEqual(result["score"], 0.0)
+        self.assertLessEqual(result["score"], 1.0)
+        self.assertEqual(result["algorithm"], "BLUMIX-EXPLICIT-WEIGHTED-RULES-1")
+        self.assertTrue(result["findings"])
 
     def test_untrained_model_is_not_mislabelled(self):
         model = new_model()
