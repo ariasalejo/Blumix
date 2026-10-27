@@ -209,26 +209,29 @@ if bash "$R/bin/blumix" completion zsh >/dev/null 2>&1; then fail "completion ac
 if bash "$R/bin/blumix" watch 1 >/dev/null 2>&1; then fail "watch aceptó un intervalo inferior al mínimo"; else code=$?; [[ "$code" -eq 2 ]] || fail "watch inválido no devolvió código 2"; fi
 pass "validación estricta de argumentos de funciones avanzadas"
 
-# El centro interactivo debe conservar una jerarquía de orquestación navegable.
-grep -q 'ORQUESTADOR BLUMIX' "$R/lib/tui.sh" || fail "falta el nodo raíz del orquestador"
-grep -q 'NUCLEO DEL SISTEMA' "$R/lib/tui.sh" || fail "falta la rama del sistema"
-grep -q 'MOTOR DE INTELIGENCIA' "$R/lib/tui.sh" || fail "falta la rama de inteligencia"
-grep -q 'ECOSISTEMA DE PROYECTOS' "$R/lib/tui.sh" || fail "falta la rama de proyectos"
-grep -q 'BOVEDA DE EVIDENCIAS' "$R/lib/tui.sh" || fail "falta la rama de evidencias"
-grep -q 'blumix_tui_render_node' "$R/lib/tui.sh" || fail "falta el renderizado recursivo del árbol"
-grep -q 'plegar/padre' "$R/lib/tui.sh" || fail "faltan instrucciones de navegación jerárquica"
+# El centro interactivo debe ser visual, navegable y no depender del árbol ASCII.
+grep -q 'ORQUESTADOR BLUMIX' "$R/lib/tui.sh" || fail "falta la raíz lógica del orquestador"
+grep -q 'NUCLEO DEL SISTEMA' "$R/lib/tui.sh" || fail "falta el dominio del sistema"
+grep -q 'MOTOR DE INTELIGENCIA' "$R/lib/tui.sh" || fail "falta el dominio de inteligencia"
+grep -q 'ECOSISTEMA DE PROYECTOS' "$R/lib/tui.sh" || fail "falta el dominio de proyectos"
+grep -q 'BOVEDA DE EVIDENCIAS' "$R/lib/tui.sh" || fail "falta el dominio de evidencias"
+grep -q 'blumix_tui_render_card' "$R/lib/tui.sh" || fail "falta el renderizador visual de tarjetas"
+grep -q 'COMMAND CENTER' "$R/lib/tui.sh" || fail "falta el encabezado del centro de mando"
+if grep -q 'blumix_tui_render_node' "$R/lib/tui.sh"; then fail "sigue presente el renderizador recursivo del árbol ASCII"; fi
 if bash "$R/bin/blumix" menu >/dev/null 2>&1; then
     fail "menu aceptó ejecución sin terminal interactiva"
 else
     code=$?
     [[ "$code" -eq 2 ]] || fail "menu no interactivo no devolvió código 2"
 fi
-rendered_tree="$(bash -c 'source "$1/lib/core.sh"; source "$1/lib/ui.sh"; source "$1/lib/tui.sh"; blumix_load_config; blumix_tui_render 0' _ "$R")" || fail "el árbol no pudo renderizarse"
-grep -q 'ORQUESTADOR BLUMIX' <<<"$rendered_tree" || fail "el árbol no muestra el nodo raíz"
-grep -q 'NUCLEO DEL SISTEMA' <<<"$rendered_tree" || fail "el árbol no muestra la rama del sistema"
-grep -q 'BOVEDA DE EVIDENCIAS' <<<"$rendered_tree" || fail "el árbol no muestra la rama de evidencias"
-pass "renderizado real del árbol y sus ramas raíz"
-pass "árbol del orquestador: ramas, navegación y modo no interactivo seguro"
+rendered_dashboard="$(bash -c 'source "$1/lib/core.sh"; source "$1/lib/ui.sh"; source "$1/lib/tui.sh"; blumix_load_config; BLX_VISIBLE_NODES=(0 1 4 7 10 13 16 18 20); blumix_tui_render 0' _ "$R")" || fail "el centro de mando no pudo renderizarse"
+grep -q 'COMMAND CENTER' <<<"$rendered_dashboard" || fail "el renderizado no muestra el centro de mando"
+grep -q 'Vista general' <<<"$rendered_dashboard" || fail "el renderizado no muestra la vista general"
+grep -q 'NUCLEO DEL SISTEMA' <<<"$rendered_dashboard" || fail "el renderizado no muestra el dominio del sistema"
+grep -q 'BOVEDA DE EVIDENCIAS' <<<"$rendered_dashboard" || fail "el renderizado no muestra el dominio de evidencias"
+grep -q 'EN FOCO' <<<"$rendered_dashboard" || fail "el renderizado no resalta la selección"
+pass "centro de mando visual: tarjetas, selección y telemetría"
+pass "navegación jerárquica sin renderizador de árbol ASCII y modo no interactivo seguro"
 
 if bash "$R/bin/blumix" __comando_inexistente >/dev/null 2>&1; then
     fail "un comando desconocido devolvió éxito"
