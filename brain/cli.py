@@ -13,6 +13,7 @@ if __package__ in (None, ""):
     from brain.network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
 else:
     from .network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
+    from .reasoning import analyze_features
 
 
 DEMO_SAMPLES = [
@@ -51,6 +52,9 @@ def _parser() -> argparse.ArgumentParser:
     fit.add_argument("--learning-rate", type=float, default=0.2)
     fit.add_argument("--seed", type=int, default=7)
     fit.add_argument("--force", action="store_true", help="autorizar reemplazo de un archivo de modelo existente")
+    analyze = commands.add_parser("analyze", help="comparar reglas transparentes y, opcionalmente, una red neuronal")
+    analyze.add_argument("--features", required=True, help="JSON con los cinco features normalizados")
+    analyze.add_argument("--model", help="modelo neuronal opcional para comparar resultados")
     infer = commands.add_parser("predict", help="calcular una puntuación con un modelo entrenado")
     infer.add_argument("--model", required=True)
     infer.add_argument("--features", required=True, help="JSON con los cinco features normalizados entre 0 y 1")
@@ -82,6 +86,18 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error cuadrático medio de entrenamiento: {model['metadata']['training_mse']}")
             print(f"Puntuación de ejemplo (0–1): {score:.4f}")
             print("No se guardó ningún archivo y no se ejecutó ninguna acción externa.")
+            return 0
+        if args.command == "analyze":
+            features = _read_features(args.features)
+            result = {"schema": "blumix.brain.analysis.v1", "deterministic": analyze_features(features), "neural": None, "comparison": "rules_only", "action_taken": False}
+            if args.model:
+                model = load_model(args.model)
+                neural_score = predict(model, features)
+                rule_score = result["deterministic"]["score"]
+                result["neural"] = {"algorithm": model["algorithm"], "score": round(neural_score, 6), "model_state": model.get("metadata", {}).get("state", "unknown")}
+                difference = abs(rule_score - neural_score)
+                result["comparison"] = {"absolute_score_difference": round(difference, 6), "status": "REVIEW_REQUIRED" if difference >= 0.25 else "NO_LARGE_DISAGREEMENT_DETECTED", "threshold": 0.25}
+            print(json.dumps(result, ensure_ascii=False, indent=2))
             return 0
         if args.command == "train":
             samples = load_dataset(args.dataset)
