@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Tests for BLUMIX's dependency-free neural engine."""
 import contextlib
+import subprocess
+import sys
 import io
 import json
 import tempfile
@@ -95,6 +97,17 @@ class BrainTests(unittest.TestCase):
         self.assertLessEqual(result["score"], 1.0)
         self.assertEqual(result["algorithm"], "BLUMIX-EXPLICIT-WEIGHTED-RULES-1")
         self.assertTrue(result["findings"])
+
+    def test_direct_cli_analysis_imports_all_engines(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            path.write_text(json.dumps(features(0.8)), encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, "brain/cli.py", "analyze", "--features", str(path)],
+                check=False, capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout)["schema"], "blumix.brain.analysis.v1")
 
     def test_untrained_model_is_not_mislabelled(self):
         model = new_model()
