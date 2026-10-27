@@ -12,9 +12,11 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from brain.network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
     from brain.reasoning import analyze_features
+    from brain.evidence import load_snapshot
 else:
     from .network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
     from .reasoning import analyze_features
+    from .evidence import load_snapshot
 
 
 DEMO_SAMPLES = [
@@ -46,6 +48,8 @@ def _parser() -> argparse.ArgumentParser:
     commands.add_parser("status", help="mostrar estado y límites del motor")
     demo = commands.add_parser("demo", help="entrenar en memoria con datos sintéticos de demostración")
     demo.add_argument("--epochs", type=int, default=600)
+    observe = commands.add_parser("observe", help="adaptar una instantánea a evidencias normalizadas; no predice")
+    observe.add_argument("--snapshot", required=True, help="archivo JSON blumix.snapshot.v1")
     fit = commands.add_parser("train", help="entrenar con un dataset etiquetado por el usuario")
     fit.add_argument("--dataset", required=True, help="JSON con schema blumix.brain.dataset.v1")
     fit.add_argument("--output", required=True, help="ruta de salida del modelo JSON")
@@ -87,6 +91,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error cuadrático medio de entrenamiento: {model['metadata']['training_mse']}")
             print(f"Puntuación de ejemplo (0–1): {score:.4f}")
             print("No se guardó ningún archivo y no se ejecutó ninguna acción externa.")
+            return 0
+        if args.command == "observe":
+            result = load_snapshot(args.snapshot)
+            print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
             return 0
         if args.command == "analyze":
             features = _read_features(args.features)
