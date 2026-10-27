@@ -4,6 +4,19 @@
 
 La carpeta brain contiene una primera red neuronal implementada por el proyecto con la biblioteca estándar de Python. No descarga modelos, no requiere servicios externos y no ejecuta acciones del sistema. Es un componente experimental, no un agente autónomo ni una afirmación de que BLUMIX ya razone sobre todo el ecosistema.
 
+## Adaptador de evidencias verificables
+
+El comando `blumix brain observe --snapshot informe.json` valida una instantánea `blumix.snapshot.v1` y emite `blumix.brain.evidence.v1`. Es un adaptador de solo lectura: normaliza CPU, memoria y disco dividiendo el porcentaje por 100, conserva el valor de origen y declara qué señales se observaron.
+
+Los fallos de dependencias y de pruebas se mantienen como `null` / `UNKNOWN` porque la instantánea actual no contiene esos datos. Las métricas ausentes también quedan desconocidas. Por tanto, la salida marca `ready_for_model: false` cuando falta cualquier feature; no debe pasarse al predictor hasta que existan fuentes verificables para todas las entradas y una normalización documentada. El adaptador no guarda archivos, no entrena, no predice y no ejecuta acciones.
+
+Ejemplo:
+
+    blumix report --json > /tmp/blumix-snapshot.json
+    blumix brain observe --snapshot /tmp/blumix-snapshot.json
+
+El informe se escribe en el archivo temporal indicado por el usuario; el adaptador en sí solo lee ese archivo y emite JSON por stdout. Revisa el contenido antes de compartirlo.
+
 ## Motor de razonamiento determinista
 
 brain/reasoning.py implementa una línea base transparente con pesos explícitos: CPU 0.15, memoria 0.20, disco 0.15, fallos de dependencias 0.25 y fallos de pruebas 0.25. Es una heurística diseñada por el proyecto, no una fórmula validada científicamente. Devuelve el detalle de las señales que superan umbrales configurados.
