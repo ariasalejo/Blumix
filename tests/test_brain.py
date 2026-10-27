@@ -117,5 +117,72 @@ class BrainTests(unittest.TestCase):
         self.assertGreaterEqual(predict(model, features(0.4)), 0.0)
 
 
+
+class EvidenceAdapterTests(unittest.TestCase):
+    def test_snapshot_normalizes_only_observed_percentages(self):
+        from brain.evidence import build_evidence
+
+        result = build_evidence({
+            "schema": "blumix.snapshot.v1",
+            "generated_at": "2026-10-27T12:00:00Z",
+            "system": {
+                "cpu_percent": 25,
+                "memory_percent": 80,
+                "root_disk_percent": None,
+            },
+        })
+        self.assertEqual(result["schema"], "blumix.brain.evidence.v1")
+        self.assertEqual(result["features"]["cpu_pressure"], 0.25)
+        self.assertEqual(result["features"]["memory_pressure"], 0.8)
+        self.assertIsNone(result["features"]["disk_pressure"])
+        self.assertIsNone(result["features"]["dependency_failures"])
+        self.assertIsNone(result["features"]["test_failures"])
+        self.assertFalse(result["ready_for_model"])
+        self.assertFalse(result["action_taken"])
+        self.assertEqual(
+            result["missing_features"],
+            ["disk_pressure", "dependency_failures", "test_failures"],
+        )
+
+    def test_snapshot_adapter_rejects_wrong_schema_and_out_of_range_metrics(self):
+        from brain.evidence import build_evidence
+
+        with self.assertRaises(BrainDataError):
+            build_evidence({"schema": "other.v1", "system": {}})
+        with self.assertRaises(BrainDataError):
+            build_evidence({
+                "schema": "blumix.snapshot.v1",
+                "system": {"cpu_percent": 101},
+            })
+        with self.assertRaises(BrainDataError):
+            build_evidence({
+                "schema": "blumix.snapshot.v1",
+                "system": {"cpu_percent": True},
+            })
+
+    def test_cli_observe_emits_json_without_writing_or_predicting(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "snapshot.json"
+            path.write_text(json.dumps({
+                "schema": "blumix.snapshot.v1",
+                "generated_at": "2026-10-27T12:00:00Z",
+                "system": {
+                    "cpu_percent": 12,
+                    "memory_percent": 34,
+                    "root_disk_percent": 56,
+                },
+            }), encoding="utf-8")
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                result = main(["observe", "--snapshot", str(path)])
+            self.assertEqual(result, 0)
+            document = json.loads(output.getvalue())
+            self.assertEqual(document["schema"], "blumix.brain.evidence.v1")
+            self.assertFalse(document["ready_for_model"])
+            self.assertIsNone(document["features"]["dependency_failures"])
+            self.assertFalse(document["action_taken"])
+            self.assertTrue(document["safety"]["read_only"])
+
+
 if __name__ == "__main__":
     unittest.main()
