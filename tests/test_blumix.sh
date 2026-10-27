@@ -195,7 +195,23 @@ grep -q 'report --json' <<<"$help" || fail "help no anuncia report --json"
 grep -q 'audit' <<<"$help" || fail "help no anuncia audit"
 grep -q 'policy' <<<"$help" || fail "help no anuncia policy"
 grep -q 'intelligence' <<<"$help" || fail "help no anuncia intelligence"
+grep -q 'brain status|demo' <<<"$help" || fail "help no anuncia brain"
 pass "ayuda contiene comandos clave"
+
+brain_status="$(bash "$R/bin/blumix" brain status)" || fail "brain status falló"
+grep -q 'BLUMIX BRAIN' <<<"$brain_status" || fail "brain status no identifica el motor"
+grep -q 'no ejecuta comandos' <<<"$brain_status" || fail "brain status no declara límites"
+brain_demo="$(bash "$R/bin/blumix" brain demo --epochs 20)" || fail "brain demo falló"
+grep -q 'datos sintéticos' <<<"$brain_demo" || fail "brain demo no advierte sobre datos sintéticos"
+grep -q 'No se guardó ningún archivo' <<<"$brain_demo" || fail "brain demo no declara que no escribe modelos"
+if bash "$R/bin/blumix" brain comando-desconocido >/dev/null 2>&1; then
+    fail "brain aceptó un subcomando desconocido"
+else
+    code=$?
+    [[ "$code" -eq 2 ]] || fail "brain desconocido no devolvió código 2"
+fi
+python3 "$R/tests/test_brain.py" >/dev/null || fail "pruebas del motor neuronal fallaron"
+pass "motor neuronal experimental: entrenamiento, validación, serialización y límites"
 
 # Capacidades avanzadas de terminal: rutas explícitas, autocompletado y menú seguro.
 completion="$(bash "$R/bin/blumix" completion bash)" || fail "completion bash falló"

@@ -137,6 +137,10 @@ Comandos:
   audit [--json]          Revisiones locales de permisos y archivos de riesgo
   policy [--json]         Catálogo de capacidades y límites de privilegio
   intelligence, intel     Diagnóstico accionable por reglas locales (solo lectura)
+  brain status|demo        Motor neuronal propio experimental
+  brain analyze            Comparar reglas transparentes y red neuronal opcional
+  brain train              Entrenar con dataset etiquetado explícito
+  brain predict            Puntuar features con un modelo guardado
   projects [--json]       Inventario con estados de evidencia
   services [--json]       Procesos y unidades relacionados observables
   integrations, int      Rutas de proyectos conectados
@@ -148,6 +152,12 @@ Comandos:
   blumsec                 Abrir directorio BLUMSEC
   blumelix, elx            Abrir directorio BLUMELIX
   about                  Filosofía del proyecto
+
+Motor neuronal experimental:
+  blumix brain status
+  blumix brain demo
+  blumix brain train --dataset dataset.json --output modelo.json
+  blumix brain predict --model modelo.json --features features.json
 
 Variables:
   BLUMCL_HOME, BLUMSEC_HOME, BLUMELIX_HOME
@@ -276,7 +286,7 @@ blumix_completion() {
     cat <<'COMPLETION'
 _blumix_complete() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local commands="help version system network net security sec audit policy intelligence intel center projects services integrations int development dev status doctor report snapshot blumcl cl blumsec blumelix elx about nave menu watch completion paths install-user"
+    local commands="help version system network net security sec audit policy intelligence intel center brain projects services integrations int development dev status doctor report snapshot blumcl cl blumsec blumelix elx about nave menu watch completion paths install-user"
     if (( COMP_CWORD == 1 )); then
         COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
     elif (( COMP_CWORD == 2 )); then
@@ -336,7 +346,19 @@ blumix_menu() {
     done
 }
 
+blumix_brain() {
+    if ! blumix_command_exists python3; then
+        printf 'BLUMIX BRAIN necesita Python 3; no se instaló nada.\n' >&2
+        return 1
+    fi
+    python3 "$BLUMIX_ROOT/brain/cli.py" "$@"
+}
+
 case "${1:-}" in
+    brain)
+        shift
+        blumix_brain "$@"
+        ;;
     system) blumix_system ;;
     network|net) blumix_network ;;
     security|sec) blumix_security ;;
