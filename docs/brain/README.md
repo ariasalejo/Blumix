@@ -4,6 +4,17 @@
 
 La carpeta brain contiene una primera red neuronal implementada por el proyecto con la biblioteca estándar de Python. No descarga modelos, no requiere servicios externos y no ejecuta acciones del sistema. Es un componente experimental, no un agente autónomo ni una afirmación de que BLUMIX ya razone sobre todo el ecosistema.
 
+## Motor de razonamiento determinista
+
+brain/reasoning.py implementa una línea base transparente con pesos explícitos: CPU 0.15, memoria 0.20, disco 0.15, fallos de dependencias 0.25 y fallos de pruebas 0.25. Es una heurística diseñada por el proyecto, no una fórmula validada científicamente. Devuelve el detalle de las señales que superan umbrales configurados.
+
+Analizar un archivo de features y, opcionalmente, comparar con un modelo neuronal:
+
+    blumix brain analyze --features features.json
+    blumix brain analyze --features features.json --model modelo.json
+
+Si reglas y red neuronal difieren mucho, el resultado solicita revisión; no elige ni ejecuta una reparación automáticamente.
+
 ## Arquitectura propia
 
 La versión inicial es un perceptrón multicapa (MLP) con cinco entradas, una capa oculta configurable (6 neuronas por defecto) y una salida sigmoide. La propagación hacia delante, la función sigmoide, la inicialización determinista, el cálculo del error y la retropropagación se implementan en brain/network.py. Los pesos se inicializan con una semilla reproducible y se ajustan durante el entrenamiento.
