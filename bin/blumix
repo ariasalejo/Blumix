@@ -138,6 +138,7 @@ Comandos:
   policy [--json]         Catálogo de capacidades y límites de privilegio
   intelligence, intel     Diagnóstico accionable por reglas locales (solo lectura)
   brain status|demo        Motor neuronal propio experimental
+  brain observe            Adaptar snapshot a evidencias verificables
   brain analyze            Comparar reglas transparentes y red neuronal opcional
   brain train              Entrenar con dataset etiquetado explícito
   brain predict            Puntuar features con un modelo guardado
