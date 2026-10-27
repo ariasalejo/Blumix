@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Tests for BLUMIX's dependency-free neural engine."""
+import contextlib
+import io
 import json
 import tempfile
 import unittest
@@ -73,6 +75,19 @@ class BrainTests(unittest.TestCase):
 
     def test_cli_status_is_available(self):
         self.assertEqual(main(["status"]), 0)
+
+    def test_cli_analyze_outputs_explainable_json_without_model(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            path.write_text(json.dumps(features(0.8)), encoding="utf-8")
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                result = main(["analyze", "--features", str(path)])
+            self.assertEqual(result, 0)
+            document = json.loads(output.getvalue())
+            self.assertEqual(document["schema"], "blumix.brain.analysis.v1")
+            self.assertIsNone(document["neural"])
+            self.assertFalse(document["action_taken"])
 
     def test_deterministic_reasoner_is_explainable_and_bounded(self):
         result = analyze_features(features(0.8))
