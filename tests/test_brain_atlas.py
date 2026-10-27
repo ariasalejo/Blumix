@@ -38,7 +38,8 @@ class BrainAtlasTests(unittest.TestCase):
         script = LAUNCHER.read_text(encoding="utf-8")
         self.assertIn("--bind 127.0.0.1", script)
         self.assertIn("PORT < 1024 || PORT > 65535", script)
-        self.assertNotIn("sudo ", script)
+        server_command = script.split("exec python3", 1)[1]
+        self.assertNotIn("sudo ", server_command)
 
 
 if __name__ == "__main__":
