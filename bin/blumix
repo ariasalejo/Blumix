@@ -348,7 +348,7 @@ blumix_menu() {
 
 blumix_brain() {
     if ! blumix_command_exists python3; then
-        printf 'BLUMIX BRAIN necesita Python 3; no se instaló nada.\\n' >&2
+        printf 'BLUMIX BRAIN necesita Python 3; no se instaló nada.\n' >&2
         return 1
     fi
     python3 "$BLUMIX_ROOT/brain/cli.py" "$@"
