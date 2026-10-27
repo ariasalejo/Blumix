@@ -11,6 +11,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from brain.network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
+    from brain.reasoning import analyze_features
 else:
     from .network import BrainDataError, FEATURE_NAMES, load_dataset, load_model, predict, save_model, train
     from .reasoning import analyze_features
