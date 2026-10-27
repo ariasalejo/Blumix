@@ -49,31 +49,6 @@ blumix_tui_children_count() {
     printf '%s' "$count"
 }
 
-blumix_tui_render_node() {
-    local node="$1" prefix="$2" last="$3" selected="$4"
-    local marker="├──" branch="·" color="$BLX_CYAN" i child_prefix="$prefix" glyph
-    [[ "$last" == 1 ]] && marker="└──"
-    if [[ "$(blumix_tui_children_count "$node")" -gt 0 ]]; then
-        if [[ "${BLX_NODE_EXPANDED[$node]:-0}" == 1 ]]; then branch="▼"; else branch="▶"; fi
-    fi
-    [[ "$node" == "$selected" ]] && color="$BLX_GREEN"
-    glyph="${BLX_NODE_ICONS[$node]:-·}"
-    printf '%b%s%b %b%s%b %b%s %-32s%b' "$BLX_DIM" "$prefix$marker" "$BLX_RESET" "$color" "$branch" "$BLX_RESET" "$glyph" "$([[ "$node" == "$selected" ]] && printf '%s' "$BLX_BOLD")" "${BLX_NODE_LABELS[$node]}" "$BLX_RESET"
-    if [[ "$node" == "$selected" ]]; then printf '%b  ◀ ACTIVE%b' "$BLX_GREEN" "$BLX_RESET"; fi
-    printf '\n'
-    if [[ "${BLX_NODE_EXPANDED[$node]:-0}" != 1 ]]; then return; fi
-    local -a children=()
-    for i in "${!BLX_NODE_PARENTS[@]}"; do
-        [[ "${BLX_NODE_PARENTS[$i]}" == "$node" ]] && children+=("$i")
-    done
-    [[ "$last" == 1 ]] && child_prefix+="   " || child_prefix+="│  "
-    for i in "${!children[@]}"; do
-        local is_last=0
-        (( i == ${#children[@]} - 1 )) && is_last=1
-        blumix_tui_render_node "${children[$i]}" "$child_prefix" "$is_last" "$selected"
-    done
-}
-
 blumix_tui_render_card() {
     local node="$1" selected="$2" label icon count badge color marker
     label="${BLX_NODE_LABELS[$node]}"
